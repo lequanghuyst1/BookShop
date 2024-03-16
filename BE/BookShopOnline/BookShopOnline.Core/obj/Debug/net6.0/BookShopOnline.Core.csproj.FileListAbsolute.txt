@@ -1,0 +1,12 @@
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\bin\Debug\net6.0\BookShopOnline.Core.deps.json
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\bin\Debug\net6.0\BookShopOnline.Core.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\bin\Debug\net6.0\BookShopOnline.Core.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.csproj.AssemblyReference.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.AssemblyInfoInputs.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.AssemblyInfo.cs
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.csproj.CoreCompileInputs.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\refint\BookShopOnline.Core.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\ref\BookShopOnline.Core.dll

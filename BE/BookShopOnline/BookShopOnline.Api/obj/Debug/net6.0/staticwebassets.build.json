@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "71seixb6qiF+nVEweRXlk5HH+/VKj4iaCjVuIBk2+p4=",
+  "Source": "BookShopOnline.Api",
+  "BasePath": "_content/BookShopOnline.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

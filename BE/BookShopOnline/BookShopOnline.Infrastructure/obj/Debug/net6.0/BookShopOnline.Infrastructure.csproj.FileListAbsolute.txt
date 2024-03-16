@@ -1,0 +1,15 @@
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\bin\Debug\net6.0\BookShopOnline.Infrastructure.deps.json
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\bin\Debug\net6.0\BookShopOnline.Infrastructure.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\bin\Debug\net6.0\BookShopOnline.Infrastructure.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.csproj.AssemblyReference.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.AssemblyInfoInputs.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.AssemblyInfo.cs
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.csproj.CoreCompileInputs.cache
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\refint\BookShopOnline.Infrastructure.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\ref\BookShopOnline.Infrastructure.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\bin\Debug\net6.0\BookShopOnline.Core.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\bin\Debug\net6.0\BookShopOnline.Core.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Infrastructure\obj\Debug\net6.0\BookShopOnline.Infrastructure.csproj.CopyComplete
