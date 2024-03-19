@@ -1,5 +1,6 @@
 ﻿using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Infrastructure.Interface;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
@@ -12,26 +13,10 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Infrastructure.Repository
 {
-    public class BookRepository : IBookRepository
+    public class BookRepository : BaseRepository<Book>, IBookRepository
     {
-        readonly string ConnectionString;
-        public IDbConnection Connection { get; set; }
-        public BookRepository(IConfiguration configuration)
+        public BookRepository(IDbContext dbContext) : base(dbContext)
         {
-            ConnectionString = configuration.GetConnectionString("DefaultConnection");
-            Connection = new MySqlConnection(ConnectionString);
-        }
-
-        public async Task<IEnumerable<Book>> GetAllAsync()
-        {
-            var sqlCommand = "Select * From Book";
-            var res = await Connection.QueryAsync<Book>(sqlCommand);
-            return res;
-        }
-
-        public Task<Book> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<Book>> GetByCategoryIdAsync(string id)

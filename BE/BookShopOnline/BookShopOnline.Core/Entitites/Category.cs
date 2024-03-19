@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Entitites
 {
-    public class Category
+    public class Category : BaseEntity
     {
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }

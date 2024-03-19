@@ -35,3 +35,5 @@ D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopO
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Infrastructure.dll
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Core.pdb
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Infrastructure.pdb
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMapper.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

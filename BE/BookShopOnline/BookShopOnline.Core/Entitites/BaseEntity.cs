@@ -11,7 +11,7 @@ namespace BookShopOnline.Core.Entitites
     /// Class BaseEntity
     /// </summary>
     /// CreatedBy: LQHUY(16/03/2024)
-    public class BaseEntity
+    public class BaseEntity 
     {
         #region Properties
         /// <summary>
