@@ -52,5 +52,16 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
+        public async Task<bool> CheckExitEntityNameAsync(string entityName)
+        {
+            var res = await _dbContext.CheckExitEntityNameAsync<TEntity>(entityName);
+            return res;
+        }
+
+        public async Task<string> GetNewCodeAsync()
+        {
+            var res = await _dbContext.GetNewCodeAsync<TEntity>();
+            return res;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using BookShopOnline.Api.Middleware;
 using BookShopOnline.Core.AutoMapper;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
@@ -15,6 +16,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Add the CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 //config Auto Mapper
 builder.Services.AddAutoMapper
@@ -48,5 +60,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//Use the CORS policy
+app.UseCors("AllowOrigin");
+
+//config middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

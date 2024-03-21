@@ -1,6 +1,6 @@
 <template>
-    <div>
-        TheContent
+    <div class="content">
+        <router-view name="ContentRouterView"></router-view>
     </div>
 </template>
 <script>

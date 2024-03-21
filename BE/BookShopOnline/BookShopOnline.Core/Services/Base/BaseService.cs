@@ -17,6 +17,7 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> DeleteManyServiceAsync(List<Guid> ids)
         {
+
             var res = await _baseRepository.DeleteManyAsync(ids);
             return res;
         }
@@ -29,6 +30,7 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> InsertServiceAsync(TEntity entity)
         {
+            await ValidateBeforeInsert(entity);
             var res = await _baseRepository.InsertAsync(entity);
             return res;
         }
@@ -37,6 +39,11 @@ namespace BookShopOnline.Core.Services.Base
         {
             var res = await _baseRepository.UpdateAsync(entity,id);
             return res;
+        }
+
+        public virtual async Task ValidateBeforeInsert(TEntity entity)
+        {
+            await Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookShopOnline.Core.Dto.Book;
 using BookShopOnline.Core.Dto.Category;
+using BookShopOnline.Core.Dto.Publisher;
 using BookShopOnline.Core.Entitites;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace BookShopOnline.Core.AutoMapper
         {
             CreateMap<Category, CategoryDto>();
             CreateMap<Book, BookDto>();
+            CreateMap<Publisher, PublisherDto>();
         }
     }
 }

@@ -1,7 +1,11 @@
 <template>
-  <the-header></the-header>
-  <the-content></the-content>
-  <the-siderbar></the-siderbar>
+  <div id="app">
+    <the-header></the-header>
+    <div class="container">
+      <the-siderbar></the-siderbar>
+      <the-content></the-content>
+    </div>
+  </div>
 </template>
 <script>
 import TheContent from "../TheContent.vue";
@@ -12,4 +16,10 @@ export default {
   components: { TheHeader, TheSiderbar, TheContent },
 };
 </script>
-<style></style>
+<style scoped>
+.container {
+  display: flex;
+  height: calc(100vh - var(--header-height-admin));
+  background-color: var(--bgc-container-admin);
+}
+</style>

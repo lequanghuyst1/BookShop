@@ -6,7 +6,7 @@ namespace BookShopOnline.Api.Controllers.Base
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class BaseReadOnlyController<TEntity, TDto> : ControllerBase 
+    public class BaseReadOnlyController<TEntity, TDto> : ControllerBase
     {
         protected IBaseService<TEntity, TDto> _baseService;
 
@@ -25,6 +25,12 @@ namespace BookShopOnline.Api.Controllers.Base
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var res = await _baseService.GetByIdAsync(id);
+            return Ok(res);
+        }
+        [HttpGet("NewCode")]
+        public async Task<IActionResult> GetNewCodeAsync()
+        {
+            var res = await _baseService.GetNewCodeAsync();
             return Ok(res);
         }
     }

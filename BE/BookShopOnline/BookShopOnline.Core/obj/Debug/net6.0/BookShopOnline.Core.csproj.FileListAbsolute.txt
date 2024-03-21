@@ -10,3 +10,5 @@ D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShop
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\refint\BookShopOnline.Core.dll
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.pdb
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\ref\BookShopOnline.Core.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.Resources.ResourceVN.resources
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Core\obj\Debug\net6.0\BookShopOnline.Core.csproj.GenerateResource.cache

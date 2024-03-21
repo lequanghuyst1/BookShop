@@ -1,0 +1,8 @@
+#m-dialog__info-book .m-dialog__container {
+  width: 70%;
+}
+
+#m-dialog__info-book .m-dialog__footer {
+  display: flex;
+  justify-content: space-between;
+}

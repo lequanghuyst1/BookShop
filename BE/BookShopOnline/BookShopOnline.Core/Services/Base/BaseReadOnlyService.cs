@@ -31,6 +31,12 @@ namespace BookShopOnline.Core.Services.Base
             return res;
         }
 
+        public async Task<string> GetNewCodeAsync()
+        {
+            var res = await _baseRepository.GetNewCodeAsync();
+            return res;
+        }
+
         public abstract TDto MapEntityToDto(TEntity entity);
     }
 }

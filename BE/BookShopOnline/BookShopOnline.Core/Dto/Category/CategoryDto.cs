@@ -10,6 +10,7 @@ namespace BookShopOnline.Core.Dto.Category
     public class CategoryDto : BaseEntity
     {
         public Guid CategoryId { get; set; }
+        public string CategoryCode { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
     }

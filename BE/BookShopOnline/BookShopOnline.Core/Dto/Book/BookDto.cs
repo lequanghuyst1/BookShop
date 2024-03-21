@@ -21,5 +21,7 @@ namespace BookShopOnline.Core.Dto.Book
         public string Image { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
+        public string CategoryName { get; set; }
+        public string PublisherName { get; set; }
     }
 }

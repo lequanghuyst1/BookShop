@@ -10,5 +10,6 @@ namespace BookShopOnline.Core.Interfaces.Services.Base
     {
         Task<IEnumerable<TDto>> GetAllAsync();
         Task<TDto?> GetByIdAsync(Guid id);
+        Task<string> GetNewCodeAsync();
     }
 }

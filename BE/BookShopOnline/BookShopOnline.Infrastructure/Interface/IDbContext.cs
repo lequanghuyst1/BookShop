@@ -15,5 +15,9 @@ namespace BookShopOnline.Infrastructure.Interface
         Task<int> UpdateAsync<TEntity>(TEntity entity, Guid entityId);
         Task<int> DeleteAsync<TEntity>(Guid id);
         Task<int> DeleteManyAsync<TEntity>(List<Guid> ids);
+        Task<bool> CheckExitEntityNameAsync<TEntity>(string entityName);
+        Task<string> GetNewCodeAsync<TEntity>();
+
+
     }
 }

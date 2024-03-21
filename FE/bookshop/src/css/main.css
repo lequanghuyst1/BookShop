@@ -1,0 +1,28 @@
+@import url(./icon.css);
+@import url(./grid.css);
+:root {
+  --header-height-admin: 56px;
+  --bgc-container-admin: #eeeff1;
+}
+
+body {
+  font-family: Notosans;
+  background-color: #f7f7f7;
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: Notosans;
+  src: url(../assets/fonts/notosans-regular.2cb88a13.woff2);
+}
+@font-face {
+  font-family: NotosansBold;
+  src: url(../assets/fonts/notosans-bold.3ede5aff.woff2);
+}
+@font-face {
+  font-family: NotosansItalic;
+  src: url(../assets/fonts/notosans-italic.1c1aaac9.woff2);
+}
