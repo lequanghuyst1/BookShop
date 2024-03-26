@@ -2,8 +2,10 @@
 using BookShopOnline.Core.Resources;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +33,7 @@ namespace BookShopOnline.Infrastructure.DbContext
                 throw new ConnectDbException(System.Net.HttpStatusCode.InternalServerError, ResourceVN.ConnectDbException, errors);
             }
         }
-      
+
         public async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>()
         {
             var tableName = typeof(TEntity).Name.ToLower();
@@ -44,7 +46,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name;
             var sqlCommand = $"Select * From {tableName} where {tableName}Id = @EntityId";
-            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityId = entityId});
+            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityId = entityId });
             return res;
         }
 
@@ -123,6 +125,53 @@ namespace BookShopOnline.Infrastructure.DbContext
                 default:
                     return "";
             }
+        }
+
+        public async Task<int> InsertHaveImageAsync<TEntity>(IFormFile? image, string dataJson)
+        {
+            var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
+            if (image?.Length > 0)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", image.FileName);
+                using (var stream = System.IO.File.Create(path))
+                {
+                    await image.CopyToAsync(stream);
+                }
+                var imagePath = $"/images/{image.FileName}";
+                entity?.GetType()?.GetProperty("Image")?.SetValue(entity, imagePath);
+            }
+            else
+            {
+                entity?.GetType()?.GetProperty("Image")?.SetValue(entity, null);
+            }
+            var tableName = typeof(TEntity).Name;
+            var procName = $"Proc_{tableName}_Insert";
+            var res = await Connection.ExecuteAsync(procName, entity);
+            return res;
+        }
+
+        public async Task<int> UpdateHaveImageAsync<TEntity>(IFormFile? image, string dataJson)
+        {
+            var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
+            if (image?.Length > 0)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", image.FileName);
+                using (var stream = System.IO.File.Create(path))
+                {
+                    await image.CopyToAsync(stream);
+                }
+                var imagePath = $"/images/{image.FileName}";
+                entity?.GetType()?.GetProperty("Image")?.SetValue(entity, imagePath);
+            }
+            else
+            {
+                entity?.GetType()?.GetProperty("Image")?.SetValue(entity, null);
+            }
+
+            var tableName = typeof(TEntity).Name;
+            var procName = $"Proc_{tableName}_Update";
+            var res = await Connection.ExecuteAsync(procName, entity);
+            return res;
         }
     }
 }

@@ -40,7 +40,7 @@
             class="m-button-icon m-button--sub m-button-none"
             id="btn-delete-all"
             text="Xóa tất cả"
-            @click="btnDeleteAllEmployee"
+            @click="btnDeleteAllBook"
           >
           </MButton>
         </div>
@@ -99,6 +99,7 @@ export default {
     this.loadData();
     this.$emitter.on("toggleShowForm", this.toggleShowForm);
     this.$emitter.on("deleteCategory", this.deleteCategory);
+    this.$emitter.on("deleteManyCategory", this.deleteManyCategory);
   },
   mounted() {
     this.$emitter.emit("toggleShowLoadingTable", true);
@@ -106,6 +107,7 @@ export default {
   beforeUnmount() {
     this.$emitter.off("toggleShowForm", this.toggleShowForm);
     this.$emitter.off("deleteCategory", this.deleteCategory);
+    this.$emitter.off("deleteManyCategory", this.deleteManyCategory);
   },
   methods: {
     async loadData() {
@@ -120,6 +122,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
+        this.$emitter.emit("handleApiError", error);
         this.$emitter.emit("toggleShowLoadingTable", false);
       }
     },
@@ -131,26 +134,63 @@ export default {
       this.isShowForm = isShow;
     },
     updateItemId(value) {
+      console.log(value)
       this.bookIdSelected = value;
     },
     async deleteCategory() {
-      // try {
-      //   const res = await categoryService.delete(this.bookIdSelected);
-      //   switch (res.status) {
-      //     case 200:
-      //     this.$emitter.emit("toggleDialogNotice", false);
-      //       this.$emitter.emit(
-      //         "onShowToastMessage",
-      //         this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-      //         "Xoá thành công",
-      //         this.$Resource[this.$languageCode].ToastMessage.Status.Success
-      //       );
-      //       this.loadData();
-      //       break;
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        const res = await bookService.delete(this.bookIdSelected);
+        switch (res.status) {
+          case 200:
+            this.$emitter.emit("toggleDialogNotice", false);
+            this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+              "Xoá thành công",
+              this.$Resource[this.$languageCode].ToastMessage.Status.Success
+            );
+            this.loadData();
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    updateListItemId(ids) {
+      this.lstBookIdSelected = ids;
+    },
+    btnDeleteAllBook(){
+      this.$emitter.emit(
+        "toggleDialogNotice",
+        true,
+        true,
+        'Xác nhận xóa',
+        this.$Resource[this.$languageCode].ConfirmDeleteAll(
+          "Cuốn sách"
+        ),
+        this.$Resource[this.$languageCode].Dialog.Type.Question
+      );
+    },
+    async deleteManyCategory() {
+      try {
+        const res = await bookService.deleteMany({
+          data: this.lstBookIdSelected,
+        });
+        switch (res.status) {
+          case 200:
+            this.$emitter.emit("toggleDialogNotice", false);
+            this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+              "Xoá thành công",
+              this.$Resource[this.$languageCode].ToastMessage.Status.Success
+            );
+            this.loadData();
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   data() {
@@ -159,6 +199,7 @@ export default {
       pageData: [],
       isShowForm: false,
       bookIdSelected: null,
+      lstBookIdSelected: [],
     };
   },
 };

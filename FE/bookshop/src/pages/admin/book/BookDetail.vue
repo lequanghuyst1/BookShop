@@ -1,16 +1,14 @@
 <template>
   <MForm id="m-dialog__info-book" title="Thêm mới sách">
     <template #form>
-      <form action="" style="width: 100%">
+      <form action="" style="width: 100%; height: 100%;">
         <div class="row">
           <div class="col l-2">
-            <img src="../../../assets/img/103-1.png" style="height: 150px" />
-            <MInput
-                  ref="bookCode"
-                  v-model="book.image"
-                  label="Chọn ảnh"
-                  type="file"
-                ></MInput>
+            <MInputImage
+              v-model:imagePath="book.image"
+              v-model="imageFile"
+              label="Chọn ảnh"
+            ></MInputImage>
           </div>
           <div class="col l-10">
             <div class="row">
@@ -32,10 +30,9 @@
               </div>
               <div class="col l-4">
                 <MInput
-                  ref="publicationDate"
-                  type=date
-                  v-model="book.publicationDate"
-                  label="Ngày xuất bản"
+                  ref="author"
+                  v-model="book.author"
+                  label="Tác giả"
                 ></MInput>
               </div>
             </div>
@@ -63,18 +60,38 @@
                 ></MCombobox>
               </div>
             </div>
+            <div class="row">
+              <div class="col l-3">
+                <MInput
+                  ref="publicationDate"
+                  type="date"
+                  v-model="book.publicationDate"
+                  label="Ngày xuất bản"
+                ></MInput>
+              </div>
+              <div class="col l-3">
+                <MInput ref="price" v-model="book.price" label="Giá"></MInput>
+              </div>
+              <div class="col l-3">
+                <MInput
+                  ref="size"
+                  v-model="book.size"
+                  label="Khổ sách"
+                ></MInput>
+              </div>
+              <div class="col l-3">
+                <MInput
+                  ref="size"
+                  v-model="book.heavy"
+                  label="Khối lượng"
+                ></MInput>
+              </div>
+            </div>
           </div>
         </div>
-
         <div class="row">
           <div class="col l-3">
-            <MInput ref="price" v-model="book.price" label="Giá"></MInput>
-          </div>
-          <div class="col l-3">
-            <MInput ref="size" v-model="book.size" label="Khổ sách"></MInput>
-          </div>
-          <div class="col l-3">
-            <MInput ref="size" v-model="book.heavy" label="Khối lượng"></MInput>
+            <MInput label="Số lượng nhập" v-model="book.quantityImported"></MInput>
           </div>
         </div>
         <div class="row">
@@ -140,7 +157,7 @@ export default {
   emits: ["loadData"],
   created() {
     if (this.formMode == this.$Enum.FormMode.Edit) {
-      this.getCategoryDetail();
+      this.getBookDetail();
     } else {
       this.getNewCode();
     }
@@ -171,11 +188,11 @@ export default {
           return;
         }
         if (this.formMode === this.$Enum.FormMode.Add) {
-          this.addNewCategory();
+          this.addNewBook();
         } else if (this.formMode === this.$Enum.FormMode.Clone) {
           this.addNewEmployee();
         } else {
-          this.editCategory();
+          this.editBook();
         }
       } catch (error) {
         console.error(error);
@@ -220,9 +237,12 @@ export default {
       this.$refs[this.lstErorr[0]].setFocus();
     },
 
-    async addNewCategory() {
+    async addNewBook() {
       try {
-        const res = await bookService.post(this.book);
+        var formData = new FormData();
+        formData.append("imageFile", this.imageFile);
+        formData.append("dataJson", JSON.stringify(this.book));
+        const res = await bookService.postHaveImage(formData);
         switch (res.status) {
           case 201:
             this.successResponse("Thêm mới thành công");
@@ -236,9 +256,12 @@ export default {
       }
     },
 
-    async editCategory() {
+    async editBook() {
       try {
-        const res = await bookService.put(this.bookIdSelected, this.book);
+        var formData = new FormData();
+        formData.append("imageFile", this.imageFile);
+        formData.append("dataJson", JSON.stringify(this.book));
+        const res = await bookService.putHaveImage(formData);
         switch (res.status) {
           case 200:
             this.successResponse("Sửa thành công");
@@ -252,7 +275,7 @@ export default {
       }
     },
 
-    async getCategoryDetail() {
+    async getBookDetail() {
       try {
         const res = await bookService.getById(this.bookIdSelected);
         switch (res.status) {
@@ -306,6 +329,7 @@ export default {
       book: {},
       lstErrorMessage: {},
       lstErorr: [],
+      imageFile: null,
     };
   },
 };

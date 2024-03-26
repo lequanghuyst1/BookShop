@@ -4,7 +4,6 @@
       label
     }}</label>
     <input
-      
       class="m-textfield"
       v-model="value"
       :id="id"

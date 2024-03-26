@@ -1,5 +1,6 @@
 ﻿using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,18 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<string> GetNewCodeAsync()
         {
             var res = await _dbContext.GetNewCodeAsync<TEntity>();
+            return res;
+        }
+
+        public async Task<int> InsertHaveImageAsync(IFormFile? image, string dataJson)
+        {
+            var res = await _dbContext.InsertHaveImageAsync<TEntity>(image, dataJson);
+            return res;
+        }
+
+        public async Task<int> UpdateHaveImageAsync(IFormFile? image, string dataJson)
+        {
+            var res = await _dbContext.UpdateHaveImageAsync<TEntity>(image, dataJson);
             return res;
         }
     }

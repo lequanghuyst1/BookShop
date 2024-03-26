@@ -49,6 +49,7 @@ export default {
     onBtnConfirm() {
       this.$emitter.emit("deleteCategory");
       this.$emitter.emit("deleteEmployees");
+      this.$emitter.emit("deleteManyCategory");
     },
     /**
      * Hàm xác nhận thông báo và đóng dialog

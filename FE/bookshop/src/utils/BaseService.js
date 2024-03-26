@@ -15,7 +15,7 @@ class BaseService {
     const res = await this.baseAxios.get(`${this.baseUrl}/${id}`);
     return res;
   }
-  async getNewCode(){
+  async getNewCode() {
     const res = await this.baseAxios.get(`${this.baseUrl}/NewCode`);
     return res;
   }
@@ -29,6 +29,33 @@ class BaseService {
   }
   async delete(id) {
     const res = await this.baseAxios.delete(`${this.baseUrl}/${id}`);
+    return res;
+  }
+  async deleteMany(lstId) {
+    const res = await this.baseAxios.delete(
+      `${this.baseUrl}/DeleteMany`,
+      lstId
+    );
+    return res;
+  }
+  async postHaveImage(data) {
+    const res = await this.baseAxios.post(`${this.baseUrl}/HaveImage`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  }
+  async putHaveImage(data) {
+    const res = await this.baseAxios.put(
+      `${this.baseUrl}/HaveImage`,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return res;
   }
 }

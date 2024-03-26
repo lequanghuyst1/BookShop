@@ -1,5 +1,6 @@
 ﻿using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,12 @@ namespace BookShopOnline.Core.Services.Base
             return res;
         }
 
+        public async Task<int> InsertHaveImageServiceAsync(IFormFile? image, string dataJson)
+        {
+            var res = await _baseRepository.InsertHaveImageAsync(image, dataJson);
+            return res;
+        }
+
         public async Task<int> InsertServiceAsync(TEntity entity)
         {
             await ValidateBeforeInsert(entity);
@@ -35,9 +42,15 @@ namespace BookShopOnline.Core.Services.Base
             return res;
         }
 
+        public async Task<int> UpdateHaveImageServiceAsync(IFormFile? imageFile, string dataJson)
+        {
+            var res = await _baseRepository.UpdateHaveImageAsync(imageFile, dataJson);
+            return res;
+        }
+
         public async Task<int> UpdateServiceAsync(TEntity entity, Guid id)
         {
-            var res = await _baseRepository.UpdateAsync(entity,id);
+            var res = await _baseRepository.UpdateAsync(entity, id);
             return res;
         }
 

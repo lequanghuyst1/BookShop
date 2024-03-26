@@ -15,4 +15,8 @@
     <ProjectReference Include="..\BookShopOnline.Infrastructure\BookShopOnline.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

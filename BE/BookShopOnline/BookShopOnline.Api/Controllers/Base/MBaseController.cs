@@ -19,6 +19,13 @@ namespace BookShopOnline.Api.Controllers.Base
             return StatusCode(201, res);
         }
 
+        [HttpPost("HaveImage")]
+        public async Task<IActionResult> InsertHaveImageAsync([FromForm] string dataJson, IFormFile? imageFile)
+        {
+            var res = await _baseService.InsertHaveImageServiceAsync(imageFile, dataJson);
+            return StatusCode(201, res);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(TEntity entity, Guid id)
         {
@@ -26,10 +33,23 @@ namespace BookShopOnline.Api.Controllers.Base
             return Ok(res);
         }
 
+        [HttpPut("HaveImage")]
+        public async Task<IActionResult> UpdateHaveImageAsync([FromForm] string dataJson, IFormFile? imageFile)
+        {
+            var res = await _baseService.UpdateHaveImageServiceAsync(imageFile, dataJson);
+            return Ok(res);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var res = await _baseService.DeleteServiceAsync(id);
+            return Ok(res);
+        }
+        [HttpDelete("DeleteMany")]
+        public async Task<IActionResult> DeleteManyAsync([FromBody] List<Guid> ids)
+        {
+            var res = await _baseService.DeleteManyServiceAsync(ids);
             return Ok(res);
         }
     }

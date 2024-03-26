@@ -67,4 +67,6 @@ app.UseCors("AllowOrigin");
 //config middleware
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseStaticFiles();
+
 app.Run();

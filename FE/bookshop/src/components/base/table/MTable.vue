@@ -65,7 +65,11 @@
                 padding: 10px 0;
               "
               v-if="col.field == 'image'"
-              src="../../../assets/img/103-1.png"
+              :src="
+                data[col.field]
+                  ? `https://localhost:7015/${data[col.field]}`
+                  : 'https://localhost:7015/images/no-image.jpg'
+              "
               alt=""
             />
             <tippy
@@ -157,7 +161,7 @@
       class="no-data-table"
       v-if="isShowNoData && this.pageData.length === 0"
     >
-      {{ this.$Resource[this.$languageCode].Text.NoDataContent }}
+      Không có dữ liệu nào
     </div>
   </div>
 </template>
@@ -190,8 +194,8 @@ export default {
       required: false,
     },
     image: {
-      typeof: Boolean
-    }
+      typeof: Boolean,
+    },
   },
   emit: [
     "toggleShowForm",

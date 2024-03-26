@@ -1,7 +1,23 @@
 #m-dialog__info-book .m-dialog__container {
   width: 70%;
+  height: auto;
 }
-
+#m-dialog__info-book .m-dialog__container .m-dialog__footer::before {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background-color: #e0e0e0;
+  top: -5px;
+} 
+#m-dialog__info-book .m-dialog__content {
+ overflow-y: scroll;
+ height: 470px;
+ margin: 0;
+ margin-bottom: 24px;
+} 
 #m-dialog__info-book .m-dialog__footer {
   display: flex;
   justify-content: space-between;

@@ -37,3 +37,5 @@ D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopO
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Infrastructure.pdb
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMapper.dll
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Api.staticwebassets.runtime.json
