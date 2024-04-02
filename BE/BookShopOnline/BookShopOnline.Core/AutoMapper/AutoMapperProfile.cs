@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookShopOnline.Core.Dto.Book;
 using BookShopOnline.Core.Dto.Category;
+using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Dto.Publisher;
 using BookShopOnline.Core.Entitites;
 using System;

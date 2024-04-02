@@ -30,7 +30,7 @@
         <span class="m-page__number-total"
           ><b v-if="this.total === 0"> {{ "00" }} </b>
 
-          <b v-else> {{ this.endIndex }} </b></span
+          <b v-else> {{  this.endIndex < 10 ? `0${this.endIndex}` : this.endIndex}} </b></span
         >
         <span style="margin-left: 4px">
           bản ghi</span

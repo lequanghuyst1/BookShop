@@ -40,9 +40,9 @@
 
 .m-table td,
 th {
-  padding: 0 16px;
-  border-bottom: 1px solid #e0e0e0;
-  border-right: 1px dashed #e0e0e0;
+  padding: 0 16px !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  border-right: 1px dashed #e0e0e0 !important;
 }
 
 .m-table tbody td {

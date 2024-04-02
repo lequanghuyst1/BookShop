@@ -33,5 +33,11 @@ namespace BookShopOnline.Api.Controllers.Base
             var res = await _baseService.GetNewCodeAsync();
             return Ok(res);
         }
+        [HttpGet("FilterPaging")]
+        public async Task<IActionResult> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber)
+        {
+            var res = await _baseService.GetFilterPagingAsync(searchString, pageSize, pageNumber);
+            return Ok(res);
+        }
     }
 }

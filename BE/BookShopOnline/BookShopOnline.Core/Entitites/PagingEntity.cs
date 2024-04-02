@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookShopOnline.Core.Dto.Paging
+namespace BookShopOnline.Core.Entitites
 {
-    public class PagingEntity<TEntity>
+    public class PagingEntity<T>
     {
         public int TotalPage { get; set; }
-        public int TotalRecord { get; set; }    
-        public List<TEntity> Data { get; set; }
+        public int TotalRecord { get; set; }
+        public IEnumerable<T> Data { get; set; }
     }
 }

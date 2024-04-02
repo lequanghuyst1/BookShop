@@ -32,6 +32,10 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale.css'
 import 'tippy.js/animations/scale-subtle.css'
 import 'tippy.js/animations/scale-extreme.css'
+
+// Import Bootstrap and BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 const app = createApp(App);
 
 
@@ -59,6 +63,7 @@ app.config.globalProperties.$Resource = Resource;
 app.config.globalProperties.$languageCode = "VN";
 app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
+app.config.globalProperties.$accessToken = '1';
 
 app.use(
     VueTippy,
@@ -76,6 +81,8 @@ app.use(
 
 
 app.use(router);
-
+// Make BootstrapVue available throughout your project
+// Optionally install the BootstrapVue icon components plugin
+// Optionally install the BootstrapVue icon components plugin
 
 app.mount('#app')

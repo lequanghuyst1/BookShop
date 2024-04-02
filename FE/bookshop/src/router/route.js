@@ -1,14 +1,51 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import LayoutUser from "@/components/user/layout/layout-default/LayoutUser.vue";
+// import LayoutUser from "@/components/user/layout/layout-default/LayoutUser.vue";
+import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import LayoutAdmin from "@/components/admin/layout/layout-default/LayoutAdmin.vue";
 import BookPage from "../pages/admin/book/Index.vue";
 import CategoryPage from "../pages/admin/category/Index.vue";
+import PulisherPage from "../pages/admin/publisher/Index.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
+import HomeUserPage from "../pages/user/home/Index.vue";
+import CartPage from "../pages/user/cart/Index.vue";
+import CategoryUserPage from "../pages/user/category/Index.vue";
+import ProdcutPage from "../pages/user/product/Index.vue";
+
 const routes = [
   {
     path: "/",
-    component: LayoutUser,
+    component: LayoutHeaderAndFooter,
+    children: [
+      {
+        path: "",
+        components: {
+          ViewRouterContainer: HomeUserPage,
+        },
+      },
+      {
+        path: "cart",
+        components: {
+          ViewRouterContainer: CartPage,
+        },
+      },
+      {
+        path: "collections/:id",
+        name: "category",
+        components: {
+          ViewRouterContainer: CategoryUserPage,
+        },
+        props: true,
+      },
+      {
+        path: "product/:id",
+        name: "product",
+        components: {
+          ViewRouterContainer: ProdcutPage,
+        },
+        props: true,
+      },
+    ],
   },
   {
     path: "/admin/login",
@@ -30,6 +67,12 @@ const routes = [
           ContentRouterView: CategoryPage,
         },
       },
+      {
+        path: "publisher-management",
+        components: {
+          ContentRouterView: PulisherPage,
+        },
+      },
     ],
   },
 ];
@@ -39,4 +82,7 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  next();
+});
 export default router;

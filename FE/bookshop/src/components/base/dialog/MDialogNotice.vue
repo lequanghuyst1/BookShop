@@ -47,9 +47,13 @@ export default {
      * Author: LQHUY(06/12/2002)
      */
     onBtnConfirm() {
+      this.$emitter.emit("deleteBook");
+      this.$emitter.emit("deleteManyBook");
       this.$emitter.emit("deleteCategory");
-      this.$emitter.emit("deleteEmployees");
       this.$emitter.emit("deleteManyCategory");
+      this.$emitter.emit("deletePublisher");
+      this.$emitter.emit("deleteManyPublisher");
+
     },
     /**
      * Hàm xác nhận thông báo và đóng dialog

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Entitites;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace BookShopOnline.Infrastructure.Interface
     {
         Task<IEnumerable<TEntity>> GetAllAsync<TEntity>();
         Task<TEntity?> GetByIdAsync<TEntity>(Guid entityId);
+        Task<PagingEntity<TEntity>> GetFilterPagingAsync<TEntity>(string? searchString, int pageSize, int pageNumber);
         Task<int> InsertAsync<TEntity>(TEntity entity);
         Task<int> InsertHaveImageAsync<TEntity>(IFormFile? image, string dataJson);
         Task<int> UpdateAsync<TEntity>(TEntity entity, Guid entityId);

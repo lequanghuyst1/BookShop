@@ -3,7 +3,7 @@
     <div class="m-dialog__overlay"></div>
     <div class="m-dialog__container">
       <div class="m-dialog__header">
-        <slot></slot>
+        <slot name="header"></slot>
         <h3 class="m-dialog__header-title">{{ title }}</h3>
 
         <div class="m-dialog__header-action">
@@ -60,6 +60,7 @@ export default {
     btnHiddenForm() {
       this.$emitter.emit("toggleDialogNotice", false);
       this.$emitter.emit("toggleShowForm");
+      this.$emitter.emit("onHideFormLoginOrRegister");
     },
   },
 };

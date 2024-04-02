@@ -3,7 +3,6 @@
     <div class="content__header-title">
       <h3>Quản lý sách</h3>
     </div>
-
     <div class="content__header-group-button">
       <tippy content="Thêm mới" placement="bottom" animation="scale">
         <MButton
@@ -21,7 +20,11 @@
   <div class="content__body">
     <div class="content__toolbar">
       <div class="content__toolbar-left">
-        <div class="content__toolbar-left--action" style="display: flex">
+        <div
+          v-show="isShowToolbarAction"
+          class="content__toolbar-left--action"
+          style="display: flex; column-gap: 20px"
+        >
           <p class="content__toolbar-left--selected">
             Đã chọn
             <b class="content__toolbar-left--selected-quantity">{{
@@ -50,7 +53,7 @@
           <MInputIcon
             refEl="txtSearchString"
             v-model="searchString"
-            placeholder="Tìm kiếm theo tên danh mục"
+            placeholder="Tìm kiếm theo tên sách, tên tác giả"
           ></MInputIcon>
         </div>
       </div>
@@ -98,25 +101,47 @@ export default {
   created() {
     this.loadData();
     this.$emitter.on("toggleShowForm", this.toggleShowForm);
-    this.$emitter.on("deleteCategory", this.deleteCategory);
-    this.$emitter.on("deleteManyCategory", this.deleteManyCategory);
+    this.$emitter.on("deleteBook", this.deleteBook);
+    this.$emitter.on("deleteManyBook", this.deleteManyBook);
   },
   mounted() {
     this.$emitter.emit("toggleShowLoadingTable", true);
   },
   beforeUnmount() {
     this.$emitter.off("toggleShowForm", this.toggleShowForm);
-    this.$emitter.off("deleteCategory", this.deleteCategory);
-    this.$emitter.off("deleteManyCategory", this.deleteManyCategory);
+    this.$emitter.off("deleteBook", this.deleteBook);
+    this.$emitter.off("deleteManyBook", this.deleteManyBook);
+  },
+  watch: {
+    pageNumber(newValue) {
+      if (newValue) {
+        this.loadData();
+      }
+    },
+    searchString() {
+      this.loadData();
+    },
   },
   methods: {
     async loadData() {
       this.$emitter.emit("toggleShowLoadingTable", true);
       try {
-        const res = await bookService.getAll();
+        let params = !this.searchString
+          ? {
+              pageSize: this.pageSize,
+              pageNumber: this.pageNumber,
+            }
+          : {
+              searchString: this.searchString,
+              pageSize: this.pageSize,
+              pageNumber: this.pageNumber,
+            };
+        const res = await bookService.getFilterPaging({ params });
         switch (res.status) {
           case 200:
-            this.pageData = res.data;
+            this.pageData = res.data.data;
+            this.totalRecord = res.data.totalRecord;
+            this.totalPage = res.data.totalPage;
             this.$emitter.emit("toggleShowLoadingTable", false);
             break;
         }
@@ -134,10 +159,9 @@ export default {
       this.isShowForm = isShow;
     },
     updateItemId(value) {
-      console.log(value)
       this.bookIdSelected = value;
     },
-    async deleteCategory() {
+    async deleteBook() {
       try {
         const res = await bookService.delete(this.bookIdSelected);
         switch (res.status) {
@@ -159,19 +183,17 @@ export default {
     updateListItemId(ids) {
       this.lstBookIdSelected = ids;
     },
-    btnDeleteAllBook(){
+    btnDeleteAllBook() {
       this.$emitter.emit(
         "toggleDialogNotice",
         true,
         true,
-        'Xác nhận xóa',
-        this.$Resource[this.$languageCode].ConfirmDeleteAll(
-          "Cuốn sách"
-        ),
+        "Xác nhận xóa",
+        this.$Resource[this.$languageCode].ConfirmDeleteAll("Cuốn sách"),
         this.$Resource[this.$languageCode].Dialog.Type.Question
       );
     },
-    async deleteManyCategory() {
+    async deleteManyBook() {
       try {
         const res = await bookService.deleteMany({
           data: this.lstBookIdSelected,
@@ -186,11 +208,24 @@ export default {
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
             this.loadData();
+            this.btnRemoveRowSelected();
             break;
         }
       } catch (error) {
         console.log(error);
       }
+    },
+    toggleShowToolbarAction(isShow) {
+      this.isShowToolbarAction = isShow;
+    },
+    updateTotalRecordSelected(total) {
+      this.totalRecordSelected = total;
+    },
+    btnRemoveRowSelected() {
+      this.selectAll = false;
+      setTimeout(() => {
+        this.selectAll = null;
+      }, 500);
     },
   },
   data() {
@@ -200,6 +235,15 @@ export default {
       isShowForm: false,
       bookIdSelected: null,
       lstBookIdSelected: [],
+      selectAll: false,
+      /**chuỗi tìm kiếm nhanh các bản ghi */
+      searchString: null,
+      isShowToolbarAction: false,
+      totalRecordSelected: null,
+      pageSize: 10,
+      pageNumber: 1,
+      totalRecord: null,
+      totalPage: null,
     };
   },
 };

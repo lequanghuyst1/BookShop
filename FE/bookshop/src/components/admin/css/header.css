@@ -35,6 +35,7 @@
 .header__info .header__info-company-name {
     font-size: 18px;
     margin-right: 12px;
+    margin-bottom: 0;
 }
 .header__info .header__navbar-list {
     display: flex;

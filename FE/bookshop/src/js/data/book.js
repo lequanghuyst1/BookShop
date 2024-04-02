@@ -18,6 +18,12 @@ const bookColumns = [
     width: "182px",
   },
   {
+    field: "author",
+    nameField: "Tác giả",
+    class: "table-align-text",
+    width: "152px",
+  },
+  {
     field: "price",
     nameField: "Giá",
     class: "table-align-text",
@@ -29,7 +35,8 @@ const bookColumns = [
     field: "quantityInStock",
     nameField: "Số lượng tồn",
     class: "table-align-text",
-    width: "182px",
+    width: "132px",
+    textAlign: "right",
   },
   {
     field: "publicationDate",

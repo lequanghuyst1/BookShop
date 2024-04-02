@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShopOnline.Core.Entitites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace BookShopOnline.Core.Interfaces.Services.Base
         Task<IEnumerable<TDto>> GetAllAsync();
         Task<TDto?> GetByIdAsync(Guid id);
         Task<string> GetNewCodeAsync();
+        Task<PagingEntity<TDto>> GetFilterPagingAsync(string? searchString, int pageSize, int PageNumber);
     }
 }

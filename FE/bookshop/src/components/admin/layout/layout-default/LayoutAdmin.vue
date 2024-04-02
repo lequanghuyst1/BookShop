@@ -1,11 +1,9 @@
 <template>
-  <div id="app">
     <the-header></the-header>
-    <div class="container">
+    <div class="container-fulid d-flex">
       <the-siderbar></the-siderbar>
       <the-content></the-content>
     </div>
-  </div>
 </template>
 <script>
 import TheContent from "../TheContent.vue";
@@ -17,8 +15,7 @@ export default {
 };
 </script>
 <style scoped>
-.container {
-  display: flex;
+.container-fulid {
   height: calc(100vh - var(--header-height-admin));
   background-color: var(--bgc-container-admin);
 }

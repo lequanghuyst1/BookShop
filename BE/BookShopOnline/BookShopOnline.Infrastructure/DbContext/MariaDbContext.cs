@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Exceptions;
+﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Resources;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
@@ -172,6 +173,30 @@ namespace BookShopOnline.Infrastructure.DbContext
             var procName = $"Proc_{tableName}_Update";
             var res = await Connection.ExecuteAsync(procName, entity);
             return res;
+        }
+
+        public async Task<PagingEntity<TEntity>> GetFilterPagingAsync<TEntity>(string? searchString, int pageSize, int pageNumber)
+        {
+            var tableName = typeof(TEntity).Name;
+            var sql = $"Proc_{tableName}_FilterPaging";
+
+            PagingEntity<TEntity> pagingEntity = new PagingEntity<TEntity>();
+            DynamicParameters parameters = new DynamicParameters();
+
+            parameters.Add("@pageSize", pageSize);
+            parameters.Add("@pageNumber", pageNumber);
+            parameters.Add("@searchString", searchString);
+
+            parameters.Add("@totalRecord", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+            parameters.Add("@totalPage", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+            var res = await Connection.QueryAsync<TEntity>(sql, parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            pagingEntity.Data = res;
+            pagingEntity.TotalRecord = parameters.Get<int>("@totalRecord");
+            pagingEntity.TotalPage = parameters.Get<int>("@totalPage");
+
+            return pagingEntity;
         }
     }
 }

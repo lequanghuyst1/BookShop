@@ -2,8 +2,9 @@
   <MForm id="m-dialog__info-book" title="Thêm mới sách">
     <template #form>
       <form action="" style="width: 100%; height: 100%;">
+        <b-row></b-row>
         <div class="row">
-          <div class="col l-2">
+          <div class="col-2">
             <MInputImage
               v-model:imagePath="book.image"
               v-model="imageFile"
@@ -334,4 +335,6 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+
+</style>

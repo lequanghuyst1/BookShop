@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using BookShopOnline.Core.Dto.Category;
+using BookShopOnline.Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace BookShopOnline.Core.Dto.Book
 {
     public class BookDto : BaseEntity
     {
+        public BookDto()
+        {
+            CategoryDto = new CategoryDto();
+        }
         public Guid BookId { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
@@ -22,6 +27,7 @@ namespace BookShopOnline.Core.Dto.Book
         public string? Image { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
+        public CategoryDto CategoryDto { get; set; }
         public string? CategoryName { get; set; }
         public string? PublisherName { get; set; }
         public int QuantityInStock { get; set; }

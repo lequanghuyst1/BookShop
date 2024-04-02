@@ -19,6 +19,10 @@ class BaseService {
     const res = await this.baseAxios.get(`${this.baseUrl}/NewCode`);
     return res;
   }
+  async getFilterPaging(data) {
+    const res = await this.baseAxios.get(`${this.baseUrl}/FilterPaging`, data);
+    return res;
+  }
   async post(data) {
     const res = await this.baseAxios.post(this.baseUrl, data);
     return res;
@@ -47,15 +51,11 @@ class BaseService {
     return res;
   }
   async putHaveImage(data) {
-    const res = await this.baseAxios.put(
-      `${this.baseUrl}/HaveImage`,
-      data,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const res = await this.baseAxios.put(`${this.baseUrl}/HaveImage`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res;
   }
 }

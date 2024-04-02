@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Interfaces.Infrastructures;
+﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,19 @@ namespace BookShopOnline.Core.Services.Base
         {
             var entity = await _baseRepository.GetByIdAsync(id);
             var res = MapEntityToDto(entity);
+            return res;
+        }
+
+        public async Task<PagingEntity<TDto>> GetFilterPagingAsync(string? searchString, int pageSize, int PageNumber)
+        {
+            var entity = await _baseRepository.GetFilterPagingAsync(searchString, pageSize, PageNumber);
+            var entitiesData = entity.Data;
+            var res = new PagingEntity<TDto>()
+            {
+                TotalPage = entity.TotalPage,
+                TotalRecord = entity.TotalRecord,
+                Data = entitiesData.Select(entity => MapEntityToDto(entity)),
+            };
             return res;
         }
 

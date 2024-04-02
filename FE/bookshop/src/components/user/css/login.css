@@ -1,0 +1,144 @@
+#customer-login .m-dialog .m-dialog__header{
+  margin: 16px 0;
+  width: 450px;
+}
+#customer-login .m-dialog .m-dialog__container {
+  width: 450px;
+}
+#customer-login .m-dialog .m-dialog__footer {
+  height: auto;
+  justify-content: center;
+}
+#customer-login .m-dialog .m-dialog__container .m-dialog__content {
+  display: block;
+  margin: 12px 0;
+
+}
+#customer-login .m-textfield {
+  padding: 20px 12px;
+}
+
+.input-password {
+  position: relative;
+}
+.btn-show-pass {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: calc(50% + 5px);
+  width: 16px;
+  height: 16px;
+  background: url(../../../assets/icons/icon-hide-pass.svg) center no-repeat;
+}
+.btn-show-pass.active {
+  display: block;
+  background: url(../../../assets/icons/icon-show-pass.svg) center no-repeat;
+}
+.forgot-password {
+  font-size: 14px;
+  text-align: right;
+}
+.forgot-password a {
+  color: #ec8000;
+}
+.m-btn-login {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 40px !important;
+  font-size: 16px !important;
+  font-weight: 500;
+}
+.not-account {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.not-account span {
+  color: #8c8c8c;
+}
+.not-account p {
+  color: #ec8000;
+  cursor: pointer;
+}
+.have-account {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.have-account span {
+  color: #8c8c8c;
+}
+.have-account p {
+  color: #ec8000;
+  cursor: pointer;
+}
+.forgot-password a:hover,
+.not-account p:hover {
+  color: #ff8d07;
+}
+.login-with {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.login-method{
+  margin-bottom: 20px;
+  width: 100%;
+
+}
+.login-with--line {
+  height: 1px;
+  width: 70px;
+  background-color: #9ea1a5;
+}
+.login-with--title {
+  padding: 5px 10px;
+  background-color: #fff;
+  color: #9ea1a5;
+  font-size: 14px;
+}
+.login-method-list {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.login-method-item {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin: 0 4px;
+  cursor: pointer;
+  font-weight: bold;
+  background-repeat: no-repeat;
+  background-size: 15%;
+  background-position: 30px center;
+}
+.login-method-item:hover{
+  background-color: #dfe0e0;
+}
+.login-method-item[method="Google"] {
+  background-image: url(../../../assets/icons/google.png);
+  background-position: 38px center;
+}
+.login-method-item[method="Facebook"] {
+  background-image: url(../../../assets/icons/facebook.png);
+}
+.login-method-item span{
+  font-size: 16px;
+  margin-left: 12px;
+}
+
+.register-policy{
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
+  width: 80%
+}
+.register-policy a{
+  font-size: 13px;
+}

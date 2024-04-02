@@ -15,7 +15,7 @@ const menu = [
         path: "category-management",
     },
     {
-        title: "Quản lý nhà sản xuất",
+        title: "Quản lý nhà xuất bản",
         icon: "",
         path: "publisher-management",
     },

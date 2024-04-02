@@ -1,4 +1,6 @@
-﻿using BookShopOnline.Core.Interfaces.Infrastructures;
+﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -74,6 +76,12 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<int> UpdateHaveImageAsync(IFormFile? image, string dataJson)
         {
             var res = await _dbContext.UpdateHaveImageAsync<TEntity>(image, dataJson);
+            return res;
+        }
+
+        public async Task<PagingEntity<TEntity>> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber)
+        {
+            var res = await _dbContext.GetFilterPagingAsync<TEntity>(searchString, pageSize, pageNumber);
             return res;
         }
     }
