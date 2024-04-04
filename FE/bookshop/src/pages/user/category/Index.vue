@@ -581,19 +581,7 @@ export default {
   font-size: 18px;
   top: calc(-3px / 2);
   left: calc(4px / 2);
-  /* content: "";
-  width: 9px;
-  height: 5px;
-  top: calc(7px / 2);
-  left: calc(5px / 2);
-  border: 3px solid #50b83c;
-  border-top: none;
-  border-right: none;
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg); */
+  
 }
 
 .check-box-item label {

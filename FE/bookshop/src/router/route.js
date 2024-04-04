@@ -11,6 +11,8 @@ import HomeUserPage from "../pages/user/home/Index.vue";
 import CartPage from "../pages/user/cart/Index.vue";
 import CategoryUserPage from "../pages/user/category/Index.vue";
 import ProdcutPage from "../pages/user/product/Index.vue";
+import UserAccountPage from "../pages/user/account/Index.vue";
+import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 
 const routes = [
   {
@@ -44,6 +46,22 @@ const routes = [
           ViewRouterContainer: ProdcutPage,
         },
         props: true,
+      },
+      {
+        path: "customer/account",
+        name: "account",
+        components: {
+          ViewRouterContainer: UserAccountPage,
+        },
+        children: [
+          {
+            path: "user-info",
+            name: "edit-account",
+            components: {
+              ViewRouterMainContentAccount: InfoAccountUserPage,
+            },
+          },
+        ],
       },
     ],
   },

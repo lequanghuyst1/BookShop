@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import menu from "@/js/data/siderbar";
+import menu from "@/js/resource/siderbar";
 export default {
   name: "TheSidebar",
   data() {
@@ -47,3 +47,4 @@ export default {
 <style scoped>
 @import url(../css/sidebar.css);
 </style>
+@/js/resource/siderbar
