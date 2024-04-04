@@ -13,6 +13,7 @@ import CategoryUserPage from "../pages/user/category/Index.vue";
 import ProdcutPage from "../pages/user/product/Index.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
+import BookAddressPage from "../pages/user/account/BookAddress.vue";
 
 const routes = [
   {
@@ -60,6 +61,16 @@ const routes = [
             components: {
               ViewRouterMainContentAccount: InfoAccountUserPage,
             },
+          },
+          {
+            path: "address-info",
+            name: "address-account",
+            components: {
+              ViewRouterMainContentAccount: BookAddressPage,
+            },
+            children: {
+              
+            }
           },
         ],
       },

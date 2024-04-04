@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 
 import router from './router/route';
+import axios from 'axios';
 
 import MButton from "./components/base/button/MButton.vue";
 import MButtonNoText from "./components/base/button/MButtonNoText.vue";
@@ -64,6 +65,7 @@ app.config.globalProperties.$languageCode = "VN";
 app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$accessToken = '1';
+app.config.globalProperties.$axios = axios;
 
 app.use(
     VueTippy,

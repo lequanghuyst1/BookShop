@@ -1,13 +1,12 @@
 <template>
   <div class="sidebar-account">
     <ul class="sidebar-account-list">
-      <li class="sidebar-account-item">
-        <router-link
-          v-for="(item, index) in menu"
-          :key="index"
-          :to="item.path"
-          class="sidebar-account-item-link"
-        >
+      <li
+        v-for="(item, index) in menu"
+        :key="index"
+        class="sidebar-account-item"
+      >
+        <router-link :to="item.path" class="sidebar-account-item-link">
           <div class="sidebar-account-item-icon">
             <i :class="item.icon"></i>
           </div>
@@ -15,6 +14,17 @@
             {{ item.title }}
           </p>
         </router-link>
+      </li>
+      <li class="sidebar-account-item">
+        <a class="sidebar-account-item-link">
+          <div
+            class="sidebar-account-item-icon"
+            style="transform: rotate(180deg)"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </div>
+          <p class="sidebar-account-item-title">Thoát tài khoản</p>
+        </a>
       </li>
     </ul>
   </div>
@@ -40,7 +50,8 @@ export default {
 }
 .sidebar-account .sidebar-account-list .sidebar-account-item {
   list-style: none;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
 }
 .sidebar-account-list .sidebar-account-item a {
   display: flex;

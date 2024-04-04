@@ -1,5 +1,5 @@
 <template>
-  <div class="row group-input-account">
+  <div class="row group-input">
     <div class="input-label">
       <label :for="id" class=""
         >{{ title }}<span v-if="required" class="field-required">*</span></label
@@ -13,9 +13,9 @@
         v-model="inputValue"
         ref="refInput"
         class="m-textfield"
-        :class="{ 'm-textfield-error': messageValue }"
+        :class="{ 'm-textfield-error': errMessage }"
       />
-      <span class="m-error-message">{{ messageValue }}</span>
+      <span class="m-error-message">{{ errMessage }}</span>
     </div>
   </div>
 </template>
@@ -48,13 +48,29 @@ export default {
       required: false,
     },
   },
+  created(){
+  },
   watch: {
-    errorMessage(newValue) {
-      this.messageValue = newValue;
+     /**
+     * Hàm theo dõi giá trị thay đổi của value
+     * @param {string} newValue
+     * Author: LQHUY(08/12/2023)
+     */
+     inputValue: function (newValue) {
+      if (newValue === null || newValue === "" || newValue === undefined) {
+        this.errMessage = this.errorMessage;
+        //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
+        this.$emit("update:modelValue", null);
+      } else {
+        this.errMessage = "";
+        this.$emit("update:modelValue", newValue);
+      }
     },
-    inputValue(newValue) {
-      this.$emit("update:modelValue", newValue);
+      
+    errorMessage: function(newValue) {
+      this.errMessage = newValue;
     },
+    
   },
   methods: {
     focusInput() {
@@ -63,22 +79,22 @@ export default {
   },
   data() {
     return {
-      messageValue: null,
+      errMessage: null,
       inputValue: null,
     };
   },
 };
 </script>
 <style scoped>
-.group-input-account {
+.group-input {
   padding: 4px 0;
 }
-.group-input-account .input-label {
+.group-input .input-label {
   width: 186px;
   height: 32px;
   transform: translateY(0px);
 }
-.group-input-account label {
+.group-input label {
   height: 100%;
   display: flex;
   align-items: center;
@@ -88,11 +104,11 @@ export default {
   color: #c92127;
   margin-left: 3px;
 }
-.group-input-account .m-textfield {
+.group-input .m-textfield {
   height: 32px;
   padding: 8px 12px 9px 12px;
 }
-.group-input-account .m-textfield::placeholder {
+.group-input .m-textfield::placeholder {
   font-style: normal;
 }
 .group-input-dateofbirth input {
