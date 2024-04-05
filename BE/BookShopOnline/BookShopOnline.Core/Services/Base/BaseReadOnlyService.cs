@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using AutoMapper;
+using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using System;
@@ -12,10 +13,14 @@ namespace BookShopOnline.Core.Services.Base
     public abstract class BaseReadOnlyService<TEntity, TDto> : IBaseReadOnlyService<TDto>
     {
         protected IBaseRepository<TEntity> _baseRepository;
+        readonly IMapper _mapper;
 
-        public BaseReadOnlyService(IBaseRepository<TEntity> baseRepository)
+
+        public BaseReadOnlyService(IBaseRepository<TEntity> baseRepository , IMapper mapper)
         {
             _baseRepository = baseRepository;
+            _mapper = mapper;
+
         }
 
         public async Task<IEnumerable<TDto>> GetAllAsync()
@@ -51,6 +56,10 @@ namespace BookShopOnline.Core.Services.Base
             return res;
         }
 
-        public abstract TDto MapEntityToDto(TEntity entity);
+        public TDto MapEntityToDto(TEntity entity)
+        {
+            var entityDto = _mapper.Map<TDto>(entity);
+            return entityDto;
+        }
     }
 }

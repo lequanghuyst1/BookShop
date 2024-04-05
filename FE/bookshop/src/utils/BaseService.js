@@ -24,11 +24,19 @@ class BaseService {
     return res;
   }
   async post(data) {
-    const res = await this.baseAxios.post(this.baseUrl, data);
+    const res = await this.baseAxios.post(`${this.baseUrl}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res;
   }
   async put(id, data) {
-    const res = await this.baseAxios.put(`${this.baseUrl}/${id}`, data);
+    const res = await this.baseAxios.put(`${this.baseUrl}/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res;
   }
   async delete(id) {
@@ -40,22 +48,6 @@ class BaseService {
       `${this.baseUrl}/DeleteMany`,
       lstId
     );
-    return res;
-  }
-  async postHaveImage(data) {
-    const res = await this.baseAxios.post(`${this.baseUrl}/HaveImage`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return res;
-  }
-  async putHaveImage(data) {
-    const res = await this.baseAxios.put(`${this.baseUrl}/HaveImage`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
     return res;
   }
 }

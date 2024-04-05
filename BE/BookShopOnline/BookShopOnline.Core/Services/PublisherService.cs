@@ -16,15 +16,15 @@ namespace BookShopOnline.Core.Services
     {
         readonly IMapper _mapper;
 
-        public PublisherService(IPublisherRepository publisherRepository, IMapper mapper) : base(publisherRepository)
+        public PublisherService(IPublisherRepository publisherRepository, IMapper mapper, IImageService imageService) : base(publisherRepository, mapper, imageService)
         {
             _mapper = mapper;
         }
 
-        public override PublisherDto MapEntityToDto(Publisher publisher)
-        {
-            var pulisherDto = _mapper.Map<PublisherDto>(publisher);
-            return pulisherDto;
-        }
+        //public override PublisherDto MapEntityToDto(Publisher publisher)
+        //{
+        //    var pulisherDto = _mapper.Map<PublisherDto>(publisher);
+        //    return pulisherDto;
+        //}
     }
 }

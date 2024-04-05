@@ -6,7 +6,7 @@
   width: 450px;
 }
 #customer-login .m-dialog .m-dialog__footer {
-  height: auto;
+  height: auto !important;
   justify-content: center;
 }
 #customer-login .m-dialog .m-dialog__container .m-dialog__content {

@@ -304,10 +304,9 @@ export default {
           const value = this.errorsMessage[key];
           if (value !== null) {
             this.$refs[key].focusInput();
-            break;
+            return;
           }
         }
-        return;
       }
       this.address.addressName =
         `${this.address.houseNumber},${this.wardSelected.name},` +
@@ -353,6 +352,8 @@ export default {
         this.errorsMessage[field] = `${title} không được phép để trống`;
       } else {
         this.errorsMessage[field] = null;
+        delete this.errorsMessage[field];
+
       }
     },
 

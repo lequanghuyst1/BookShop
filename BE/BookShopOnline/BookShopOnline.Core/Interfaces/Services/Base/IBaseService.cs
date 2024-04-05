@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookShopOnline.Core.Entitites;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,8 @@ namespace BookShopOnline.Core.Interfaces.Services.Base
 {
     public interface IBaseService<TEntity, TDto> : IBaseReadOnlyService<TDto>
     {
-        Task<int> InsertServiceAsync(TEntity entity);
-        Task<int> InsertHaveImageServiceAsync(IFormFile? imageFile, string dataJson);
-        Task<int> UpdateServiceAsync(TEntity entity, Guid id);
-        Task<int> UpdateHaveImageServiceAsync(IFormFile? imageFile, string dataJson);
+        Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile);
+        Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile);
         Task<int> DeleteServiceAsync(Guid id);
         Task<int> DeleteManyServiceAsync(List<Guid> ids);
     }

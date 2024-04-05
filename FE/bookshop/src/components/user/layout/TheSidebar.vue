@@ -11,14 +11,18 @@
         <ul class="list-unstyled mb-0">
           <li
             v-for="item in categories"
-            :key="item.categoryId"
+            :key="item.CategoryId"
             class="sidbar__menu-item"
           >
             <router-link
               class="text-decoration-none"
               @click="goToCategoryPage"
-              :to="{ name: 'category', path: 'collecttion' ,params: {id: item.categoryId } }"
-              >{{ item.categoryName }}</router-link
+              :to="{
+                name: 'category',
+                path: 'collecttion',
+                params: { id: item.CategoryId },
+              }"
+              >{{ item.CategoryName }}</router-link
             >
           </li>
         </ul>
@@ -95,8 +99,7 @@ export default {
         this.$emitter.emit("handleApiError", error);
       }
     },
-    goToCategoryPage(){
-    }
+    goToCategoryPage() {},
   },
   data() {
     return {

@@ -14,10 +14,11 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity?> GetByIdAsync(Guid entityId);
         Task<PagingEntity<TEntity>> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber);
+        //Task<int> InsertAsync(string dataJson, IFormFile? imageFile);
         Task<int> InsertAsync(TEntity entity);
-        Task<int> InsertHaveImageAsync(IFormFile? image, string dataJson);
-        Task<int> UpdateAsync(TEntity entity, Guid entityId);
-        Task<int> UpdateHaveImageAsync(IFormFile? image, string dataJson);
+
+        //Task<int> UpdateAsync(string dataJson, IFormFile? imageFile);
+        Task<int> UpdateAsync(Guid id, TEntity entity);
         Task<int> DeleteAsync(Guid id);
         Task<int> DeleteManyAsync(List<Guid> ids);
         Task<bool> CheckExitEntityNameAsync(string entityName);

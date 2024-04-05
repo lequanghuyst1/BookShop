@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Interfaces.Services.Base;
+﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Services.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,32 +14,21 @@ namespace BookShopOnline.Api.Controllers.Base
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertAsync(TEntity entity)
+        public async Task<IActionResult> InsertAsync([FromForm] string dataJson,  IFormFile? imageFile)
         {
-            var res = await _baseService.InsertServiceAsync(entity);
+            var res = await _baseService.InsertServiceAsync(dataJson, imageFile);
             return StatusCode(201, res);
         }
 
-        [HttpPost("HaveImage")]
-        public async Task<IActionResult> InsertHaveImageAsync([FromForm] string dataJson, IFormFile? imageFile)
-        {
-            var res = await _baseService.InsertHaveImageServiceAsync(imageFile, dataJson);
-            return StatusCode(201, res);
-        }
+
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(TEntity entity, Guid id)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromForm] string dataJson, IFormFile? imageFile)
         {
-            var res = await _baseService.UpdateServiceAsync(entity, id);
+            var res = await _baseService.UpdateServiceAsync(id, dataJson, imageFile);
             return Ok(res);
         }
 
-        [HttpPut("HaveImage")]
-        public async Task<IActionResult> UpdateHaveImageAsync([FromForm] string dataJson, IFormFile? imageFile)
-        {
-            var res = await _baseService.UpdateHaveImageServiceAsync(imageFile, dataJson);
-            return Ok(res);
-        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)

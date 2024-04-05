@@ -16,9 +16,11 @@ namespace BookShopOnline.Core.Entitites
         public Guid BookId { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
+        public double Price { get; set; }
+        public string Author { get; set; }
+        public int QuantityImported { get; set; }
         public string? Description { get; set; }
-        public double? Price { get; set; }
-        public string? Author { get; set; }
+
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
         public int? NumberOfPage { get; set; }
@@ -29,6 +31,5 @@ namespace BookShopOnline.Core.Entitites
         public string? CategoryName { get; set; }
         public string? PublisherName { get; set; }
         public int? QuantityInStock { get; set; }
-        public int QuantityImported { get; set; }
     }
 }

@@ -17,6 +17,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Handle pascalcase ouput result Json
+builder.Services.AddControllers()
+.AddJsonOptions(x =>
+{
+    x.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
+
 //Add the CORS services
 builder.Services.AddCors(options =>
 {
@@ -34,10 +41,15 @@ builder.Services.AddAutoMapper
 
 //config DI
 builder.Services.AddScoped<IDbContext, MariaDbContext>();
-builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 

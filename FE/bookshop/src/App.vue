@@ -7,14 +7,20 @@
     :status="statusToast"
   ></MToast>
 
-  <MDialogNotice
-    v-if="showDialogNotice"
-    :title="titleDialog"
+  <MDialog
+    v-if="isShowDialogWarning"
+    title="Cảnh báo"
+    @onCloseDialog="onHideDialogWaring"
     :message="messageDialog"
-    :type="typeDialog"
-    :isBtnCancel="isBtnCancel"
+    :type="this.$Resource[this.$languageCode].Dialog.Type.Warning"
   >
-  </MDialogNotice>
+    <template #footerRight>
+      <MButton
+        @click="this.isShowDialogWarning = false"
+        text="Xác nhận"
+      ></MButton>
+    </template>
+  </MDialog>
 
   <MLoading v-show="showLoading"></MLoading>
 </template>
@@ -23,13 +29,13 @@ export default {
   name: "App",
   created() {
     this.$emitter.on("onShowToastMessage", this.onShowToastMessage);
-    this.$emitter.on("toggleDialogNotice", this.toggleDialogNotice);
+    this.$emitter.on("onShowDialogWarning", this.onShowDialogWarning);
     this.$emitter.on("toggleShowLoading", this.toggleShowLoading);
     this.$emitter.on("handleApiError", this.handleApiError);
   },
   beforeUnmount() {
     this.$emitter.off("onShowToastMessage");
-    this.$emitter.off("toggleDialogNotice");
+    this.$emitter.off("onShowDialogWarning");
     this.$emitter.off("toggleShowLoading");
     this.$emitter.off("handleApiError");
   },
@@ -48,21 +54,13 @@ export default {
       }, 3000);
     },
 
-    /**
-     * Hàm hiển thị dialog thông báo
-     * @param {string} title
-     * @param {string} message
-     * @param {string} type
-     * @param {boolean} isBtnCancel
-     * Author: LQHUY (5/12/2023)
-     * Update: LQHUY (8/12/2023)
-     */
-    toggleDialogNotice(isBtnCancel, isShow, title, message, type) {
-      this.isBtnCancel = isBtnCancel;
-      this.showDialogNotice = isShow;
-      this.titleDialog = title;
+    onShowDialogWarning(message) {
+      this.isShowDialogWarning = true;
       this.messageDialog = message;
-      this.typeDialog = type;
+    },
+
+    onHideDialogWaring() {
+      this.isShowDialogWarning = false;
     },
 
     /**
@@ -84,57 +82,40 @@ export default {
         switch (req.response.status) {
           //Lỗi từ người dùng nhập thông tin không hợp lệ
           case 400:
-            this.$emitter.emit(
-              "toggleDialogNotice",
-              false,
-              true,
-              this.$Resource[this.$languageCode].WanrningMessage,
-              Object.values(req.response.data.errors).join(","),
-              this.$Resource[this.$languageCode].Dialog.Type.Warning
+            this.onShowDialogWarning(
+              Object.values(req.response.data.errors).join(",")
             );
             break;
           //Lỗi khi tải khoản đăng nhập không đúng
           case 401:
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Error,
-              this.$Resource[this.$languageCode].InCorrectAccount,
-              this.$Resource[this.$languageCode].ToastMessage.Status.Error
+            this.onShowDialogWarning(
+              Object.values(req.response.data.errors).join(",")
             );
             break;
           //Lỗi khi không có quyền truy cập
           case 403:
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Error,
-              this.$Resource[this.$languageCode].NotHaveAccess,
-              this.$Resource[this.$languageCode].ToastMessage.Status.Error
+            this.onShowDialogWarning(
+              Object.values(req.response.data.errors).join(",")
             );
             break;
           //Lỗi khi đường dẫn gọi API lỗi
           case 404:
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Error,
-              this.$Resource[this.$languageCode].InCorrectUrlLink,
-              this.$Resource[this.$languageCode].ToastMessage.Status.Error
+            this.onShowDialogWarning(
+              Object.values(req.response.data.errors).join(",")
             );
             break;
           //Lỗi từ phía backend
           case 500:
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Error,
-              req.response.data.UserMsg,
-              this.$Resource[this.$languageCode].ToastMessage.Status.Error
+            this.onShowDialogWarning(
+              Object.values(req.response.data.errors).join(",")
             );
             break;
           default:
@@ -160,11 +141,8 @@ export default {
       statusToast: "",
 
       /**data dialog notice */
-      showDialogNotice: false,
-      isBtnCancel: false,
-      titleDialog: "",
+      isShowDialogWarning: false,
       messageDialog: "",
-      typeDialog: "",
       showLoading: false,
     };
   },

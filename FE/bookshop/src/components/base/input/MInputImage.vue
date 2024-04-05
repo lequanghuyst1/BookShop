@@ -12,10 +12,7 @@
         @change="previewFiles($event)"
       />
       <img
-        :src="
-          newImage ||
-          'https://localhost:7015/images/upload-image.png'
-        "
+        :src="newImage || 'https://localhost:7015/images/upload-image.png'"
         style="
           width: 100%;
           border: 1px solid #e0e0e0;
@@ -36,13 +33,16 @@ export default {
   created() {},
   props: {
     label: {
-      typeof: String,
+      type: String,
     },
     modelValue: {
-      typeof: String,
+      type: [String, File],
     },
     imagePath: {
-      typeof: String,
+      type: String,
+    },
+    id: {
+      type: String,
     },
   },
   data() {

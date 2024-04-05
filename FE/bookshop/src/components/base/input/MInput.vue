@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label :for="id" class="m-lable" :class="{ 'label--required': required }">{{
+    <label :for="id" class="m-lable" :class="{ 'label--required': this.rules?.required }">{{
       label
     }}</label>
     <input
@@ -12,7 +12,7 @@
       :placeholder="placeholder"
       :style="{ 'text-align': textAlign || 'left' }"
       ref="input"
-      @blur="onBulrInput"
+      @blur="onBulrInput()"
     />
     <span class="m-error-message">{{ messageError }}</span>
   </div>
@@ -63,6 +63,10 @@ export default {
     formatMoney: {
       type: Boolean,
       default: false,
+    },
+    rules: {
+      type: Object,
+      required: false,
     },
   },
   data() {
@@ -125,8 +129,8 @@ export default {
      * Set border màu đỏ cho ô input lỗi
      * Author: LQHUY(18/03/2024)
      */
-    setBorderError(){
-      this.$refs["input"].classList.add('m-textfield-error');
+    setBorderError() {
+      this.$refs["input"].classList.add("m-textfield-error");
     },
     /**
      * Blur ra ngoài ô input validate
@@ -145,6 +149,23 @@ export default {
           //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
         } else {
           this.messageError = "";
+        }
+      }
+    },
+    validate() {
+      if (this.rules) {
+        if (this.rules?.required === true) {
+          if (
+            this.value === null ||
+            this.value === "" ||
+            this.value === undefined
+          ) {
+            this.messageError = this.$Resource[this.$languageCode].ErrorMessage(
+              this.label
+            );
+          } else {
+            this.messageError = null;
+          }
         }
       }
     },

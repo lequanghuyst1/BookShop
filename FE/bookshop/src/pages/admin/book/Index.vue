@@ -11,7 +11,7 @@
           id="btn-add-employee"
           text="Thêm mới"
           style="font-weight: 600"
-          @click="onBtnAddNew"
+          @click="onCreateItem"
         >
         </MButton>
       </tippy>
@@ -43,7 +43,7 @@
             class="m-button-icon m-button--sub m-button-none"
             id="btn-delete-all"
             text="Xóa tất cả"
-            @click="btnDeleteAllBook"
+            @click="onDeleteAll"
           >
           </MButton>
         </div>
@@ -62,16 +62,17 @@
     <!-- Table -->
 
     <MTable
+      id="book-data"
+      idObject="BookId"
+      codeObject="BookCode"
       :columnsTable="columnsTable"
-      idObject="bookId"
-      codeObject="bookCode"
       :pageData="pageData"
       :selectAll="selectAll"
       :image="true"
-      @toggleShowForm="toggleShowForm"
-      @updateItemId="updateItemId"
+      :imageData="imageData"
+      @onDelete="onDeleteItem"
+      @onUpdate="onUpdateItem"
       @updateListItemId="updateListItemId"
-      @updateItemIdClone="updateItemIdClone"
       @toggleShowToolbarAction="toggleShowToolbarAction"
       @updateTotalRecordSelected="updateTotalRecordSelected"
     >
@@ -86,9 +87,30 @@
     ></MPagination>
     <BookDetail
       v-if="isShowForm"
-      @loadData="loadData"
+      @loadData="loadDataTable"
+      @onCloseForm="onCloseFormDetail"
+      :formMode="formMode"
       :bookIdSelected="bookIdSelected"
     ></BookDetail>
+
+    <MDialog
+      v-if="isShowDialogDelete"
+      title="Xác nhận xóa"
+      @onCloseDialog="onHideDialogDelete"
+      :message="messageDialog"
+      :type="this.$Resource[this.$languageCode].Dialog.Type.Question"
+    >
+      <template #footerLeft>
+        <MButton
+          @click="onHideDialogDelete"
+          class="m-button--sub"
+          text="Hủy"
+        ></MButton>
+      </template>
+      <template #footerRight>
+        <MButton @click="handleDeleteConfirm" text="Xác nhận"></MButton>
+      </template>
+    </MDialog>
   </div>
 </template>
 <script>
@@ -98,20 +120,13 @@ import bookService from "../../../utils/BookService";
 export default {
   name: "BookPage",
   components: { BookDetail },
-  created() {
-    this.loadData();
-    this.$emitter.on("toggleShowForm", this.toggleShowForm);
-    this.$emitter.on("deleteBook", this.deleteBook);
-    this.$emitter.on("deleteManyBook", this.deleteManyBook);
-  },
+  created() {},
   mounted() {
+    this.loadData();
+    this.loadDataImage();
     this.$emitter.emit("toggleShowLoadingTable", true);
   },
-  beforeUnmount() {
-    this.$emitter.off("toggleShowForm", this.toggleShowForm);
-    this.$emitter.off("deleteBook", this.deleteBook);
-    this.$emitter.off("deleteManyBook", this.deleteManyBook);
-  },
+  beforeUnmount() {},
   watch: {
     pageNumber(newValue) {
       if (newValue) {
@@ -123,6 +138,13 @@ export default {
     },
   },
   methods: {
+    onHideDialogDelete() {
+      this.isShowDialogDelete = false;
+    },
+    loadDataTable() {
+      this.loadData();
+      this.loadDataImage();
+    },
     async loadData() {
       this.$emitter.emit("toggleShowLoadingTable", true);
       try {
@@ -139,9 +161,9 @@ export default {
         const res = await bookService.getFilterPaging({ params });
         switch (res.status) {
           case 200:
-            this.pageData = res.data.data;
-            this.totalRecord = res.data.totalRecord;
-            this.totalPage = res.data.totalPage;
+            this.pageData = res.data.Data;
+            this.totalRecord = res.data.TotalRecord;
+            this.totalPage = res.data.TotalPage;
             this.$emitter.emit("toggleShowLoadingTable", false);
             break;
         }
@@ -151,22 +173,73 @@ export default {
         this.$emitter.emit("toggleShowLoadingTable", false);
       }
     },
-    onBtnAddNew() {
-      this.toggleShowForm(true);
-      this.bookIdSelected = null;
-    },
-    toggleShowForm(isShow) {
-      this.isShowForm = isShow;
-    },
-    updateItemId(value) {
-      this.bookIdSelected = value;
-    },
-    async deleteBook() {
+
+    async loadDataImage() {
       try {
+        const res = await this.$httpRequest.get("Images");
+        switch (res.status) {
+          case 200:
+            this.imageData = res.data;
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("handleApiError", error);
+      }
+    },
+
+    onCreateItem() {
+      this.bookIdSelected = null;
+      this.isShowForm = true;
+      this.formMode = this.$Enum.FormMode.Add;
+    },
+
+    onUpdateItem(id) {
+      this.bookIdSelected = id;
+      this.isShowForm = true;
+      this.formMode = this.$Enum.FormMode.Edit;
+    },
+
+    onShowFormDetail() {
+      this.isShowForm = true;
+    },
+
+    onCloseFormDetail() {
+      this.isShowForm = false;
+    },
+
+    updateListItemId(ids) {
+      this.lstBookIdSelected = ids;
+    },
+
+    onDeleteItem(message, id) {
+      this.typeDelete = "single";
+      this.isShowDialogDelete = true;
+      this.messageDialog = message;
+      this.bookIdSelected = id;
+    },
+
+    onDeleteAll() {
+      this.typeDelete = "all";
+      this.isShowDialogDelete = true;
+      this.messageDialog =
+        this.$Resource[this.$languageCode].ConfirmDeleteAll("Cuốn sách");
+    },
+
+    async handleDeleteConfirm() {
+      if (this.typeDelete === "single") {
+        await this.handleDeteleItem();
+      } else if (this.typeDelete === "all") {
+        await this.handleDeleteMany();
+      }
+    },
+
+    async handleDeteleItem() {
+      try {
+        this.onHideDialogDelete();
         const res = await bookService.delete(this.bookIdSelected);
         switch (res.status) {
           case 200:
-            this.$emitter.emit("toggleDialogNotice", false);
             this.$emitter.emit(
               "onShowToastMessage",
               this.$Resource[this.$languageCode].ToastMessage.Type.Success,
@@ -177,24 +250,14 @@ export default {
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError");
         console.log(error);
       }
     },
-    updateListItemId(ids) {
-      this.lstBookIdSelected = ids;
-    },
-    btnDeleteAllBook() {
-      this.$emitter.emit(
-        "toggleDialogNotice",
-        true,
-        true,
-        "Xác nhận xóa",
-        this.$Resource[this.$languageCode].ConfirmDeleteAll("Cuốn sách"),
-        this.$Resource[this.$languageCode].Dialog.Type.Question
-      );
-    },
-    async deleteManyBook() {
+
+    async handleDeleteMany() {
       try {
+        this.onHideDialogDelete();
         const res = await bookService.deleteMany({
           data: this.lstBookIdSelected,
         });
@@ -206,21 +269,25 @@ export default {
               this.$Resource[this.$languageCode].ToastMessage.Type.Success,
               "Xoá thành công",
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
-            );
-            this.loadData();
+            ); 
+            this.loadDataTable();
             this.btnRemoveRowSelected();
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError");
         console.log(error);
       }
     },
+
     toggleShowToolbarAction(isShow) {
       this.isShowToolbarAction = isShow;
     },
+
     updateTotalRecordSelected(total) {
       this.totalRecordSelected = total;
     },
+
     btnRemoveRowSelected() {
       this.selectAll = false;
       setTimeout(() => {
@@ -228,8 +295,15 @@ export default {
       }, 500);
     },
   },
+  provide() {
+    return {
+      pageSizeDefault: 10,
+    };
+  },
   data() {
     return {
+      isShowDialogDelete: false,
+      formMode: this.$Enum.FormMode.Add,
       columnsTable: bookColumns,
       pageData: [],
       isShowForm: false,
@@ -244,6 +318,9 @@ export default {
       pageNumber: 1,
       totalRecord: null,
       totalPage: null,
+      typeDelete: "single",
+
+      imageData: [],
     };
   },
 };

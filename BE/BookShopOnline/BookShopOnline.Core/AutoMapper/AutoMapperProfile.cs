@@ -3,12 +3,12 @@ using BookShopOnline.Core.Dto.Book;
 using BookShopOnline.Core.Dto.Category;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Dto.Publisher;
-using BookShopOnline.Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookShopOnline.Core.Dto.Image;
 
 namespace BookShopOnline.Core.AutoMapper
 {
@@ -19,6 +19,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Category, CategoryDto>();
             CreateMap<Book, BookDto>();
             CreateMap<Publisher, PublisherDto>();
+            CreateMap<Image, ImageDto>();
         }
     }
 }

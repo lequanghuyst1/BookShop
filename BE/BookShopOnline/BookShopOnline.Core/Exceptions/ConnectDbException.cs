@@ -10,12 +10,7 @@ namespace BookShopOnline.Core.Exceptions
     public class ConnectDbException : Exception
     {
         #region Properties
-        /// <summary>
-        /// Mã lỗi
-        /// </summary>
-        /// Created By: LQHUY(25/12/2023)
-        public HttpStatusCode status { get; set; }
-
+   
         /// <summary>
         /// Danh sách lỗi 
         /// </summary>
@@ -25,9 +20,8 @@ namespace BookShopOnline.Core.Exceptions
 
         #region Constructors
         public ConnectDbException() { }
-        public ConnectDbException(HttpStatusCode status, Dictionary<string, string[]> errors)
+        public ConnectDbException(Dictionary<string, string[]> errors)
         {
-            this.status = status;
             this.errors = errors;
         }
 
@@ -35,9 +29,8 @@ namespace BookShopOnline.Core.Exceptions
         {
         }
 
-        public ConnectDbException(HttpStatusCode status, string message, Dictionary<string, string[]> errors) : base(message)
+        public ConnectDbException(string message, Dictionary<string, string[]> errors) : base(message)
         {
-            this.status = status;
             this.errors = errors;
         }
         #endregion

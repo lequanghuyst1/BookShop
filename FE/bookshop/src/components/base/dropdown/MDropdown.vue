@@ -47,13 +47,13 @@ export default {
     },
   },
   inject: {
-    pageSize: {
+    pageSizeDefault: {
       type: [Number],
       required: false,
     },
   },
   created() {
-    this.outputValue = this.pageSize;
+    this.outputValue = this.pageSizeDefault;
   },
   mounted() {
     /* bắt sự kiện khi click ra ngoài màn hình */

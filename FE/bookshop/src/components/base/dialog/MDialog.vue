@@ -8,33 +8,32 @@
 
         <div class="m-dialog__header-action">
           <div
-            v-show="isShowIconHelp"
-            v-tippy="{
-              content: 'Giúp',
-              placement: 'bottom',
-            }"
-            class="m-dialog__header-help"
-          >
-            <i class="fa-regular fa-circle-question"></i>
-          </div>
-
-          <div
             v-tippy="{
               content: 'Thoát',
               placement: 'bottom',
             }"
             class="m-dialog__header-close"
-            @click="btnHiddenForm"
+            @click="onCloseDialog"
           >
             <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
       </div>
       <div class="m-dialog__content">
-        <slot name="body"></slot>
+        <div class="m-dialog__content-icon" :class="className[type]">
+          <i :class="icons[type]"></i>
+        </div>
+        <p class="m-dialog__content-message">
+          {{ message }}
+        </p>
       </div>
       <div class="m-dialog__footer">
-        <slot name="footer"></slot>
+        <div class="m-dialog__footer-left">
+          <slot name="footerLeft"></slot>
+        </div>
+        <div class="m-dialog__footer-right">
+          <slot name="footerRight"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -47,20 +46,38 @@ export default {
       type: String,
       required: true,
     },
-    isShowIconHelp: {
+
+    message: {
       type: String,
-      required: false,
+      required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+  },
+  emits: ["onCloseDialog"],
+  data() {
+    return {
+      icons: {
+        question: "fa-solid fa-circle-question",
+        warning: "fa-solid fa-triangle-exclamation",
+        info: "fa-solid fa-circle-info",
+      },
+      className: {
+        question: "m-dialog__content-icon--question",
+        warning: "m-dialog__content-icon--warning",
+        info: "m-dialog__content-icon--info",
+      },
+    };
   },
   methods: {
     /**
      * Hàm ẩn form hoặc dialog
      * Author: LQHUY (06/12/2023)
      */
-    btnHiddenForm() {
-      this.$emitter.emit("toggleDialogNotice", false);
-      this.$emitter.emit("toggleShowForm");
-      this.$emitter.emit("onHideFormLoginOrRegister");
+    onCloseDialog() {
+      this.$emit("onCloseDialog");
     },
   },
 };

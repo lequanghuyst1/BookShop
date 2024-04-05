@@ -1,241 +1,265 @@
 <template>
-  <MForm id="m-dialog__info-book" title="Thêm mới sách">
-    <template #form>
-      <form action="" style="width: 100%; height: 100%;">
-        <b-row></b-row>
-        <div class="row">
-          <div class="col-2">
-            <MInputImage
-              v-model:imagePath="book.image"
-              v-model="imageFile"
-              label="Chọn ảnh"
-            ></MInputImage>
+  <div id="m-dialog__info-book" class="m-dialog">
+    <div class="m-dialog__overlay"></div>
+    <div class="m-dialog__container">
+      <div class="m-dialog__header">
+        <h3 class="m-dialog__header-title">
+          {{
+            this.formMode === this.$Enum.FormMode.Add
+              ? "Thêm mới sách"
+              : "Sửa thông tin sách"
+          }}
+        </h3>
+        <div class="m-dialog__header-action">
+          <div
+            v-tippy="{
+              content: 'Giúp',
+              placement: 'bottom',
+            }"
+            class="m-dialog__header-help"
+          >
+            <i class="fa-regular fa-circle-question"></i>
           </div>
-          <div class="col l-10">
-            <div class="row">
-              <div class="col l-3">
-                <MInput
-                  ref="bookCode"
-                  v-model="book.bookCode"
-                  label="Mã sách"
-                  :message="lstErrorMessage.bookCode"
-                ></MInput>
-              </div>
-              <div class="col l-5">
-                <MInput
-                  ref="bookName"
-                  v-model="book.bookName"
-                  label="Tên sách"
-                  :message="lstErrorMessage.bookName"
-                ></MInput>
-              </div>
-              <div class="col l-4">
-                <MInput
-                  ref="author"
-                  v-model="book.author"
-                  label="Tác giả"
-                ></MInput>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col l-6">
-                <MCombobox
-                  label="Danh mục"
-                  url="Categories"
-                  v-model="book.categoryId"
-                  propValue="categoryId"
-                  propText="categoryName"
-                  ref="category"
-                  id="cbCategory"
-                ></MCombobox>
-              </div>
-              <div class="col l-6">
-                <MCombobox
-                  label="Nhà xuất bản"
-                  url="Publishers"
-                  v-model="book.publisherId"
-                  propValue="publisherId"
-                  propText="publisherName"
-                  ref="publisher"
-                  id="cbPublisher"
-                ></MCombobox>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col l-3">
-                <MInput
-                  ref="publicationDate"
-                  type="date"
-                  v-model="book.publicationDate"
-                  label="Ngày xuất bản"
-                ></MInput>
-              </div>
-              <div class="col l-3">
-                <MInput ref="price" v-model="book.price" label="Giá"></MInput>
-              </div>
-              <div class="col l-3">
-                <MInput
-                  ref="size"
-                  v-model="book.size"
-                  label="Khổ sách"
-                ></MInput>
-              </div>
-              <div class="col l-3">
-                <MInput
-                  ref="size"
-                  v-model="book.heavy"
-                  label="Khối lượng"
-                ></MInput>
-              </div>
-            </div>
+          <div
+            v-tippy="{
+              content: 'Đóng',
+              placement: 'bottom',
+            }"
+            class="m-dialog__header-close"
+            @click="this.$emit('onCloseForm')"
+          >
+            <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
-        <div class="row">
-          <div class="col l-3">
-            <MInput label="Số lượng nhập" v-model="book.quantityImported"></MInput>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col l-12">
-            <MTextarea label="Mô tả" v-model="book.description"></MTextarea>
-          </div>
-        </div>
-      </form>
-    </template>
-    <template #footer>
-      <MButton class="m-button--sub" text="Hủy"></MButton>
-      <div
-        v-if="
-          formMode === this.$Enum.FormMode.Add ||
-          formMode === this.$Enum.FormMode.Clone
-        "
-        class="m-dialog__group-button"
-      >
-        <MButton
-          v-tippy="{
-            content: 'Lưu',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Lưu"
-          class="m-button--sub"
-        ></MButton>
-        <MButton
-          v-tippy="{
-            content: 'Lưu và thêm mới',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Lưu và thêm mới"
-        ></MButton>
       </div>
-      <div
-        v-else-if="formMode === this.$Enum.FormMode.Edit"
-        class="m-dialog__group-button"
-      >
-        <MButton
-          v-tippy="{
-            content: 'Sửa thông tin',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Sửa thông tin"
-        ></MButton>
+      <div class="m-dialog__content">
+        <form action="" style="width: 100%; height: 100%">
+          <div class="row">
+            <div class="col-2">
+              <MInputImage
+                id="image"
+                v-model:imagePath="image.ImagePath"
+                v-model="imageFile"
+                label="Chọn ảnh"
+              ></MInputImage>
+            </div>
+            <div class="col l-10">
+              <div class="row">
+                <div class="col l-3">
+                  <MInput
+                    :ref="textFields.bookCode.ref"
+                    :label="textFields.bookCode.label"
+                    :rules="textFields.bookCode.rules"
+                    v-model="book.BookCode"
+                  ></MInput>
+                </div>
+                <div class="col l-5">
+                  <MInput
+                    :ref="textFields.bookName.ref"
+                    :label="textFields.bookName.label"
+                    :rules="textFields.bookName.rules"
+                    v-model="book.BookName"
+                  ></MInput>
+                </div>
+                <div class="col l-4">
+                  <MInput
+                    :ref="textFields.author.ref"
+                    :label="textFields.author.label"
+                    :rules="textFields.author.rules"
+                    v-model="book.Author"
+                  ></MInput>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l-6">
+                  <MCombobox
+                    url="Categories"
+                    propValue="CategoryId"
+                    propText="CategoryName"
+                    :ref="textFields.categoryId.ref"
+                    :label="textFields.categoryId.label"
+                    :rules="textFields.categoryId.rules"
+                    v-model="book.CategoryId"
+                    id="cbCategory"
+                  ></MCombobox>
+                </div>
+                <div class="col l-6">
+                  <MCombobox
+                    url="Publishers"
+                    propValue="PublisherId"
+                    propText="PublisherName"
+                    :ref="textFields.publisherId.ref"
+                    :label="textFields.publisherId.label"
+                    :rules="textFields.publisherId.rules"
+                    v-model="book.PublisherId"
+                    id="cbPublisher"
+                  ></MCombobox>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l-3">
+                  <MInput
+                    type="date"
+                    ref="PublicationDate"
+                    label="Ngày xuất bản"
+                    v-model="book.PublicationDate"
+                  ></MInput>
+                </div>
+                <div class="col l-3">
+                  <MInput
+                    :ref="textFields.price.ref"
+                    :label="textFields.price.label"
+                    :rules="textFields.price.rules"
+                    v-model="book.Price"
+                  ></MInput>
+                </div>
+                <div class="col l-3">
+                  <MInput
+                    ref="Size"
+                    label="Khổ sách"
+                    v-model="book.Size"
+                  ></MInput>
+                </div>
+                <div class="col l-3">
+                  <MInput
+                    ref="Heavy"
+                    label="Khối lượng"
+                    v-model="book.Heavy"
+                  ></MInput>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col l-3">
+              <MInput
+                :ref="textFields.quantityImported.ref"
+                :label="textFields.quantityImported.label"
+                :rules="textFields.quantityImported.rules"
+                v-model="book.QuantityImported"
+              ></MInput>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col l-12">
+              <MTextarea
+                id="description"
+                label="Mô tả"
+                v-model="book.Description"
+              ></MTextarea>
+            </div>
+          </div>
+        </form>
       </div>
-    </template>
-  </MForm>
+      <div class="m-dialog__footer">
+        <div class="m-dialog__footer-left">
+          <MButton
+            v-tippy="{
+              content: 'Hủy',
+              placement: 'top',
+            }"
+            class="m-button--sub"
+            @click="this.$emit('onCloseForm')"
+            text="Hủy"
+          ></MButton>
+        </div>
+        <div class="m-dialog__footer-right">
+          <div class="m-dialog__group-button">
+            <MButton
+              v-tippy="{
+                content: 'Thêm mới',
+                placement: 'top',
+              }"
+              @click="handleSaveDataWithMode"
+              :text="
+                this.formMode === this.$Enum.FormMode.Add
+                  ? 'Thêm mới'
+                  : 'Sửa thông tin'
+              "
+              class="m-button"
+            ></MButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import bookService from "@/utils/BookService";
+import TEXT_FIELD from "@/js/resource/text-field";
 export default {
   name: "BookDetail",
   props: {
     bookIdSelected: {
       type: String,
     },
+    formMode: {
+      type: Number,
+    },
   },
-  emits: ["loadData"],
+  emits: ["loadData", "onCloseForm"],
   created() {
-    if (this.formMode == this.$Enum.FormMode.Edit) {
-      this.getBookDetail();
-    } else {
-      this.getNewCode();
-    }
+    this.checkModeForm();
   },
   mounted() {
-    this.$refs["bookCode"].setFocus();
+    this.$refs[this.textFields.bookCode.ref].setFocus();
   },
   computed: {
-    /**
-     * Trạng thái của form (thêm, sửa, nhân bản)
-     * Author: LQHUY (26/11/2023)
-     */
-    formMode() {
-      if (this.bookIdSelected) {
-        return this.$Enum.FormMode.Edit;
-      } else {
-        return this.$Enum.FormMode.Add;
-      }
+    textFields() {
+      return TEXT_FIELD[this.$languageCode].book;
     },
   },
   methods: {
-    onSaveData() {
+    checkModeForm() {
+      if (this.formMode == this.$Enum.FormMode.Edit) {
+        this.getImageDetail();
+        this.getBookDetail();
+      } else {
+        this.getNewCode();
+      }
+    },
+
+    handleSaveDataWithMode() {
+      this.handleValidateField();
       try {
-        this.lstErorr = [];
-        this.validateData();
-        if (this.lstErorr.length > 0) {
-          this.setFocusInputFirstError();
+        console.log(this.listErr)
+        if (this.listErr.length > 0) {
+          this.$refs[this.listErr[0]].setFocus();
           return;
         }
-        if (this.formMode === this.$Enum.FormMode.Add) {
-          this.addNewBook();
-        } else if (this.formMode === this.$Enum.FormMode.Clone) {
-          this.addNewEmployee();
-        } else {
+        if (this.formMode === this.$Enum.FormMode.Edit) {
           this.editBook();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    validateData() {
-      try {
-        this.setError("bookCode", this.$refs.bookCode.label);
-        this.setError("bookName", this.$refs.bookName.label);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    /**
-     * Hàm xét message lỗi
-     * @param {string} field
-     * @param {string} title
-     * Author: LQHUY (26/11/2023)
-     */
-    setError(field, title) {
-      try {
-        if (
-          this.book[field] === "" ||
-          this.book[field] === null ||
-          this.book[field] === undefined
-        ) {
-          this.lstErrorMessage[`${field}`] =
-            this.$Resource[this.$languageCode].ErrorMessage(title);
-          this.lstErorr.push(field);
         } else {
-          this.lstErorr.filter((item) => item !== field);
+          this.addNewBook();
         }
       } catch (error) {
         console.error(error);
       }
     },
-    /**
-     * Set vào ô input lỗi đầu tiên
-     * Author: LQHUY(07/12/2002)
-     */
-    setFocusInputFirstError() {
-      this.$refs[this.lstErorr[0]].setFocus();
+
+    handleValidateField() {
+      try {
+        for (let key in this.textFields) {
+          let ref = this.textFields[key].ref;
+          this.$refs[ref].validate();
+          let rules = this.textFields[key].rules;
+          let nameField = this.textFields[key].name;
+          if (rules.required === true) {
+            if (
+              this.book[nameField] === "" ||
+              this.book[nameField] === null ||
+              this.book[nameField] === undefined
+            ) {
+              this.listErr.push(ref);
+            } else {
+              this.listErr = this.listErr.filter((item) => item !== ref);
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async addNewBook() {
@@ -243,10 +267,12 @@ export default {
         var formData = new FormData();
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));
-        const res = await bookService.postHaveImage(formData);
+        const res = await bookService.post(formData);
         switch (res.status) {
           case 201:
             this.successResponse("Thêm mới thành công");
+            this.$emit("loadData");
+            this.$emit("onCloseForm");
             break;
           default:
             break;
@@ -262,10 +288,12 @@ export default {
         var formData = new FormData();
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));
-        const res = await bookService.putHaveImage(formData);
+        const res = await bookService.put(this.bookIdSelected, formData);
         switch (res.status) {
           case 200:
             this.successResponse("Sửa thành công");
+            this.$emit("loadData");
+            this.$emit("onCloseForm");
             break;
           default:
             break;
@@ -282,6 +310,7 @@ export default {
         switch (res.status) {
           case 200:
             this.book = res.data;
+            console.log(this.book)
             break;
           default:
             break;
@@ -295,7 +324,22 @@ export default {
         const res = await bookService.getNewCode();
         switch (res.status) {
           case 200:
-            this.book.bookCode = res.data;
+            this.book.BookCode = res.data;
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getImageDetail() {
+      try {
+        var res = await this.$httpRequest.get("Images/" + this.bookIdSelected);
+        switch (res.status) {
+          case 200:
+            this.image = res.data;
             break;
           default:
             break;
@@ -328,13 +372,11 @@ export default {
   data() {
     return {
       book: {},
-      lstErrorMessage: {},
-      lstErorr: [],
       imageFile: null,
+      listErr: [],
+      image: {},
     };
   },
 };
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

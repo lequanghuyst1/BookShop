@@ -1,6 +1,10 @@
-﻿using BookShopOnline.Core.Interfaces.Infrastructures;
+﻿using AutoMapper;
+using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +15,11 @@ namespace BookShopOnline.Core.Services.Base
 {
     public abstract class BaseService<TEntity, TDto> : BaseReadOnlyService<TEntity, TDto>, IBaseService<TEntity, TDto>
     {
-        public BaseService(IBaseRepository<TEntity> baseRepository) : base(baseRepository)
-        {
+        IImageService _imageService;
 
+        public BaseService(IBaseRepository<TEntity> baseRepository, IMapper mapper, IImageService imageService) : base(baseRepository, mapper)
+        {
+            _imageService = imageService;
         }
 
         public async Task<int> DeleteManyServiceAsync(List<Guid> ids)
@@ -25,36 +31,66 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> DeleteServiceAsync(Guid id)
         {
-            var res = await _baseRepository.DeleteAsync(id);
+            var res = await _imageService.DeleteServiceAsync(id);
+            if (res > 0)
+            {
+                await _baseRepository.DeleteAsync(id);
+            }
             return res;
         }
 
-        public async Task<int> InsertHaveImageServiceAsync(IFormFile? image, string dataJson)
+        public async Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile)
         {
-            var res = await _baseRepository.InsertHaveImageAsync(image, dataJson);
-            return res;
-        }
-
-        public async Task<int> InsertServiceAsync(TEntity entity)
-        {
+            var newId = Guid.NewGuid();
+            var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
+            var tableName = typeof(TEntity).Name;
             await ValidateBeforeInsert(entity);
-            var res = await _baseRepository.InsertAsync(entity);
-            return res;
+            entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, newId);
+
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var res = await _baseRepository.InsertAsync(entity);
+                if (res > 0)
+                {
+                    var image = new Image();
+                    image?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(image, newId);
+                    await _imageService.InsertServiceAsync(image, imageFile);
+                }
+                return res;
+
+            }
+            var result = await _baseRepository.InsertAsync(entity);
+            return result;
         }
 
-        public async Task<int> UpdateHaveImageServiceAsync(IFormFile? imageFile, string dataJson)
+        public async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
         {
-            var res = await _baseRepository.UpdateHaveImageAsync(imageFile, dataJson);
-            return res;
-        }
+            var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
+            var tableName = typeof(TEntity).Name;
+            await ValidateBeforeInsert(entity);
+            entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, id);
 
-        public async Task<int> UpdateServiceAsync(TEntity entity, Guid id)
-        {
-            var res = await _baseRepository.UpdateAsync(entity, id);
-            return res;
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var res = await _baseRepository.UpdateAsync(id, entity);
+                if (res > 0)
+                {
+                    var image = new Image();
+                    await _imageService.UpdateServiceAsync(id, image, imageFile);
+                }
+                return res;
+
+            }
+            var result = await _baseRepository.UpdateAsync(id, entity);
+            return result;
         }
 
         public virtual async Task ValidateBeforeInsert(TEntity entity)
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task ValidateBeforeUpdate(TEntity entity)
         {
             await Task.CompletedTask;
         }

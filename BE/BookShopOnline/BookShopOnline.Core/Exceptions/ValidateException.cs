@@ -10,11 +10,7 @@ namespace BookShopOnline.Core.Exceptions
     public class ValidateException : Exception
     {
         #region Properties
-        /// <summary>
-        /// Mã lỗi
-        /// </summary>
-        /// Created By: LQHUY(25/12/2023)
-        public HttpStatusCode status { get; set; }
+        
 
         /// <summary>
         /// Danh sách lỗi 
@@ -25,10 +21,9 @@ namespace BookShopOnline.Core.Exceptions
 
         #region Constructor
         public ValidateException() { }
-        public ValidateException(Dictionary<string, string[]> errors, HttpStatusCode status)
+        public ValidateException(Dictionary<string, string[]> errors)
         {
             this.errors = errors;
-            this.status = status;
         }
 
         public ValidateException(string message) : base(message)
@@ -36,9 +31,8 @@ namespace BookShopOnline.Core.Exceptions
 
         }
 
-        public ValidateException(HttpStatusCode status, string message, Dictionary<string, string[]> errors) : base(message)
+        public ValidateException( string message, Dictionary<string, string[]> errors) : base(message)
         {
-            this.status = status;
             this.errors = errors;
         }
         #endregion

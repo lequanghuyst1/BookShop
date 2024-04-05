@@ -108,7 +108,7 @@
           v-model="user.renewPassword"
         ></InputAccount>
       </div>
-      <div @click="onUpdateUserInfo" class="btn-save-confirm">
+      <div @click="handleSaveUserInfo" class="btn-save-confirm">
         <button>Cập nhật thông tin</button>
       </div>
     </form>
@@ -153,17 +153,16 @@ export default {
     },
   },
   methods: {
-    onUpdateUserInfo() {
+    handleSaveUserInfo() {
       this.validateData();
       if (Object.keys(this.errorsMessage).length > 0) {
         for (const key in this.errorsMessage) {
           const value = this.errorsMessage[key];
           if (value !== null) {
             this.$refs[key].focusInput();
-            break;
+            return;
           }
         }
-        return;
       }
       this.user.dateOfBirth = this.date + "/" + this.month + "/" + this.year;
       console.log(this.user);
@@ -185,6 +184,8 @@ export default {
         this.errorsMessage[field] = `${title} không được phép để trống`;
       } else {
         this.errorsMessage[field] = null;
+        delete this.errorsMessage[field];
+
       }
     },
   },

@@ -1,10 +1,11 @@
 <template>
   <div class="form-group">
-    <label :for="id" class="m-lable" :class="{ 'label--required': required }">{{
+    <label :for="id" class="m-lable">{{
       label
     }}</label>
     <textarea
       class="m-textarea"
+      :id="id"
       v-model="value"
       name="message"
       rows="10"
@@ -22,6 +23,10 @@ export default {
     modelValue: {
       type: String,
     },
+    id: {
+      type: String,
+
+    }
   },
   watch: {
     value(newValue) {

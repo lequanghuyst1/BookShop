@@ -19,6 +19,7 @@ const Dialog = {
     Info: "info",
   },
 };
+
 const Resource = {
   Language: {
     VN: "VN",
@@ -30,8 +31,8 @@ const Resource = {
     ErrorMessage(msg) {
       return `${msg} không được để trống`;
     },
-    ConfirmDeleteAll(className){
-      return `Bạn có chắc chắn xóa những ${className} đã chọn này?`
+    ConfirmDeleteAll(className) {
+      return `Bạn có chắc chắn xóa những ${className} đã chọn này?`;
     },
     WanrningMessage: "Cảnh báo",
   },

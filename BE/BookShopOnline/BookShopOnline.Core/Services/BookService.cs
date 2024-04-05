@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Dto.Book;
 using BookShopOnline.Core.Dto.Category;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Services.Base;
@@ -16,17 +17,33 @@ namespace BookShopOnline.Core.Services
     public class BookService : BaseService<Book, BookDto>, IBookService
     {
         readonly IMapper _mapper;
+        Dictionary<string, string[]> errors;
 
-        public BookService(IBookRepository bookRepository, IMapper mapper) : base(bookRepository)
+        public BookService(IBookRepository bookRepository, IMapper mapper, IImageService imageService) : base(bookRepository, mapper, imageService)
         {
             _mapper = mapper;
-
+            errors = new Dictionary<string, string[]>();
         }
 
-        public override BookDto MapEntityToDto(Book book)
+        //public override BookDto MapEntityToDto(Book book)
+        //{
+        //    var bookDto = _mapper.Map<BookDto>(book);
+        //    return bookDto;
+        //}
+        public override async Task ValidateBeforeInsert(Book book)
         {
-            var bookDto = _mapper.Map<BookDto>(book);
-            return bookDto;
+            if(book.BookName == "" || book.BookName == null)
+            {
+                errors.Add("BookName", new string[] { "Tên sách không được để trống" });
+                throw new ValidateException("Tên sách không được để trống", errors);
+            }
+            if (book.Author == "" || book.Author == null)
+            {
+                errors.Add("Author", new string[] { "Tên tác giả không được để trống" });
+                throw new ValidateException("Tên tác giả không được để trống", errors);
+            }
+
+            await Task.CompletedTask;
         }
     }
 }

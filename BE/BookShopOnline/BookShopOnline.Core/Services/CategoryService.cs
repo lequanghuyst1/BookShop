@@ -17,24 +17,24 @@ namespace BookShopOnline.Core.Services
     {
         readonly IMapper _mapper;
         ICategoryRepository _categoryRepository;
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : base(categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IImageService imageService) : base(categoryRepository, mapper, imageService)
         {
             _mapper = mapper;
             _categoryRepository = categoryRepository;
         }
-        public override CategoryDto MapEntityToDto(Category category)
-        {
-            var categoryDto = _mapper.Map<CategoryDto>(category);
-            return categoryDto;
+        //public override CategoryDto MapEntityToDto(Category category)
+        //{
+        //    var categoryDto = _mapper.Map<CategoryDto>(category);
+        //    return categoryDto;
 
-        }
+        //}
         public async override Task ValidateBeforeInsert(Category category)
         {
             if (await _categoryRepository.CheckExitEntityNameAsync(category.CategoryName))
             {
                 Dictionary<string, string[]>? errors = new Dictionary<string, string[]>();
                 errors.Add("categoryName", new string[] { $"Danh mục {category.CategoryName} đã tồn tại trong hệ thống!" });
-                throw new ValidateException(System.Net.HttpStatusCode.BadRequest, $"Danh mục{category.CategoryName} đã tồn tại trong hệ thống", errors);
+                throw new ValidateException( $"Danh mục{category.CategoryName} đã tồn tại trong hệ thống", errors);
             }
         }
     }

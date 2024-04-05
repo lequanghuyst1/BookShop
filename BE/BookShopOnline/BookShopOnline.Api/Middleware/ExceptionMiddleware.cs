@@ -57,7 +57,7 @@ namespace BookShopOnline.Api.Middleware
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync(text: new ServiceResult()
                 {
-                    status = connectDbException.status,
+                    status = HttpStatusCode.BadRequest,
                     userMsg = ResourceVN.UserMessage,
                     devMsg = ex.Message,
                     errors = connectDbException.errors,
@@ -72,7 +72,7 @@ namespace BookShopOnline.Api.Middleware
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync(text: new ServiceResult()
                 {
-                    status = validateException.status,
+                    status = HttpStatusCode.BadRequest,
                     userMsg = ResourceVN.UserMessage,
                     devMsg = ex.Message,
                     errors = validateException.errors,

@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // import LayoutUser from "@/components/user/layout/layout-default/LayoutUser.vue";
-import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import LayoutAdmin from "@/components/admin/layout/layout-default/LayoutAdmin.vue";
 import BookPage from "../pages/admin/book/Index.vue";
 import CategoryPage from "../pages/admin/category/Index.vue";
 import PulisherPage from "../pages/admin/publisher/Index.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
+import HomeAdminPage from "../pages/admin/home/Index.vue"
+
+import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/Index.vue";
 import CartPage from "../pages/user/cart/Index.vue";
 import CategoryUserPage from "../pages/user/category/Index.vue";
@@ -100,6 +102,12 @@ const routes = [
         path: "publisher-management",
         components: {
           ContentRouterView: PulisherPage,
+        },
+      },
+      {
+        path: "home",
+        components: {
+          ContentRouterView: HomeAdminPage,
         },
       },
     ],

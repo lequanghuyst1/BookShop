@@ -58,22 +58,18 @@
             }"
           >
             <img
+              v-if="col.field === 'Image'"
+              :src="this.getImagePath(data[idObject])"
+              alt=""
               style="
                 width: 80px;
                 height: 105px;
                 text-align: center;
                 padding: 10px 0;
               "
-              v-if="col.field == 'image'"
-              :src="
-                data[col.field]
-                  ? `https://localhost:7015/${data[col.field]}`
-                  : 'https://localhost:7015/images/no-image.jpg'
-              "
-              alt=""
             />
             <tippy
-              v-if="col.field != 'image'"
+              v-if="col.field != 'Image'"
               :content="this.setValueData(data, col)"
               placement="top"
             >
@@ -91,7 +87,7 @@
               }"
               @click="
                 (e) => {
-                  onClickEdit(data[this.idObject], e);
+                  onClickIconEdit(data[this.idObject], e);
                 }
               "
               :style="{
@@ -196,6 +192,9 @@ export default {
     image: {
       typeof: Boolean,
     },
+    imageData: {
+      typeof: Array,
+    },
   },
   emit: [
     "toggleShowForm",
@@ -204,6 +203,8 @@ export default {
     "updateItemIdClone",
     "toggleShowToolbarAction",
     "updateTotalRecordSelected",
+    "onDelete",
+    "onUpdate",
   ],
   created() {
     this.$emitter.on("removeRowSelectedDelete", this.removeRowSelectedDelete);
@@ -288,6 +289,16 @@ export default {
     },
   },
   methods: {
+    getImagePath(valueId) {
+      let imageItem = this.imageData.filter(
+        (item) => item[this.idObject] === valueId
+      );
+      if (imageItem.length > 0) {
+        return "https://localhost:7015/" + imageItem[0].ImagePath;
+      } else {
+        return "https://localhost:7015/images/no-image.jpg";
+      }
+    },
     /**
      * Set dữ liệu cho từng ô trên table
      * @param {object} data
@@ -316,9 +327,8 @@ export default {
      * @param {event} e
      * Author: LQHUY(06/12/2023)
      */
-    onClickEdit(id, e) {
-      this.$emit("toggleShowForm", true);
-      this.$emit("updateItemId", id);
+    onClickIconEdit(id, e) {
+      this.$emit("onUpdate", id);
       e.stopPropagation();
     },
 
@@ -329,15 +339,11 @@ export default {
      * @param {event} e
      */
     onClickIconDelete(data, e) {
-      this.$emitter.emit(
-        "toggleDialogNotice",
-        true,
-        true,
-        "Xác nhận xóa",
+      this.$emit(
+        "onDelete",
         "Bạn có chắc chắn xóa dòng dữ liệu này?",
-        this.$Resource[this.$languageCode].Dialog.Type.Question
+        data[this.idObject]
       );
-      this.$emit("updateItemId", data[this.idObject]);
       e.stopPropagation();
     },
 
@@ -357,8 +363,7 @@ export default {
           (item) => item !== data[this.idObject]
         );
       }
-      this.$emit("updateItemId", data[this.idObject]);
-      this.$emit("toggleShowForm", true);
+      this.$emit("onUpdate", data[this.idObject]);
       this.countSelectedRow();
     },
 
@@ -452,22 +457,6 @@ export default {
      */
     onClickIconShowMenuAction(e) {
       this.isShowActionMenu = !this.isShowActionMenu;
-      // this.styleMenuAction.left =
-      //   e.target.getBoundingClientRect().x - 100 + "px";
-      // this.styleMenuAction.top = e.target.getBoundingClientRect().y + 10 + "px";
-      e.stopPropagation();
-    },
-
-    /**
-     * Hàm hiển thị form chứa thông tin nhân bản khác hàng
-     * @param {object} data
-     * @param {event} e
-     * Author: LQHUY (18/01/2024)
-     */
-    onClickIconClone(data, e) {
-      this.$emit("updateItemIdClone", data[this.idObject]);
-      this.$emit("updateItemId", null);
-      this.$emit("toggleShowForm", true);
       e.stopPropagation();
     },
 
@@ -492,6 +481,7 @@ export default {
 
       /**ẩn hiện không có dữ liêu phuf hợp khi tìm kiếm */
       isShowNoData: false,
+      images: [],
     };
   },
 };

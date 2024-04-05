@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label for="" class="m-lable" :class="{ 'label--required': required }">{{
+    <label for="" class="m-lable" :class="{ 'label--required': this.rules?.required }">{{
       label
     }}</label>
     <div class="m-textfiled-icon m-combobox" :id="id">
@@ -98,19 +98,14 @@ export default {
       type: String,
       required: true,
     },
-    message: {
-      type: String,
+
+    rules: {
+      type: Object,
       required: false,
-      default: "",
-    },
-    required: {
-      type: Boolean,
-      default: false,
     },
   },
   created() {
     this.loadData();
-    this.messageError = this.message;
   },
   data() {
     return {
@@ -123,7 +118,7 @@ export default {
       isShowCombobox: false,
       lstItemHover: [],
       isShowNoValue: false,
-      messageError: "",
+      messageError: null,
       direction: null,
     };
   },
@@ -150,16 +145,26 @@ export default {
         this.messageError = null;
       }
     },
-    /**
-     * Hàm theo dõi message lỗi truyển vào
-     * @param {string} newValue
-     * Author: LQHUY(08/12/2023)
-     */
-    message(newValue) {
-      this.messageError = newValue;
-    },
+
   },
   methods: {
+    validate() {
+      if (this.rules) {
+        if (this.rules?.required === true) {
+          if (
+            this.modelValue === null ||
+            this.modelValue === "" ||
+            this.modelValue === undefined
+          ) {
+            this.messageError = this.$Resource[this.$languageCode].ErrorMessage(
+              this.label
+            );
+          } else {
+            this.messageError = null;
+          }
+        }
+      }
+    },
     /**
      * Load dữ liệu combobox
      * Author: LQHUY(02/12/2023)
@@ -262,9 +267,8 @@ export default {
     changeValueInput() {
       try {
         let value = this.outputText;
-        console.log(value)
         //lấy ra mảng giá trị match với giá trị input
-        this.dataFilter= this.dataCombobox.filter((item) =>
+        this.dataFilter = this.dataCombobox.filter((item) =>
           this.$helper
             .removeVietnameseTones(item[this.propText])
             .includes(this.$helper.removeVietnameseTones(value))
@@ -278,7 +282,6 @@ export default {
           return;
         }
         this.onShowcombobox();
-
       } catch (error) {
         console.error(error);
       }
@@ -324,8 +327,7 @@ export default {
             break;
           case keyCode.Enter:
             //set value cho input
-            this.outputText =
-              this.dataFilter[this.currentIndex][this.propText];
+            this.outputText = this.dataFilter[this.currentIndex][this.propText];
             this.$emit(
               "update:modelValue",
               this.dataFilter[this.currentIndex][this.propValue]
