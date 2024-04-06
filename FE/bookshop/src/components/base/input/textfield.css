@@ -2,6 +2,7 @@
 
 .form-group {
   margin-bottom: 14px;
+  position: relative;
 }
 .m-lable {
   display: block;

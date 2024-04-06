@@ -16,20 +16,11 @@ namespace BookShopOnline.Core.Services
 {
     public class BookService : BaseService<Book, BookDto>, IBookService
     {
-        readonly IMapper _mapper;
-        Dictionary<string, string[]> errors;
-
+      
         public BookService(IBookRepository bookRepository, IMapper mapper, IImageService imageService) : base(bookRepository, mapper, imageService)
         {
-            _mapper = mapper;
-            errors = new Dictionary<string, string[]>();
         }
 
-        //public override BookDto MapEntityToDto(Book book)
-        //{
-        //    var bookDto = _mapper.Map<BookDto>(book);
-        //    return bookDto;
-        //}
         public override async Task ValidateBeforeInsert(Book book)
         {
             if(book.BookName == "" || book.BookName == null)

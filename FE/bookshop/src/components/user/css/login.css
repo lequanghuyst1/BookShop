@@ -1,39 +1,21 @@
-#customer-login .m-dialog .m-dialog__header{
+#user-login .m-dialog .m-dialog__header{
   margin: 16px 0;
   width: 450px;
 }
-#customer-login .m-dialog .m-dialog__container {
+#user-login .m-dialog .m-dialog__container {
   width: 450px;
 }
-#customer-login .m-dialog .m-dialog__footer {
+#user-login .m-dialog .m-dialog__footer {
   height: auto !important;
   justify-content: center;
 }
-#customer-login .m-dialog .m-dialog__container .m-dialog__content {
+#user-login .m-dialog .m-dialog__container .m-dialog__content {
   display: block;
   margin: 12px 0;
 
 }
-#customer-login .m-textfield {
-  padding: 20px 12px;
-}
 
-.input-password {
-  position: relative;
-}
-.btn-show-pass {
-  display: block;
-  position: absolute;
-  right: 20px;
-  top: calc(50% + 5px);
-  width: 16px;
-  height: 16px;
-  background: url(../../../assets/icons/icon-hide-pass.svg) center no-repeat;
-}
-.btn-show-pass.active {
-  display: block;
-  background: url(../../../assets/icons/icon-show-pass.svg) center no-repeat;
-}
+
 .forgot-password {
   font-size: 14px;
   text-align: right;

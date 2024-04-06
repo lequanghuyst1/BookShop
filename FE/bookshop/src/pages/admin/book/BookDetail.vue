@@ -223,7 +223,6 @@ export default {
     handleSaveDataWithMode() {
       this.handleValidateField();
       try {
-        console.log(this.listErr)
         if (this.listErr.length > 0) {
           this.$refs[this.listErr[0]].setFocus();
           return;
@@ -316,6 +315,8 @@ export default {
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+
         console.log(error);
       }
     },

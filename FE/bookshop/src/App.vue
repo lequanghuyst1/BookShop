@@ -112,10 +112,13 @@ export default {
             break;
           //Lỗi từ phía backend
           case 500:
-            this.$emitter.emit("toggleShowLoading", false);
+          this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join(",")
+            this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Error,
+              req.response.data.userMsg,
+              this.$Resource[this.$languageCode].ToastMessage.Status.Error
             );
             break;
           default:

@@ -261,6 +261,7 @@
   </div>
   <TheLogin
     v-if="isShowFormLoginOrRegister"
+    @onCloseForm="onHideFormLoginOrRegister"
     :formAccount="formAccount"
   ></TheLogin>
 </template>
@@ -270,16 +271,10 @@ export default {
   name: "TheHeaderUser",
   components: { TheLogin },
   created() {
-    this.$emitter.on(
-      "onHideFormLoginOrRegister",
-      this.onHideFormLoginOrRegister
-    );
+   
   },
   beforeUnmount() {
-    this.$emitter.off(
-      "onHideFormLoginOrRegister",
-      this.onHideFormLoginOrRegister
-    );
+   
   },
   methods: {
     onShowFormLogin() {

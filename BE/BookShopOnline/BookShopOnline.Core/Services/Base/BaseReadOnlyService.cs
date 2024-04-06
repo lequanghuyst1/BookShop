@@ -13,14 +13,12 @@ namespace BookShopOnline.Core.Services.Base
     public abstract class BaseReadOnlyService<TEntity, TDto> : IBaseReadOnlyService<TDto>
     {
         protected IBaseRepository<TEntity> _baseRepository;
-        readonly IMapper _mapper;
-
+        protected readonly IMapper _mapper;
 
         public BaseReadOnlyService(IBaseRepository<TEntity> baseRepository , IMapper mapper)
         {
             _baseRepository = baseRepository;
             _mapper = mapper;
-
         }
 
         public async Task<IEnumerable<TDto>> GetAllAsync()

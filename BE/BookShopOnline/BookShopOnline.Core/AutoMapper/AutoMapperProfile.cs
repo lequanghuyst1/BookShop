@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookShopOnline.Core.Dto.Image;
+using BookShopOnline.Core.Dto;
+using BookShopOnline.Core.Dto.User;
 
 namespace BookShopOnline.Core.AutoMapper
 {
@@ -20,6 +22,8 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Book, BookDto>();
             CreateMap<Publisher, PublisherDto>();
             CreateMap<Image, ImageDto>();
+            CreateMap<UserRegister, User>();
+            CreateMap<User, UserDto>();
         }
     }
 }

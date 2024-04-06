@@ -79,6 +79,122 @@ const TEXT_FIELD = {
         },
       },
     },
+    user: {
+      fullname: {
+        name: "Fullname",
+        label: "Họ và tên",
+        ref: "refFullname",
+        placeholder: "Nhập họ và tên",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      email: {
+        name: "Email",
+        label: "Email",
+        ref: "refEmail",
+        placeholder: "Nhập email",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: ["email"],
+        },
+      },
+      password: {
+        name: "Password",
+        label: "Mật khẩu",
+        ref: "refPassword",
+        placeholder: "Nhập mật khẩu",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      replicaPassword: {
+        name: "relicaPassword",
+        label: "Nhập lại khẩu",
+        ref: "refRelicaPassword",
+        placeholder: "Nhập lại mật khẩu",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+    },
+    userLogin: {
+      email: {
+        name: "Email",
+        label: "Email",
+        ref: "refEmail",
+        placeholder: "Nhập email",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: ["email"],
+        },
+      },
+      password: {
+        name: "Password",
+        label: "Mật khẩu",
+        ref: "refPassword",
+        placeholder: "Nhập mật khẩu",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+    },
+    userRegister: {
+      fullname: {
+        name: "Fullname",
+        label: "Họ và tên",
+        ref: "refFullname",
+        placeholder: "Nhập họ và tên",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      email: {
+        name: "Email",
+        label: "Email",
+        ref: "refEmail",
+        placeholder: "Nhập email",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: ["email"],
+        },
+      },
+      password: {
+        name: "Password",
+        label: "Mật khẩu",
+        ref: "refPassword",
+        placeholder: "Nhập mật khẩu",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      replicaPassword: {
+        name: "ReplicaPassword",
+        label: "Nhập lại khẩu",
+        ref: "refReplicaPassword",
+        placeholder: "Nhập lại mật khẩu",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+    },
   },
 };
 export default TEXT_FIELD;

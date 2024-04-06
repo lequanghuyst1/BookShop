@@ -16,10 +16,12 @@ namespace BookShopOnline.Core.Services.Base
     public abstract class BaseService<TEntity, TDto> : BaseReadOnlyService<TEntity, TDto>, IBaseService<TEntity, TDto>
     {
         IImageService _imageService;
-
+        protected Dictionary<string, string[]> errors;
         public BaseService(IBaseRepository<TEntity> baseRepository, IMapper mapper, IImageService imageService) : base(baseRepository, mapper)
         {
             _imageService = imageService;
+            errors = new Dictionary<string, string[]>();
+
         }
 
         public async Task<int> DeleteManyServiceAsync(List<Guid> ids)
