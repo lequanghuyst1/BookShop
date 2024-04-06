@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="header__account">
-          <div v-if="this.$accessToken">
+          <div v-if="isToken === false">
             <a
               @click="onShowFormLogin"
               class="me-3 text-decoration-none text-uppercase fw-bold"
@@ -48,7 +48,7 @@
               >Đăng ký</a
             >
           </div>
-          <div class="header__user d-flex align-items-center gap-2" v-else>
+            <div class="header__user d-flex align-items-center gap-2" v-else>
             <div class="user-image">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSbpqvNQMR7YBZ9eN_5qUeAzj6Vp-1ljDiuw&usqp=CAU"
@@ -56,11 +56,11 @@
                 class="header__navbar-item-avatar"
               />
             </div>
-            <span class="user-name">Lê Quang Huy</span>
+            <span class="user-name">{{ userInfo.Fullname }}</span>
             <div class="m-icon-arrow-down" style="scale: calc(10 / 14)"></div>
             <ul class="header__navbar-user-list">
               <li class="header__navbar-user-item">
-                <a class="header__navbar-user-item-link" href=""
+                <a class="header__navbar-user-item-link" href="customer/account/user-info"
                   >Tài khoản của tôi</a
                 >
               </li>
@@ -74,8 +74,9 @@
               </li>
               <li
                 class="header__navbar-user-item header__navbar-user-item--logout"
+                @click="onLogout"
               >
-                <a class="header__navbar-user-item-link" href="">Đăng xuất</a>
+                <p class="header__navbar-user-item-link">Đăng xuất</p>
               </li>
             </ul>
           </div>
@@ -267,14 +268,22 @@
 </template>
 <script>
 import TheLogin from "./TheLogin.vue";
+import { checkInfoTokensInStorage } from "@/js/token/TokenService";
+import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
+import localStorageService from "@/js/storage/LocalStorageService";
+import userService from "@/utils/UserService";
 export default {
   name: "TheHeaderUser",
   components: { TheLogin },
-  created() {
-   
-  },
-  beforeUnmount() {
-   
+  created() {},
+  beforeUnmount() {},
+  computed: {
+    isToken: () => {
+      return checkInfoTokensInStorage();
+    },
+    userInfo: () => {
+      return localStorageService.getItemFromLocalStorage("userInfo")
+    }
   },
   methods: {
     onShowFormLogin() {
@@ -289,8 +298,29 @@ export default {
       this.isShowFormLoginOrRegister = false;
     },
     goToHomePage() {
-        this.$router.push({ path: "/" });
+      this.$router.push({ path: "/" });
     },
+    /**
+     * Thực hiện đăng xuất khi click đăng xuất
+     * Author: LQHUY(06/04/2024)
+     */
+    async onLogout(){
+      try {
+        var res = await userService.Logout(this.userInfo.Email);
+        if(res.status === 201){
+          this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+              "Đăng xuất thành công",
+              this.$Resource[this.$languageCode].ToastMessage.Status.Success
+            );
+            removeAllInfoTokenToStorage();
+            location.reload();
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
   data() {
     return {
@@ -342,6 +372,9 @@ export default {
   padding: 0 !important;
   display: none;
 }
+.header__account:hover .header__navbar-user-list{
+  display: block;
+}
 /* .header__navbar-user-list::before {
   content: "";
   display: block;
@@ -385,7 +418,15 @@ export default {
 .header__navbar-user-item--logout {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.header__navbar-user-item--logout a {
+.header__navbar-user-item--logout p{
+  font-size: 14px;
+  padding: 8px 12px !important;
+  cursor: pointer;
+  display: inline-block;
+  color: #333;
+  font-weight: 400;
+}
+.header__navbar-user-item--logout p {
   color: rgb(26, 147, 141) !important;
 }
 .info a:hover,

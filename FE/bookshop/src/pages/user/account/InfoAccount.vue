@@ -9,21 +9,21 @@
         id="fullname"
         :required="true"
         placeholder="Nhập họ và tên"
-        v-model="user.fullname"
+        v-model="user.Fullname"
         ref="fullname"
         :errorMessage="errorsMessage.fullname"
       ></InputAccount>
       <InputAccount
         title="Số điện thoại"
-        id="phonenumber"
+        id="honenumber"
         placeholder="Nhập số điện thoại"
-        v-model="user.phoneNumber"
+        v-model="user.PhoneNumber"
       ></InputAccount>
       <InputAccount
         title="Email"
         id="email"
         placeholder="Nhập email"
-        v-model="user.email"
+        v-model="user.Email"
       ></InputAccount>
       <InputAccount
         title="Địa chỉ"
@@ -116,10 +116,19 @@
 </template>
 <script>
 import InputAccount from "./GroupInput.vue";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "InfoAccountUserPage",
   components: { InputAccount },
-  created() {},
+  created() {
+  },
+  mounted() {
+    this.user = localStorageService.getItemFromLocalStorage("userInfo")
+      ? localStorageService.getItemFromLocalStorage("userInfo")
+      : {};
+    console.log(this.user);
+
+  },
   watch: {
     date(newValue) {
       if (newValue > 31) {
@@ -185,7 +194,6 @@ export default {
       } else {
         this.errorsMessage[field] = null;
         delete this.errorsMessage[field];
-
       }
     },
   },

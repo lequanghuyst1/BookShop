@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using BookShopOnline.Core.Dto.User;
+using BookShopOnline.Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,24 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// false - chưa tồn tại
         /// </returns>
         /// Created By: LQHUY(06/04/2024)
-        Task<bool> CheckUserIsExist(User user);
+        Task<bool> CheckUserIsExist(string email);
+
+
+        /// <summary>
+        /// Kiểm tra thông tin người dùng có xác thực không
+        /// </summary>
+        /// <param name="user">thông tin tài khoản</param>
+        /// <returns>
+        /// true - xác thực
+        /// false - không xác thực
+        /// </returns>
+        /// Created By: LQHUY(06/04/2024)
+        Task<User?> FindUserByEmailAndPassword(UserLogin userLogin);
+
+        Task<User?> FindByEmailAsync(string email);
+
+        Task<User?> GetUserByToken(string token);
+
     }
-    
+
 }

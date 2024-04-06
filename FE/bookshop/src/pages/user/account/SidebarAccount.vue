@@ -15,7 +15,7 @@
           </p>
         </router-link>
       </li>
-      <li class="sidebar-account-item">
+      <li @click="onLogout" class="sidebar-account-item">
         <a class="sidebar-account-item-link">
           <div
             class="sidebar-account-item-icon"
@@ -31,8 +31,41 @@
 </template>
 <script>
 import sidebarAccount from "../../../js/resource/sidebar-account";
+import userService from "@/utils/UserService";
+import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "SidebarAccount",
+  computed: {
+    user: () => {
+      return localStorageService.getItemFromLocalStorage("userInfo");
+    },
+  },
+  methods: {
+    /**
+     * Thực hiện đăng xuất khi click đăng xuất
+     * Author: LQHUY(06/04/2024)
+     */
+    async onLogout() {
+      try {
+        var res = await userService.Logout(this.user?.Email);
+        if (res.status === 201) {
+          removeAllInfoTokenToStorage();
+          this.$router.push("/").finally(() => {
+            location.reload();
+            this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+              "Đăng xuất thành công",
+              this.$Resource[this.$languageCode].ToastMessage.Status.Success
+            );
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
   data() {
     return {
       menu: sidebarAccount,

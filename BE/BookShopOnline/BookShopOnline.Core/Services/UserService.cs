@@ -31,7 +31,6 @@ namespace BookShopOnline.Core.Services
             userRegister.RoleId = role.RoleId;
             userRegister.UserId = Guid.NewGuid();
             var user = _mapper.Map<User>(userRegister);
-
             await ValidateBeforeInsert(user);
 
             var res = await _userRepository.InsertAsync(user);
@@ -44,7 +43,6 @@ namespace BookShopOnline.Core.Services
             userRegister.RoleId = role.RoleId;
             userRegister.UserId = Guid.NewGuid();
             var user = _mapper.Map<User>(userRegister);
-
             await ValidateBeforeInsert(user);
 
             var res = await _userRepository.InsertAsync(user);
@@ -52,7 +50,7 @@ namespace BookShopOnline.Core.Services
         }
         public override async Task ValidateBeforeInsert(User user)
         {
-            if (await _userRepository.CheckUserIsExist(user))
+            if (await _userRepository.CheckUserIsExist(user.Email))
             {
                 errors.Add("Email", new string[] { "Email này đã tồn tại trong hệ thống" });
                 throw new ValidateException("Email này đã tồn tại trong hệ thống", errors);

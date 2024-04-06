@@ -13,9 +13,11 @@ namespace BookShopOnline.Api.Controllers
     public class UsersController : MBaseController<User, UserDto>
     {
         IUserService _userService;
-        public UsersController(IUserService userService) : base(userService)
+        IJWTAuthenticationService _jwtAuthenticationService;
+        public UsersController(IUserService userService, IJWTAuthenticationService jwtAuthenticationService) : base(userService)
         {
             _userService = userService;
+            _jwtAuthenticationService = jwtAuthenticationService;
         }
 
         /// <summary>
@@ -47,7 +49,50 @@ namespace BookShopOnline.Api.Controllers
         public async Task<IActionResult> RegisterUserAsync(UserRegister userRegister)
         {
             var res = await _userService.RegisterUserServiceAsync(userRegister);
-            return StatusCode(201,res);
+            return StatusCode(201, res);
         }
+
+        /// <summary>
+        /// Api thực hiện đăng nhập người dùng
+        /// </summary>
+        /// <param name="userLogin">thông tin đăng nhập</param>
+        /// <returns>
+        /// Thông tin đăng nhập người dùng
+        /// </returns>
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginAsync(UserLogin userLogin)
+        {
+            var res = await _jwtAuthenticationService.LoginAsync(userLogin);
+            return StatusCode(201, res);
+        }
+
+        /// <summary>
+        /// Api thực hiện lấy token mới khi token cũ hết hạn
+        /// </summary>
+        /// <param name="tokenModel">thông tin token cũ</param>
+        /// <returns>
+        /// Thông tin đăng nhập người dùng mới
+        /// </returns>
+        /// Created By: LQHUY(06/04/2024)
+        [HttpPost("RenewToken")]
+        public async Task<IActionResult> RenewTokenAsync(TokenModel tokenModel)
+        {
+            var res = await _jwtAuthenticationService.RefreshTokenAsync(tokenModel);
+            return StatusCode(201, res);
+        }
+
+        /// <summary>
+        /// Api thực hiện đăng xuất
+        /// </summary>
+        /// <param name="email">email người dùng</param>
+        /// <returns></returns>
+        /// Created By: LQHUY(06/04/2024)
+        [HttpPost("Logout")]
+        public async Task<IActionResult> LogoutAsync([FromBody] string email)
+        {
+            await _jwtAuthenticationService.LogoutAsync(email);
+            return StatusCode(201);
+        }
+
     }
 }

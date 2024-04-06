@@ -2,15 +2,13 @@
   <div class="header">
     <div class="header__logo">
       <div class="header__logo-image">
-        <img src="../../../assets/logo.png" alt="" style="width: 80%;">
+        <img src="../../../assets/logo.png" alt="" style="width: 80%" />
       </div>
     </div>
 
     <div class="header__info">
       <div class="header__info-name">
-        <h4 class="header__info-company-name">
-          NHÀ SÁCH PANDA
-        </h4>
+        <h4 class="header__info-company-name">NHÀ SÁCH PANDA</h4>
       </div>
       <div class="header__navbar-list">
         <div
@@ -40,7 +38,7 @@
           <div class="m-icon-arrow-down" style="scale: calc(10 / 14)"></div>
           <ul v-show="isShowActionUser" class="user-action">
             <li class="user-action-item">Thông tin cá nhân</li>
-            <li class="user-action-item" @click="logOutSystem">Đăng xuất</li>
+            <li class="user-action-item" @click="onLogout">Đăng xuất</li>
           </ul>
         </div>
       </div>
@@ -48,26 +46,47 @@
   </div>
 </template>
 <script>
+import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
+import userService from "@/utils/UserService";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "TheHeader",
   created() {
     this.user = JSON.parse(localStorage.getItem("User"));
   },
+  computed: {
+    user: () => {
+      return localStorageService.getItemFromLocalStorage("userInfo");
+    },
+  },
   methods: {
-    logOutSystem() {
-      localStorage.setItem("Token", JSON.stringify(null));
-      localStorage.setItem("User", JSON.stringify(null));
-
-      this.$router.push("/login").finally(() => {
-        document.title = "Đăng nhập"; // Đặt lại tiêu đề sau khi chuyển hướng
-        location.reload();
-      });
+    /**
+     * Thực hiện đăng xuất khi click đăng xuất
+     * Author: LQHUY(06/04/2024)
+     */
+    async onLogout() {
+      try {
+        var res = await userService.Logout(this.user?.Email);
+        if (res.status === 201) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Đăng xuất thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          removeAllInfoTokenToStorage();
+          this.$router.replace("login").finally(() => {
+            document.title = "Đăng nhập"; // Đặt lại tiêu đề sau khi chuyển hướng
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   data() {
     return {
       isShowActionUser: false,
-      user: null,
     };
   },
 };

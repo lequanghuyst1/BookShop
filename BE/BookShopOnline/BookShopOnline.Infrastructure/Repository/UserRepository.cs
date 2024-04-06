@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using BookShopOnline.Core.Dto.User;
+using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
@@ -16,15 +17,38 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
-        public async Task<bool> CheckUserIsExist(User user)
+        public async Task<bool> CheckUserIsExist(string email)
         {
             var procName = "Proc_User_CheckUserIsExist";
-            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(procName, new { Email = user.Email });
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(procName, new { Email = email });
             if (res != null)
             {
                 return true;
             }
             return false;
+        }
+
+        public async Task<User?> FindByEmailAsync(string email)
+        {
+            var procName = "Proc_User_CheckUserIsExist";
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(procName, new { Email = email });
+            return res;
+        }
+
+        public async Task<User?> FindUserByEmailAndPassword(UserLogin userLogin)
+        {
+            var procName = "Proc_User_FindUserByEmailAndPassword";
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(procName, userLogin);
+            return res;
+        }
+
+        public async Task<User?> GetUserByToken(string token)
+        {
+            var sql = "Select * from User where RefreshToken = @RefreshToken";
+            var param = new DynamicParameters();
+            param.Add("@RefreshToken", token);
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(sql, param);
+            return res;
         }
     }
 }

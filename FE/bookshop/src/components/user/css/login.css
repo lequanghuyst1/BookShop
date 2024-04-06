@@ -15,7 +15,12 @@
 
 }
 
-
+.error-account-failure {
+  color: #ff1d1d;
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: block;
+}
 .forgot-password {
   font-size: 14px;
   text-align: right;

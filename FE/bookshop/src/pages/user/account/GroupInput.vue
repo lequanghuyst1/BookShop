@@ -48,15 +48,14 @@ export default {
       required: false,
     },
   },
-  created(){
-  },
+  created() {},
   watch: {
-     /**
+    /**
      * Hàm theo dõi giá trị thay đổi của value
      * @param {string} newValue
      * Author: LQHUY(08/12/2023)
      */
-     inputValue: function (newValue) {
+    inputValue: function (newValue) {
       if (newValue === null || newValue === "" || newValue === undefined) {
         this.errMessage = this.errorMessage;
         //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
@@ -66,11 +65,13 @@ export default {
         this.$emit("update:modelValue", newValue);
       }
     },
-      
-    errorMessage: function(newValue) {
+
+    modelValue: function (newValue) {
+      this.inputValue = newValue;
+    },
+    errorMessage: function (newValue) {
       this.errMessage = newValue;
     },
-    
   },
   methods: {
     focusInput() {

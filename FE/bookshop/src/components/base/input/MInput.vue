@@ -33,8 +33,6 @@
 import { validateValue } from "@/js/validate/validate";
 export default {
   created() {
-    this.inputValue = this.modelValue;
-    this.messageError = this.message;
   },
 
   name: "MInput",
@@ -71,7 +69,7 @@ export default {
     errMsg: {
       type: String,
       required: false,
-    }
+    },
   },
   data() {
     return {
@@ -83,38 +81,34 @@ export default {
   watch: {
     /**
      * Hàm theo dõi giá trị thay đổi của inputValue
-     * @param {string} newinputValue
+     * @param {string} newValue
      * Author: LQHUY(08/12/2023)
      */
-    inputValue: function (newinputValue) {
-      if (
-        newinputValue === null ||
-        newinputValue === "" ||
-        newinputValue === undefined
-      ) {
+    inputValue: function (newValue) {
+      if (newValue === null || newValue === "" || newValue === undefined) {
         this.messageError = this.message;
         //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
         this.$emit("update:modelValue", null);
       } else {
         this.messageError = "";
-        this.$emit("update:modelValue", newinputValue);
+        this.$emit("update:modelValue", newValue);
       }
     },
     /**
      * Hàm theo dõi giá trị truyển vào cho inputValue
-     * @param {string} newinputValue
+     * @param {string} newValue
      * Author: LQHUY(08/12/2023)
      */
-    modelValue(newinputValue) {
-      this.inputValue = newinputValue;
+    modelValue(newValue) {
+      this.inputValue = newValue;
     },
     /**
      * Hàm theo dõi message lỗi truyển vào
-     * @param {string} newinputValue
+     * @param {string} newValue
      * Author: LQHUY(08/12/2023)
      */
-     errMsg(newinputValue) {
-      this.messageError = newinputValue;
+    errMsg(newValue) {
+      this.messageError = newValue;
     },
   },
   methods: {

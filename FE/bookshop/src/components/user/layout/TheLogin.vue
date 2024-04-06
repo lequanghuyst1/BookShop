@@ -53,6 +53,9 @@
                   v-model="user.Password"
                 ></MInput>
               </div>
+              <span style="margin-bottom: 16px" class="error-account-failure">{{
+                this.errsMsg.Login
+              }}</span>
             </form>
             <button
               @click="handleSaveDataWithMode"
@@ -177,11 +180,19 @@
 <script>
 import TEXT_FIELD from "@/js/resource/text-field";
 import userService from "@/utils/UserService";
+import { setInfoTokensToStorage } from "@/js/token/TokenService";
 export default {
   name: "TheLoginUser",
   emits: ["onCloseForm"],
   created() {
     this.mode = this.formAccount;
+  },
+  mounted() {
+    if (this.formAccount === this.$Enum.FormAccount.Login) {
+      this.$refs[this.textFieldsLogin.email.ref].setFocus();
+    } else {
+      this.$refs[this.textFieldsRegister.fullname.ref].setFocus();
+    }
   },
   props: {
     formAccount: {
@@ -190,7 +201,7 @@ export default {
     },
   },
   computed: {
-    //Lấy ra tên và các rằng buộc của người dùng khi đăng nhập    
+    //Lấy ra tên và các rằng buộc của người dùng khi đăng nhập
     textFieldsLogin: function () {
       return TEXT_FIELD[this.$languageCode].userLogin;
     },
@@ -201,7 +212,6 @@ export default {
     },
   },
   methods: {
-
     /**
      * Thực hiện lưu thông tin người dùng khi click vào đăng ký hoặc đăng nhập
      * Author: LQHUY(06/04/2024)
@@ -279,8 +289,30 @@ export default {
      * Người dùng thực hiện đăng nhập vào hệ thống khi click đăng nhập
      * Author: LQHUY(06/04/2024)
      */
-    userLoginInSystem() {
-      
+    async userLoginInSystem() {
+      this.errsMsg = {};
+      try {
+        const res = await userService.Login(this.user);
+        switch (res.status) {
+          case 201:
+            this.$emit("onCloseForm");
+            this.$emitter.emit(
+              "onShowToastMessage",
+              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+              "Đăng nhập thành công",
+              this.$Resource[this.$languageCode].ToastMessage.Status.Success
+            );
+            setInfoTokensToStorage(
+              res.data.AccessToken,
+              res.data.RefreshToken,
+              res.data.UserDto
+            );
+            location.reload();
+            break;
+        }
+      } catch (error) {
+        this.errsMsg.Login = Object.values(error.response.data.errors).join("");
+      }
     },
 
     /**

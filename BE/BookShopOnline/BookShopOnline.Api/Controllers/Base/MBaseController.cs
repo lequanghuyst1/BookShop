@@ -21,14 +21,12 @@ namespace BookShopOnline.Api.Controllers.Base
         }
 
 
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(Guid id, [FromForm] string dataJson, IFormFile? imageFile)
         {
             var res = await _baseService.UpdateServiceAsync(id, dataJson, imageFile);
             return Ok(res);
         }
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)

@@ -1,4 +1,5 @@
 ﻿using BookShopOnline.Core.Interfaces.Services.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ namespace BookShopOnline.Api.Controllers.Base
         {
             _baseService = baseService;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {

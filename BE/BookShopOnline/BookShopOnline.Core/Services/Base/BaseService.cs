@@ -33,12 +33,10 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> DeleteServiceAsync(Guid id)
         {
-            var res = await _imageService.DeleteServiceAsync(id);
-            if (res > 0)
-            {
-                await _baseRepository.DeleteAsync(id);
-            }
-            return res;
+            
+                var result = await _baseRepository.DeleteAsync(id);
+                return result;
+          
         }
 
         public async Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile)

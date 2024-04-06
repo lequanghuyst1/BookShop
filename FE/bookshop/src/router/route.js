@@ -6,7 +6,7 @@ import BookPage from "../pages/admin/book/Index.vue";
 import CategoryPage from "../pages/admin/category/Index.vue";
 import PulisherPage from "../pages/admin/publisher/Index.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
-import HomeAdminPage from "../pages/admin/home/Index.vue"
+import HomeAdminPage from "../pages/admin/home/Index.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/Index.vue";
@@ -17,6 +17,7 @@ import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 import BookAddressPage from "../pages/user/account/BookAddress.vue";
 
+import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 const routes = [
   {
     path: "/",
@@ -70,9 +71,7 @@ const routes = [
             components: {
               ViewRouterMainContentAccount: BookAddressPage,
             },
-            children: {
-              
-            }
+            children: {},
           },
         ],
       },
@@ -85,6 +84,7 @@ const routes = [
   {
     path: "/admin",
     component: LayoutAdmin,
+    meta: { requiresAuth: true },
     children: [
       {
         path: "book-management",
@@ -120,6 +120,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  next();
+  if (to.meta.requiresAuth && !checkInfoTokensInStorage()) {
+    next("/admin/login");
+  } else if (
+    to.path === "Login" &&
+    checkInfoTokensInStorage()
+  ) {
+    next();
+    location.reload();
+  } else {
+    next();
+  }
 });
 export default router;

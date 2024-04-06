@@ -39,3 +39,11 @@ D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMappe
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\BookShopOnline.Api.staticwebassets.runtime.json
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+D:\DoAnTotNghiep\BE\BookShopOnline\BookShopOnline.Api\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
