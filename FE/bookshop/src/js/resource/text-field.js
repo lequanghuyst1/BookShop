@@ -102,24 +102,57 @@ const TEXT_FIELD = {
           rule: ["email"],
         },
       },
-      password: {
-        name: "Password",
-        label: "Mật khẩu",
-        ref: "refPassword",
-        placeholder: "Nhập mật khẩu",
+      phoneNumber: {
+        name: "PhoneNumber",
+        label: "Số điện thoại",
+        ref: "refPhoneNumber",
+        placeholder: "Nhập số điện thoại",
+        rules: {
+          lengthMax: 50,
+          required: false,
+          rule: [],
+        },
+      },
+      address: {
+        name: "Address",
+        label: "Địa chỉ",
+        ref: "refAddress",
+        placeholder: "Nhập địa chỉ",
         rules: {
           lengthMax: 100,
+          required: false,
+          rule: [],
+        },
+      },
+      currentPassword: {
+        name: "CurrentPassword",
+        label: "Mật khẩu hiện tại",
+        ref: "refCurrentPassword",
+        placeholder: "Nhập mật khẩu hiện tại",
+        rules: {
+          lengthMax: 50,
           required: true,
           rule: [],
         },
       },
-      replicaPassword: {
-        name: "relicaPassword",
-        label: "Nhập lại khẩu",
-        ref: "refRelicaPassword",
-        placeholder: "Nhập lại mật khẩu",
+      newPassword: {
+        name: "NewPassword",
+        label: "Nhập mật khẩu mới",
+        ref: "refNewPassword",
+        placeholder: "Nhập mật khẩu mới",
         rules: {
-          lengthMax: 100,
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      renewPassword: {
+        name: "RenewPassword",
+        label: "Nhập lại mật khẩu mới",
+        ref: "refRenewPassword",
+        placeholder: "Nhập lại mật khẩu mới",
+        rules: {
+          lengthMax: 50,
           required: true,
           rule: [],
         },

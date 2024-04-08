@@ -6,9 +6,12 @@ using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Services.Base;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +26,61 @@ namespace BookShopOnline.Core.Services
         {
             _roleRepository = roleRepository;
             _userRepository = userRepository;
+        }
+
+        public override async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
+        {
+            var user = JsonConvert.DeserializeObject<User>(dataJson);
+
+            //Lấy thông tin người dùng trong Db
+            var userDb = await _userRepository.GetByIdAsync(id);
+
+            user.Password = userDb.Password;
+
+
+            //Nếu thay đổi mật khẩu thì kiểm tra xem mật khẩu hiện tại có khớp với mật khẩu trong db hay không
+            if (!string.IsNullOrEmpty(user.CurrentPassword))
+            {
+                var currentPasswordMD5 = CalculateMD5Hash(user.CurrentPassword);
+                //không khớp ném ra lỗi
+                if (currentPasswordMD5 != userDb.Password)
+                {
+                    errors.Add("CurrentPassword", new string[] { "Mật khẩu hiện tại không chính xác." });
+                    throw new ValidateException("Mật khẩu hiện tại không chính xác.", errors);
+                }
+                //hợp lệ thì gán lại giá trị password
+                else
+                {
+                    user.Password = CalculateMD5Hash(user.NewPassword);
+                }
+            }
+
+            //Cập nhật thông tin
+            var res = await _userRepository.UpdateAsync(id, user);
+            return res;
+        }
+        private string CalculateMD5Hash(string input)
+        {
+            // Kiểm tra xem input có phải là null không
+            //if (input == null)
+            //{
+            //    return input;
+            //}
+            // Tạo một đối tượng MD5
+            using (MD5 md5 = MD5.Create())
+            {
+                // Chuyển đổi input thành một mảng byte và tính toán giá trị băm
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Chuyển đổi mảng byte thành một chuỗi hex
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
         }
 
         public async Task<int> RegisterAdminServiceAsync(UserRegister userRegister)
@@ -55,6 +113,10 @@ namespace BookShopOnline.Core.Services
                 errors.Add("Email", new string[] { "Email này đã tồn tại trong hệ thống" });
                 throw new ValidateException("Email này đã tồn tại trong hệ thống", errors);
             }
+        }
+        public override Task ValidateBeforeUpdate(User user)
+        {
+            return base.ValidateBeforeUpdate(user);
         }
     }
 }

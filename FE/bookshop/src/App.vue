@@ -83,7 +83,7 @@ export default {
           //Lỗi từ người dùng nhập thông tin không hợp lệ
           case 400:
             this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join(",")
+              Object.values(req.response.data.errors).join("")
             );
             break;
           //Lỗi khi tải khoản đăng nhập không đúng
@@ -91,7 +91,7 @@ export default {
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
             this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join(",")
+              Object.values(req.response.data.errors).join("")
             );
             break;
           //Lỗi khi không có quyền truy cập
@@ -99,7 +99,7 @@ export default {
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
             this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join(",")
+              Object.values(req.response.data.errors).join("")
             );
             break;
           //Lỗi khi đường dẫn gọi API lỗi
@@ -107,7 +107,7 @@ export default {
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
             this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join(",")
+              Object.values(req.response.data.errors).join("")
             );
             break;
           //Lỗi từ phía backend

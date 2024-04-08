@@ -282,7 +282,7 @@ export default {
       return checkInfoTokensInStorage();
     },
     userInfo: () => {
-      return localStorageService.getItemFromLocalStorage("userInfo")
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo")
     }
   },
   methods: {

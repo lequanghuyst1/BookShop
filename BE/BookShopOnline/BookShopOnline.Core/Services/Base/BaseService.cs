@@ -33,10 +33,10 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> DeleteServiceAsync(Guid id)
         {
-            
-                var result = await _baseRepository.DeleteAsync(id);
-                return result;
-          
+
+            var result = await _baseRepository.DeleteAsync(id);
+            return result;
+
         }
 
         public async Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile)
@@ -63,7 +63,7 @@ namespace BookShopOnline.Core.Services.Base
             return result;
         }
 
-        public async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
+        public virtual async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
         {
             var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
             var tableName = typeof(TEntity).Name;

@@ -2,7 +2,8 @@
   <div class="row group-input">
     <div class="input-label">
       <label :for="id" class=""
-        >{{ title }}<span v-if="required" class="field-required">*</span></label
+        >{{ label
+        }}<span v-if="rules?.required" class="field-required">*</span></label
       >
     </div>
     <div class="col-8">
@@ -20,10 +21,11 @@
   </div>
 </template>
 <script>
+import { validateValue } from "@/js/validate/validate";
 export default {
   name: "InputAccount",
   props: {
-    title: {
+    label: {
       type: String,
       required: false,
     },
@@ -47,6 +49,10 @@ export default {
       type: [String, Number, Boolean, Array],
       required: false,
     },
+    rules: {
+      type: Object,
+      required: false,
+    },
   },
   created() {},
   watch: {
@@ -57,7 +63,7 @@ export default {
      */
     inputValue: function (newValue) {
       if (newValue === null || newValue === "" || newValue === undefined) {
-        this.errMessage = this.errorMessage;
+        this.validate();
         //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
         this.$emit("update:modelValue", null);
       } else {
@@ -67,6 +73,7 @@ export default {
     },
 
     modelValue: function (newValue) {
+ 
       this.inputValue = newValue;
     },
     errorMessage: function (newValue) {
@@ -76,6 +83,23 @@ export default {
   methods: {
     focusInput() {
       this.$refs["refInput"].focus();
+    },
+    validate() {
+      if (this.rules) {
+        if (this.rules?.required === true) {
+          this.errMessage = validateValue.required(
+            this.inputValue,
+            this.label
+          );
+          if (!this.errMessage) {
+            if (this.rules?.rule.length > 0) {
+              this.rules?.rule.forEach((item) => {
+                this.errMessage = validateValue[item](this.inputValue);
+              });
+            }
+          }
+        }
+      }
     },
   },
   data() {

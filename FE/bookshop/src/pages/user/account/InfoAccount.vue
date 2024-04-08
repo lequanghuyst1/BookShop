@@ -5,30 +5,35 @@
     </div>
     <form v-on:submit.prevent action="" id="form-account-info">
       <InputAccount
-        title="Họ và tên"
         id="fullname"
-        :required="true"
-        placeholder="Nhập họ và tên"
+        :label="textFields.fullname.label"
+        :placeholder="textFields.fullname.placeholder"
+        :ref="textFields.fullname.ref"
+        :rules="textFields.fullname.rules"
         v-model="user.Fullname"
-        ref="fullname"
-        :errorMessage="errorsMessage.fullname"
       ></InputAccount>
       <InputAccount
-        title="Số điện thoại"
-        id="honenumber"
-        placeholder="Nhập số điện thoại"
+        id="phonenumber"
+        :label="textFields.phoneNumber.label"
+        :placeholder="textFields.phoneNumber.placeholder"
+        :ref="textFields.phoneNumber.ref"
+        :rules="textFields.phoneNumber.rules"
         v-model="user.PhoneNumber"
       ></InputAccount>
       <InputAccount
-        title="Email"
         id="email"
-        placeholder="Nhập email"
+        :label="textFields.email.label"
+        :placeholder="textFields.email.placeholder"
+        :ref="textFields.email.ref"
+        :rules="textFields.email.rules"
         v-model="user.Email"
       ></InputAccount>
       <InputAccount
-        title="Địa chỉ"
         id="address"
-        placeholder="Nhập địa chỉ"
+        :label="textFields.address.label"
+        :placeholder="textFields.address.placeholder"
+        :ref="textFields.address.ref"
+        :rules="textFields.address.rules"
         v-model="user.address"
       ></InputAccount>
 
@@ -73,7 +78,10 @@
         <div class="input-label">
           <label for="" class=""></label>
         </div>
-        <div class="col-8 d-flex align-items-start">
+        <div
+          @click="onShowBlockChangePassword"
+          class="col-8 d-flex align-items-start"
+        >
           <input type="checkbox" v-model="isChangePassword" />
           <label for="" class="ms-2 change-password">Đổi mật khẩu</label>
         </div>
@@ -81,34 +89,32 @@
 
       <div v-if="isChangePassword" class="change-password-layout">
         <InputAccount
-          title="Mật khẩu hiện tại"
           id="password-old"
-          :required="true"
-          ref="password"
-          placeholder="Nhập mật khẩu hiện tại"
-          :errorMessage="errorsMessage.password"
-          v-model="user.password"
+          :label="textFields.currentPassword.label"
+          :placeholder="textFields.currentPassword.placeholder"
+          :ref="textFields.currentPassword.ref"
+          :rules="textFields.currentPassword.rules"
+          :errorMessage="this.lstErrorMessage.CurrentPassword"
+          v-model="user.CurrentPassword"
         ></InputAccount>
         <InputAccount
-          title="Mật khẩu mới"
           id="password-new"
-          :required="true"
-          ref="newPassword"
-          placeholder="Nhập mật khẩu mới"
-          :errorMessage="errorsMessage.newPassword"
-          v-model="user.newPassword"
+          :label="textFields.newPassword.label"
+          :placeholder="textFields.newPassword.placeholder"
+          :ref="textFields.newPassword.ref"
+          :rules="textFields.newPassword.rules"
+          v-model="user.NewPassword"
         ></InputAccount>
         <InputAccount
-          title="Nhập mật lại khẩu mới"
-          id="password-new"
-          :required="true"
-          ref="renewPassword"
-          placeholder="Nhập lại mật khẩu mới"
-          :errorMessage="errorsMessage.renewPassword"
-          v-model="user.renewPassword"
+          id="password-renew"
+          :label="textFields.renewPassword.label"
+          :placeholder="textFields.renewPassword.placeholder"
+          :ref="textFields.renewPassword.ref"
+          :rules="textFields.renewPassword.rules"
+          v-model="user.RenewPassword"
         ></InputAccount>
       </div>
-      <div @click="handleSaveUserInfo" class="btn-save-confirm">
+      <div @click="handleUpdateUserInfo" class="btn-save-confirm">
         <button>Cập nhật thông tin</button>
       </div>
     </form>
@@ -117,17 +123,18 @@
 <script>
 import InputAccount from "./GroupInput.vue";
 import localStorageService from "@/js/storage/LocalStorageService";
+import userService from "@/utils/UserService";
+import TEXT_FIELD from "@/js/resource/text-field";
 export default {
   name: "InfoAccountUserPage",
   components: { InputAccount },
   created() {
   },
   mounted() {
-    this.user = localStorageService.getItemFromLocalStorage("userInfo")
-      ? localStorageService.getItemFromLocalStorage("userInfo")
+    this.$refs[this.textFields.fullname.ref].focusInput();
+    this.user = localStorageService.getItemEncodeFromLocalStorage("userInfo")
+      ? localStorageService.getItemEncodeFromLocalStorage("userInfo")
       : {};
-    console.log(this.user);
-
   },
   watch: {
     date(newValue) {
@@ -160,40 +167,126 @@ export default {
       let date = new Date();
       return date.getFullYear();
     },
+    textFields: function () {
+      return TEXT_FIELD[this.$languageCode].user;
+    },
   },
   methods: {
-    handleSaveUserInfo() {
-      this.validateData();
-      if (Object.keys(this.errorsMessage).length > 0) {
-        for (const key in this.errorsMessage) {
-          const value = this.errorsMessage[key];
+    onShowBlockChangePassword() {
+      // console.log(this.$refs[this.textFields.currentPassword.ref])
+      // this.$refs[this.textFields.currentPassword.ref].focusInput();
+    },
+
+    /**
+     * Thực hiện save khi click vào btn lưu thông tin
+     * Author: LQHUY(08/04/2024)
+     */
+    handleUpdateUserInfo() {
+      this.lstErrorMessage = {};
+
+      //validate dữ liệu
+      this.handleValidateField();
+
+      if (Object.keys(this.lstErrorMessage).length > 0) {
+        for (const key in this.lstErrorMessage) {
+          const value = this.lstErrorMessage[key];
           if (value !== null) {
             this.$refs[key].focusInput();
             return;
           }
         }
       }
-      this.user.dateOfBirth = this.date + "/" + this.month + "/" + this.year;
-      console.log(this.user);
+
+      //update dữ liệu bản ghi
+      this.onUpdateUser();
     },
-    validateData() {
-      this.setError("fullname", this.$refs["fullname"].title);
-      if (this.isChangePassword) {
-        this.setError("password", this.$refs["password"].title);
-        this.setError("newPassword", this.$refs["newPassword"].title);
-        this.setError("renewPassword", this.$refs["renewPassword"].title);
+
+    /**
+     * Thực hiện validate dữ liệu khi update
+     * Author: LQHUY(08/04/2024)
+     */
+    handleValidateField() {
+      try {
+        for (let key in this.textFields) {
+          let ref = this.textFields[key].ref;
+
+          //Nếu không thay đổi mật khẩu thì dừng luôn không cần check
+          if (
+            this.isChangePassword === false &&
+            ref === this.textFields.currentPassword.ref
+          ) {
+            break;
+          }
+
+          //validate dữ liệu
+          this.$refs[ref].validate();
+          let rules = this.textFields[key].rules;
+          let nameField = this.textFields[key].name;
+
+          if (rules.required === true) {
+            if (
+              this.user[nameField] === "" ||
+              this.user[nameField] === null ||
+              this.user[nameField] === undefined
+            ) {
+              this.lstErrorMessage[ref] = key;
+            } else {
+              delete this.lstErrorMessage[ref];
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
-    setError(field, title) {
-      if (
-        this.user[field] === "" ||
-        this.user[field] === null ||
-        this.user[field] === undefined
-      ) {
-        this.errorsMessage[field] = `${title} không được phép để trống`;
-      } else {
-        this.errorsMessage[field] = null;
-        delete this.errorsMessage[field];
+
+    /**
+     * Thực hiện update bản ghi
+     * Author: LQHUY(08/04/2024)
+     */
+    async onUpdateUser() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+
+        //this.user.DateOfBirth = this.date + "/" + this.month + "/" + this.year;
+        var formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.user));
+
+        //gọi Api update bản ghi
+        const res = await userService.put(this.user.UserId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Cập nhật thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+
+          //đóng form thay đổi mật khẩu
+          this.isChangePassword =
+            this.isChangePassword === true
+              ? !this.isChangePassword
+              : this.isChangePassword;
+
+          //Lấy lại thông tin người dùng lưu vào local storage
+          const res = await userService.getById(this.user.UserId);
+          if (res.status === 200) {
+            localStorageService.setItemEncodeToLocalStorage(
+              "userInfo",
+              res.data
+            );
+          }
+        }
+      } catch (error) {
+        const errorObject = error.response.data.errors;
+        //hiển thi cho người dùng lỗi từ backend
+        for (let key in errorObject) {
+          this.lstErrorMessage[key] = errorObject[key].join("");
+          //focus vào ô lỗi
+          this.$refs[`ref${key}`].focusInput();
+        }
+        this.$emitter.emit("toggleShowLoading", false);
       }
     },
   },
@@ -205,7 +298,7 @@ export default {
       date: null,
       month: null,
       year: null,
-      errorsMessage: {},
+      lstErrorMessage: {},
     };
   },
 };
