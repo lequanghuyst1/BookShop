@@ -73,7 +73,6 @@ export default {
     },
 
     modelValue: function (newValue) {
- 
       this.inputValue = newValue;
     },
     errorMessage: function (newValue) {
@@ -85,15 +84,13 @@ export default {
       this.$refs["refInput"].focus();
     },
     validate() {
-      if (this.rules) {
-        if (this.rules?.required === true) {
-          this.errMessage = validateValue.required(
-            this.inputValue,
-            this.label
-          );
+      let rules = this.$props.rules;
+      if (rules) {
+        if (rules?.required === true) {
+          this.errMessage = validateValue.required(this.inputValue, this.$props.label);
           if (!this.errMessage) {
-            if (this.rules?.rule.length > 0) {
-              this.rules?.rule.forEach((item) => {
+            if (rules?.rule.length > 0) {
+              rules?.rule.forEach((item) => {
                 this.errMessage = validateValue[item](this.inputValue);
               });
             }

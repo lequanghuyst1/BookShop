@@ -81,6 +81,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJWTAuthenticationService, JWTAuthenticationService>();
 builder.Services.AddScoped<IJWTAuthenticationRepository, JWTAuthenticationRepository>();
 
+builder.Services.AddScoped<IDeliveryAddressService, DeliveryAddressService>();
+builder.Services.AddScoped<IDeliveryAddressRepository, DeliveryAddressRepository>();
+
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 //builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

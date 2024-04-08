@@ -33,5 +33,7 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// </returns>
         /// Created By: LQHUY(06/04/2024)
         Task<int> RegisterAdminServiceAsync(UserRegister userRegister);
+
+
     }
 }

@@ -39,7 +39,7 @@ namespace BookShopOnline.Core.Services.Base
 
         }
 
-        public async Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile)
+        public virtual async Task<int> InsertServiceAsync(string dataJson, IFormFile? imageFile)
         {
             var newId = Guid.NewGuid();
             var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);

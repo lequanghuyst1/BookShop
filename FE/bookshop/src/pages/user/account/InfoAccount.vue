@@ -198,7 +198,7 @@ export default {
       }
 
       //update dữ liệu bản ghi
-      this.onUpdateUser();
+      this.hanldeOnEdit();
     },
 
     /**
@@ -244,7 +244,7 @@ export default {
      * Thực hiện update bản ghi
      * Author: LQHUY(08/04/2024)
      */
-    async onUpdateUser() {
+    async hanldeOnEdit() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
 

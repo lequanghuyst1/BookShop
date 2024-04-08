@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using BookShopOnline.Core.Dto.Image;
 using BookShopOnline.Core.Dto;
 using BookShopOnline.Core.Dto.User;
+using BookShopOnline.Core.Dto.DeliveryAddress;
 
 namespace BookShopOnline.Core.AutoMapper
 {
@@ -24,6 +25,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Image, ImageDto>();
             CreateMap<UserRegister, User>();
             CreateMap<User, UserDto>();
+            CreateMap<DeliveryAddress, DeliveryAddressDto>();
         }
     }
 }

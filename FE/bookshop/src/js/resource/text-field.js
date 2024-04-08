@@ -228,6 +228,48 @@ const TEXT_FIELD = {
         },
       },
     },
+    /**
+     * Các field Địa chỉ nhận hàng
+     */
+    delieveryAddress: {
+      reminiscentName: {
+        name: "ReminiscentName",
+        label: "Tên gợi nhớ",
+        ref: "refReminiscentName",
+        placeholder: "Nhập tên gợi nhớ",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+
+      phoneNumber: {
+        name: "PhoneNumber",
+        label: "Số điện thoại",
+        ref: "refPhoneNumber",
+        placeholder: "Nhập số điện thoại",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: ['phoneNumber'],
+        },
+      },
+      homeNumber: {
+        name: "HomeNumber",
+        label: "Số nhà/đường",
+        ref: "refHomeNumber",
+        placeholder: "Nhập số nhà/tên đường",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      
+
+      
+    }
   },
 };
 export default TEXT_FIELD;
