@@ -139,6 +139,14 @@
                 v-model="book.QuantityImported"
               ></MInput>
             </div>
+            <div class="col l-3">
+              <MInput
+                :ref="textFields.numberOfPage.ref"
+                :label="textFields.numberOfPage.label"
+                :rules="textFields.numberOfPage.rules"
+                v-model="book.NumberOfPage"
+              ></MInput>
+            </div>
           </div>
           <div class="row">
             <div class="col l-12">

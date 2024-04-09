@@ -63,6 +63,7 @@ builder.Services.AddAutoMapper
 
 //config DI
 builder.Services.AddScoped<IDbContext, MariaDbContext>();
+
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 
@@ -113,6 +114,7 @@ app.UseCors("AllowOrigin");
 //config middleware
 app.UseMiddleware<ExceptionMiddleware>();
 
+//Tạo file tĩnh wwwroot
 app.UseStaticFiles();
 
 app.Run();

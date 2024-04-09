@@ -78,6 +78,17 @@ const TEXT_FIELD = {
           rule: [],
         },
       },
+      numberOfPage: {
+        name: "NumberOfPage",
+        label: "Số trang",
+        ref: "refNumberOfPage",
+        placeholder: "",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
     },
     user: {
       fullname: {
@@ -252,7 +263,7 @@ const TEXT_FIELD = {
         rules: {
           lengthMax: 50,
           required: true,
-          rule: ['phoneNumber'],
+          rule: ["phoneNumber"],
         },
       },
       homeNumber: {
@@ -266,10 +277,7 @@ const TEXT_FIELD = {
           rule: [],
         },
       },
-      
-
-      
-    }
+    },
   },
 };
 export default TEXT_FIELD;

@@ -28,10 +28,16 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task UpdateDeleliveryAddressDefalutAsync()
+        public async Task RemoveDefaultAddressAsync()
         {
             var procName = "Proc_DeliveryAddress_RemoveDefault";
             await _dbContext.Connection.ExecuteAsync(procName);
+        }
+
+        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id)
+        {
+            var procName = "Proc_DeliveryAddress_SetDefault";
+            await _dbContext.Connection.ExecuteAsync(procName, new { DeliveryAddressId  = id});
         }
         #endregion
     }

@@ -36,6 +36,7 @@ import 'tippy.js/animations/scale-extreme.css'
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 const app = createApp(App);
 
 
@@ -62,8 +63,8 @@ app.config.globalProperties.$Resource = Resource;
 app.config.globalProperties.$languageCode = "VN";
 app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
-app.config.globalProperties.$accessToken = '1';
 app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$quantityOfCart = 0;
 
 app.use(
     VueTippy,

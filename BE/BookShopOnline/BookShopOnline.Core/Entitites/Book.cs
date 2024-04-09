@@ -16,6 +16,8 @@ namespace BookShopOnline.Core.Entitites
         public Guid BookId { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
+        public string ImagePath { get; set; }
+
         public double Price { get; set; }
         public string Author { get; set; }
         public int QuantityImported { get; set; }

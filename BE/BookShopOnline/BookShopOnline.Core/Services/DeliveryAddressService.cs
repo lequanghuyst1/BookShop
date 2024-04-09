@@ -43,12 +43,18 @@ namespace BookShopOnline.Core.Services
 
             if (deliveryAddress.DeliveryAddressDefault == true)
             {
-                await _deliveryAddressRepository.UpdateDeleliveryAddressDefalutAsync();
+                await _deliveryAddressRepository.RemoveDefaultAddressAsync();
             }
             var result = await _baseRepository.InsertAsync(deliveryAddress);
             return result;
 
         }
+
+        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id)
+        {
+            await _deliveryAddressRepository.UpdateDeleliveryAddressDefalutAsync(id);
+        }
+
         public override async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
         {
             var deliveryAddress = JsonConvert.DeserializeObject<DeliveryAddress>(dataJson);
@@ -56,7 +62,7 @@ namespace BookShopOnline.Core.Services
 
             if (deliveryAddress.DeliveryAddressDefault == true)
             {
-                await _deliveryAddressRepository.UpdateDeleliveryAddressDefalutAsync();
+                await _deliveryAddressRepository.RemoveDefaultAddressAsync();
             }
             var result = await _baseRepository.UpdateAsync(id,deliveryAddress);
             return result; ;

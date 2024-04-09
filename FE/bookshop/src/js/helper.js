@@ -43,14 +43,11 @@ const helper = {
       if (gender !== null || gender !== undefined) {
         switch (gender) {
           case appConfig.$Enum.Gender.Male:
-            return appConfig.$Resource[appConfig.$languageCode].Gender
-              .Male;
+            return appConfig.$Resource[appConfig.$languageCode].Gender.Male;
           case appConfig.$Enum.Gender.Female:
-            return appConfig.$Resource[appConfig.$languageCode].Gender
-              .Female;
+            return appConfig.$Resource[appConfig.$languageCode].Gender.Female;
           case appConfig.$Enum.Gender.Other:
-            return appConfig.$Resource[appConfig.$languageCode].Gender
-              .Other;
+            return appConfig.$Resource[appConfig.$languageCode].Gender.Other;
           default:
             return "";
         }
@@ -71,7 +68,7 @@ const helper = {
         money = new Intl.NumberFormat("vi-VN", {
           style: "currency",
           currency: "VND",
-        }).format(money);
+        }).format(money).replace("₫", "");
         return money;
       } else {
         return "";
@@ -102,7 +99,7 @@ const helper = {
 
   /**
    * Hàm chuyển chuỗi tiếng Việt thành k dấu và loại bỏ các ký tự đặc biệt
-   * @param {string} str 
+   * @param {string} str
    * @returns string
    * Author: LQHUY(26/01/2024)
    */
@@ -116,8 +113,7 @@ const helper = {
     str = str.replace(/[ýỳỷỹỵ]/g, "y");
     str = str.replace(/đ/g, "d");
     return str;
-  }
-
+  },
 };
 
 export default helper;

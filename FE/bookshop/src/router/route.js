@@ -12,12 +12,14 @@ import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/Layou
 import HomeUserPage from "../pages/user/home/Index.vue";
 import CartPage from "../pages/user/cart/Index.vue";
 import CategoryUserPage from "../pages/user/category/Index.vue";
-import ProdcutPage from "../pages/user/product/Index.vue";
+import ProductPage from "../pages/user/product/Index.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 import BookAddressPage from "../pages/user/account/BookAddress.vue";
+import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
 
 import { checkInfoTokensInStorage } from "@/js/token/TokenService";
+import localStorageService from "@/js/storage/LocalStorageService";
 const routes = [
   {
     path: "/",
@@ -47,7 +49,7 @@ const routes = [
         path: "product/:id",
         name: "product",
         components: {
-          ViewRouterContainer: ProdcutPage,
+          ViewRouterContainer: ProductPage,
         },
         props: true,
       },
@@ -58,6 +60,13 @@ const routes = [
           ViewRouterContainer: UserAccountPage,
         },
         children: [
+          {
+            path: "",
+            name: "home-account",
+            components: {
+              ViewRouterMainContentAccount: HomeAccountUserPage,
+            },
+          },
           {
             path: "user-info",
             name: "edit-account",
@@ -120,14 +129,20 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !checkInfoTokensInStorage()) {
+  const user = localStorageService.getItemEncodeFromLocalStorage("userInfo");
+
+  if (
+    to.meta.requiresAuth &&
+    !checkInfoTokensInStorage() &&
+    user?.RoleName === "User"
+  ) {
     next("/admin/login");
   } else if (
-    to.path === "Login" &&
+    to.path === "/admin/login" &&
+    user?.RoleName === "Admin" &&
     checkInfoTokensInStorage()
   ) {
     next();
-    location.reload();
   } else {
     next();
   }

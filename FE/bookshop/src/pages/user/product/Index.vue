@@ -1,5 +1,5 @@
 <template>
-  <div class="breadcrumb-shop">
+  <div :id="this.$route.params.id" class="breadcrumb-shop">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pd5">
@@ -60,22 +60,27 @@
                 <div class="product-gallary">
                   <div class="text-center">
                     <div class="product-image">
-                      <img src="../../../assets/img/anh-mau.jpg" alt="" />
+                      <img
+                        :src="
+                          productInfo.ImagePath ? productInfo.ImagePath : ''
+                        "
+                        alt=""
+                      />
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="product-info">
-                  <h3 class="product-name">Để Trở Thành Người Thú Vị</h3>
+                  <h3 class="product-name">{{ productInfo.BookName }}</h3>
                   <div class="d-flex justify-content-between">
                     <span class="product-publisher">
                       Nhà xuất bản:
-                      <b>Thế giới</b>
+                      <b>{{ productInfo.PublisherName }}</b>
                     </span>
                     <span class="product-author">
                       Tác giả:
-                      <b>Trần Ngọc Nam</b>
+                      <b>{{ productInfo.Author }}</b>
                     </span>
                   </div>
                   <div class="mt-1">
@@ -83,9 +88,14 @@
                       Hình thức bìa: <b>Bìa cứng</b>
                     </span>
                   </div>
-                  <div class="product-price">
-                    <span class="product-price-sale"> 103,500₫ </span>
-                    <span class="product-price-cover"> 115,000₫ </span>
+
+                  <div class="product-price" style="padding: 16px 0 16px 0">
+                    <span class="product-price-sale">
+                      {{ this.$helper.formatMoney(productInfo.Price) }}đ</span
+                    >
+                    <span class="product-price-cover">
+                      {{ productInfo.Price }}</span
+                    >
                     <span class="product-discount">-10%</span>
                   </div>
                   <div class="policy-return d-flex">
@@ -101,21 +111,30 @@
                         Số lượng
                       </span>
                       <div class="select-quantity d-flex">
-                        <button @click="reduceQuantity" class="btn-quantity">
+                        <button
+                          @click="hanldeOnReduceQuantity"
+                          class="btn-quantity"
+                        >
                           <i class="fa-solid fa-minus"></i>
                         </button>
                         <input
                           type="text"
                           class="quantity-add"
-                          v-model="quantity"
+                          v-model="cartItem.Quantity"
                         />
-                        <button @click="increaseQuantity" class="btn-quantity">
+                        <button
+                          @click="handleOnIncreaseQuantity"
+                          class="btn-quantity"
+                        >
                           <i class="fa-solid fa-plus"></i>
                         </button>
                       </div>
                     </div>
                     <div class="wrap-addcart">
-                      <button class="add-to-cart">
+                      <button
+                        @click="handleOnAddProductToCart"
+                        class="add-to-cart"
+                      >
                         <i class="fa-solid fa-cart-plus"></i>
                         <span>Thêm vào giỏ hàng</span>
                       </button>
@@ -182,6 +201,7 @@
       </div>
     </div>
   </div>
+
   <div class="product-introduction">
     <div class="container">
       <div class="row">
@@ -194,130 +214,42 @@
         <div class="row">
           <div class="col-lg-5ths col-md-5ths">
             <div class="product-item">
-              <a href="/" class="product-image d-block text-center">
+              <div class="product-image d-block text-center">
                 <div class="product-sale">-10%</div>
-                <img
-                  src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                  alt=""
-                />
-              </a>
-              <div class="product-detail">
-                <h3 class="product-name">
-                  <a href="">
-                    Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không trở
-                    về
-                  </a>
-                </h3>
-                <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">46,000đ</div>
-                  <div
-                    class="product-pirce--original text-decoration-line-through"
-                  >
-                    79,000đ
-                  </div>
+                <a :href="'product/' + productInfo.BookId" class="d-block">
+                  <img
+                    :src="productInfo.ImagePath ? productInfo.ImagePath : ''"
+                    alt=""
+                  />
+                </a>
+                <div class="group-button">
+                  <button class="btn-action button-add-like">
+                    <a href="/heart">
+                      <i class="fa-solid fa-heart"></i>
+                    </a>
+                  </button>
+                  <button class="btn-action button-add-cart">
+                    <a href="/cart">
+                      <i class="fa-solid fa-cart-plus"></i>
+                    </a>
+                  </button>
+                  <button class="btn-action button-detail">
+                    <a href="/detail">
+                      <i class="fa-solid fa-eye"></i>
+                    </a>
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-lg-5ths col-md-5ths">
-            <div class="product-item">
-              <a href="/" class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <img
-                  src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                  alt=""
-                />
-              </a>
               <div class="product-detail">
                 <h3 class="product-name">
                   <a href="">
-                    Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không trở
-                    về
+                    {{ productInfo.BookName }}
                   </a>
                 </h3>
                 <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">46,000đ</div>
-                  <div
-                    class="product-pirce--original text-decoration-line-through"
-                  >
-                    79,000đ
+                  <div class="product-pirce--discount me-2">
+                    {{ productInfo.Price }}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5ths col-md-5ths">
-            <div class="product-item">
-              <a href="/" class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <img
-                  src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                  alt=""
-                />
-              </a>
-              <div class="product-detail">
-                <h3 class="product-name">
-                  <a href="">
-                    Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không trở
-                    về
-                  </a>
-                </h3>
-                <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">46,000đ</div>
-                  <div
-                    class="product-pirce--original text-decoration-line-through"
-                  >
-                    79,000đ
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5ths col-md-5ths">
-            <div class="product-item">
-              <a href="/" class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <img
-                  src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                  alt=""
-                />
-              </a>
-              <div class="product-detail">
-                <h3 class="product-name">
-                  <a href="">
-                    Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không trở
-                    về
-                  </a>
-                </h3>
-                <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">46,000đ</div>
-                  <div
-                    class="product-pirce--original text-decoration-line-through"
-                  >
-                    79,000đ
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5ths col-md-5ths">
-            <div class="product-item">
-              <a href="/" class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <img
-                  src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                  alt=""
-                />
-              </a>
-              <div class="product-detail">
-                <h3 class="product-name">
-                  <a href="">
-                    Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không trở
-                    về
-                  </a>
-                </h3>
-                <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">46,000đ</div>
                   <div
                     class="product-pirce--original text-decoration-line-through"
                   >
@@ -346,41 +278,40 @@
           <tbody>
             <tr>
               <th class="table-label">Mã hàng</th>
-              <td class="data_sku">8935325006289</td>
+              <td class="data_sku">{{ productInfo.BookCode }}</td>
             </tr>
             <tr>
-              <th class="table-label">Tên Nhà Cung Cấp</th>
+              <th class="table-label">Nhà xuất bản</th>
               <td class="data_supplier">
                 <a
                   class="xem-chi-tiet"
                   href="sky-books?fhs_campaign=ATTRIBUTE_PRODUCT"
-                  >Skybooks</a
+                  >{{ productInfo.PublisherName }}</a
                 >
               </td>
             </tr>
             <tr>
               <th class="table-label">Tác giả</th>
-              <td class="data_author">Kulzsc</td>
+              <td class="data_author">{{ productInfo.Author }}</td>
             </tr>
-            <tr>
-              <th class="table-label">NXB</th>
-              <td class="data_publisher">NXB Phụ Nữ Việt Nam</td>
-            </tr>
+
             <tr>
               <th class="table-label">Năm XB</th>
-              <td class="data_publish_year">2022</td>
+              <td class="data_publish_year">
+                {{ productInfo.PublicationDate }}
+              </td>
             </tr>
             <tr>
               <th class="table-label">Trọng lượng (gr)</th>
-              <td class="data_weight">150</td>
+              <td class="data_weight">{{ productInfo.Heavy }}</td>
             </tr>
             <tr>
               <th class="table-label">Kích Thước Bao Bì</th>
-              <td class="data_size">24 x 19 x 0.4 cm</td>
+              <td class="data_size">{{ productInfo.Size }}cm</td>
             </tr>
             <tr>
               <th class="table-label">Số trang</th>
-              <td class="data_qty_of_page">96</td>
+              <td class="data_qty_of_page">{{ productInfo.NumberOfPage }}</td>
             </tr>
             <tr>
               <th class="table-label">Hình thức</th>
@@ -417,7 +348,7 @@
         </table>
       </div>
       <div
-        :style="{ height: isOpenViewMoreDesc ? 'auto' : '200px' }"
+        :style="{ height: isShowMoreViewDesc ? 'auto' : '200px' }"
         class="product__tabs-description mt-3"
       >
         <div id="desc_content" class="std">
@@ -498,7 +429,7 @@
       </div>
       <div @click="openViewMoreDesc" class="desc-viewmore">
         <button>
-          {{ isOpenViewMoreDesc == false ? "Xem thêm" : "Rút gọn" }}
+          {{ isShowMoreViewDesc == false ? "Xem thêm" : "Rút gọn" }}
         </button>
       </div>
     </div>
@@ -545,33 +476,104 @@
   </div>
 </template>
 <script>
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import bookService from "@/utils/BookService";
+// import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "ProductPage",
-  methods: {
-    increaseQuantity() {
-      this.quantity++;
+  props: {
+    id: {
+      type: String,
     },
-    reduceQuantity() {
-      this.quantity--;
-      if (this.quantity < 1) {
-        this.quantity = 1;
+  },
+  created() {
+    this.loadDataProduct();
+  },
+  watch: {
+    //Theo dõi biến số lượng cập nhật số tiền
+    "cartItem.Quantity": function (newValue) {
+      this.cartItem.TotalAmount = this.cartItem.Price * newValue;
+    },
+  },
+  methods: {
+    /**
+     * Thực hiện lấy dữ liệu chi tiết của sản phẩm
+     * @author LQHUY(09/04/2024)
+     */
+    async loadDataProduct() {
+      try {
+        //gọi API lấy chi tiết sản phẩm
+        const res = await bookService.getById(this.$route.params.id);
+        if (res.status === 200) {
+          this.productInfo = res.data;
+          this.cartItem = res.data;
+          this.cartItem.Quantity = 1;
+          this.cartItem.TotalAmount = this.cartItem.Price;
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
+
+    /**
+     * Thực hiện tăng số lượng khi click icon +
+     * @author LQHUY(09/04/2024)
+     */
+    handleOnIncreaseQuantity() {
+      this.cartItem.Quantity++;
+    },
+
+    /**
+     * Thực hiện giảm số lượng khi click icon +
+     * @author LQHUY(09/04/2024)
+     */
+    hanldeOnReduceQuantity() {
+      this.cartItem.Quantity--;
+      if (this.cartItem.Quantity < 1) {
+        this.cartItem.Quantity = 1;
+      }
+    },
+
+    /**
+     * Thực hiện mở rộng phần review khi nhấn btn xem thêm
+     * @author LQHUY(09/04/2024)
+     */
     openViewMoreDesc() {
-      this.isOpenViewMoreDesc = !this.isOpenViewMoreDesc;
+      this.isShowMoreViewDesc = !this.isShowMoreViewDesc;
+    },
+
+    /**
+     * Thực hiện thêm vào giỏ hàng khi clcik btn Thêm vào giỏ hàng
+     * @author LQHUY(09/04/2024)
+     */
+    handleOnAddProductToCart() {
+      //thêm mới item vào cart
+      cartLocalStorageService.addItemToCart(this.cartItem);
+
+      if (cartLocalStorageService.getCartFromLocalStorage().length > 0) {
+        this.$emitter.emit(
+          "onShowToastMessage",
+          this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+          "Sản phẩm đã được thêm vào giỏ hàng.",
+          this.$Resource[this.$languageCode].ToastMessage.Status.Success
+        );
+
+        //Update lại tổng số lượng sản phẩm trong cart
+        this.$emitter.emit("getQuantityOfCart");
+      }
     },
   },
   data() {
     return {
+      productInfo: {},
+      cartItem: {},
       quantity: 1,
-      isOpenViewMoreDesc: false,
+      isShowMoreViewDesc: false,
     };
   },
 };
 </script>
 <style scoped>
-.product {
-}
 .product .container {
   background-color: #fff;
   border-radius: 4px;
@@ -716,10 +718,10 @@ export default {
 .product-introduction {
   margin: 24px 0;
 }
-.product-introduction-body{
+.product-introduction-body {
   position: relative;
 }
-.product-introduction-body .introduction-btn{
+.product-introduction-body .introduction-btn {
   position: absolute;
   top: 40%;
   transform: translateY(-50%);
@@ -733,10 +735,10 @@ export default {
   color: #ccc;
   border: 1px solid #ccc;
 }
-.product-introduction-body .introduction-btn.btn-prev{
+.product-introduction-body .introduction-btn.btn-prev {
   left: -5px;
 }
-.product-introduction-body .introduction-btn.btn-next{
+.product-introduction-body .introduction-btn.btn-next {
   right: -5px;
 }
 .product-introduction .container {

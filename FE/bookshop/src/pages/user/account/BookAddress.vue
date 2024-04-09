@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div v-show="this.numberPage === 2" class="block-address-form">
+    <div v-if="this.numberPage === 2" class="block-address-form">
       <form v-on:submit.prevent action="">
         <InputAccount
           :label="textFields.reminiscentName.label"
@@ -316,14 +316,10 @@ export default {
         if (res.status === 200) {
           this.lstAddress = res.data;
         }
-        const addressDefault = this.lstAddress.filter(
-          (item) => item.DeliveryAddressDefault === true
-        );
         //set địa chỉ mặc định vào local storage
-        localStorageService.setItemEncodeToLocalStorage(
-          "addressDefault",
-          addressDefault
-        );
+        // const addressDefault = this.lstAddress.filter(
+        //   (item) => item.DeliveryAddressDefault === true
+        // )[0];
       } catch (error) {
         console.log(error);
       }
@@ -349,6 +345,7 @@ export default {
      * Hàm lấy dữ liệu tỉnh, thành phố
      * Author: LQHUY(04/04/2024)
      */
+
     async getDataProvince() {
       try {
         //gọi api lấy dữ liệu tỉnh thành phố
@@ -374,6 +371,9 @@ export default {
         //gán giá trị cho districtData
         this.districtData = res.data.results;
 
+        if (this.districtSelected.district_id) {
+          return;
+        }
         //kiểm tra xem thông tin cập nhật có quận huyện hay không
         if (this.address.District) {
           this.districtSelected = this.districtData.filter(
@@ -397,6 +397,10 @@ export default {
         );
         //gán lại giá trị cho wardData
         this.wardData = res.data.results;
+
+        if (this.wardSelected.ward_id) {
+          return;
+        }
 
         //kiểm tra xem thông tin cập nhật có xã phường hay không
         if (this.address.Ward) {
@@ -429,7 +433,6 @@ export default {
       this.handleRefreshForm();
       this.formMode = this.$Enum.FormMode.Add;
       this.numberPage = 2;
-      console.log(this.lstErrorMessage);
     },
 
     /**
@@ -449,6 +452,8 @@ export default {
      */
     async getInfoAddress() {
       try {
+        this.$emitter.emit("toggleShowLoading", true);
+
         const res = await deliveryAddressService.getById(
           this.addressIdSelected
         );
@@ -460,10 +465,14 @@ export default {
               (item) => item.province_name === this.address.Province
             )[0];
             this.address.Province = null;
+            setTimeout(() => {
+              this.$emitter.emit("toggleShowLoading", false);
+            }, 300);
           }
         }
       } catch (error) {
         console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
       }
     },
 
@@ -516,24 +525,32 @@ export default {
               this.refListError.push(ref);
             } else {
               delete this.lstErrorMessage[ref];
-              if (this.refListError.length > 0) {
-                this.refListError = this.filter((item) => item !== ref);
-              }
+              this.refListError = this.refListError.filter(
+                (item) => item !== ref
+              );
             }
           }
         }
 
         this.setError(
           this.provinceSelected.province_id,
+          "refProvince",
           "province",
           "Tỉnh/thành phố"
         );
         this.setError(
           this.districtSelected.district_id,
+          "refDistrict",
+
           "district",
           "Quận/huyện"
         );
-        this.setError(this.wardSelected.ward_id, "ward", "Xã/phường");
+        this.setError(
+          this.wardSelected.ward_id,
+          "refWard",
+          "ward",
+          "Xã/phường"
+        );
       } catch (error) {
         console.error(error);
       }
@@ -543,11 +560,13 @@ export default {
      * Thực hiện set message dữ liệu không hợp lệ
      * Author: LQHUY(04/04/2024)
      */
-    setError(value, field, title) {
+    setError(value, ref, field, title) {
       if (value === "" || value === null || value === undefined) {
         this.lstErrorMessage[field] = `${title} không được phép để trống`;
+        this.refListError.push(ref);
       } else {
         delete this.lstErrorMessage[field];
+        this.refListError = this.refListError.filter((item) => item !== ref);
       }
     },
 
@@ -639,10 +658,30 @@ export default {
      * Author: LQHUY(04/04/2024)
      */
     async handleSetAddressDefault() {
-      await this.getInfoAddress();
-      this.address.DeliveryAddressDefault = true;
-      await this.handleOnEdit();
-      this.isShowActionEditAddress = true;
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+
+        const res = await deliveryAddressService.updateAdressDefault(
+          this.addressIdSelected
+        );
+        if (res.status === 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Cập nhật thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          //quay lại trang danh sách địa chỉ và load lại dữ liệu
+          this.numberPage = 1;
+          this.handleLoadData();
+          this.isShowActionEditAddress = this.lstAddress.map(() => false);
+        }
+      } catch (error) {
+        this.$emitter.emit("toggleShowLoading", false);
+
+        console.log(error);
+      }
     },
 
     /**

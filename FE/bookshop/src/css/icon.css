@@ -194,3 +194,84 @@
     scale: calc(18 / 21);
   }
   
+  .m-icon-cart{
+    background: url(../assets/icons/cart.svg) no-repeat center center;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+    position: relative;
+}
+.ico_vip_copper {
+  background: url(../assets/icons/ico_vip_copper.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 44px;
+  width: 44px;
+}
+  
+
+.icon_bill_gray {
+  background: url(../assets/icons/ico_bill_gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 24px;
+  width: 24px;
+}
+
+.ico_heart_gray {
+  background: url(../assets/icons/ico-heart-gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 24px;
+  width: 24px;
+}
+
+.ico_voucher_gray {
+  background: url(../assets/icons/ico_voucher_gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 24px;
+  width: 24px;
+}
+
+.ico_fpoint_gray {
+  background: url(../assets/icons/ico_fpoint_gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 24px;
+  width: 24px;
+}
+
+.ico_logout_gray {
+  background: url(../assets/icons/ico_logout_gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  height: 24px;
+  width: 24px;
+}
+
+
+.icon_seemore_gray {
+  background: url(../assets/icons/icon_seemore_gray.svg) no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+}

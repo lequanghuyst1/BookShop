@@ -46,7 +46,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         public async Task<TEntity?> GetByIdAsync<TEntity>(Guid entityId)
         {
             var tableName = typeof(TEntity).Name;
-            var sqlCommand = $"Select * From {tableName} where {tableName}Id = @EntityId";
+            var sqlCommand = $"Select * From view_{tableName} where {tableName}Id = @EntityId";
             var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityId = entityId });
             return res;
         }

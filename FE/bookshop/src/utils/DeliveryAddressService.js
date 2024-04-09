@@ -4,7 +4,11 @@ class DeliveryAddress extends BaseService{
         super("DeliveryAddresss")
     }
     async getAllByUserId (id){
-        const res = await this.baseAxios(`${this.baseUrl}/GetByUserId/${id}`);
+        const res = await this.baseAxios.get(`${this.baseUrl}/GetByUserId/${id}`);
+        return res;
+    }
+    async updateAdressDefault (id){
+        const res = await this.baseAxios.put(`${this.baseUrl}/SetAddresDefault/${id}`);
         return res;
     }
 }

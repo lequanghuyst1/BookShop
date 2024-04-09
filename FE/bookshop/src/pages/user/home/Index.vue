@@ -1,5 +1,5 @@
 <template>
- <div class="container mt-5">
+  <div class="container mt-5">
     <div class="row">
       <div class="col-3">
         <TheSidebar></TheSidebar>
@@ -48,40 +48,21 @@
           </div>
           <div class="tab-content">
             <div class="row">
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
+              <div
+                v-for="item in booksOutStanding"
+                :key="item.BookId"
+                class="col-3"
+              >
                 <div class="product-item">
                   <div class="product-image d-block text-center">
                     <div class="product-sale">-10%</div>
-                    <a href="/" class="d-block">
+                    <a :href="'product/' + item.BookId" class="d-block">
                       <img
-                        src="https://product.hstatic.net/200000845405/product/nh_ng-c_-g_i-m_t-t_ch----b_a-1_cb8ed626604c47429f44d721891cda29_medium.jpg"
+                        :src="
+                          item.ImagePath
+                            ? item.ImagePath
+                            : 'https://t3.ftcdn.net/jpg/04/34/72/82/240_F_34728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg'
+                        "
                         alt=""
                       />
                     </a>
@@ -106,174 +87,13 @@
                   <div class="product-detail">
                     <h3 class="product-name">
                       <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
+                        {{ item.BookName }}
                       </a>
                     </h3>
                     <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
+                      <div class="product-pirce--discount me-2">
+                        {{ this.$helper.formatMoney(item.Price) }}đ
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/nh_ng-c_-g_i-m_t-t_ch----b_a-1_cb8ed626604c47429f44d721891cda29_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="product-item">
-                  <a href="/" class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <img
-                      src="https://product.hstatic.net/200000845405/product/8935074133526_1_a7c9ab98cd0144c380544f534323fb62_medium.jpg"
-                      alt=""
-                    />
-                  </a>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        Những cô gái bí ẩn đi tìm nơi cơ trú ngoài biển xa không
-                        trở về
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">46,000đ</div>
                       <div
                         class="product-pirce--original text-decoration-line-through"
                       >
@@ -288,13 +108,34 @@
         </div>
       </div>
     </div>
- </div>
+  </div>
 </template>
 <script>
 import TheSidebar from "@/components/user/layout/TheSidebar.vue";
+import bookService from "@/utils/BookService";
 export default {
   name: "HomeUserPage",
   components: { TheSidebar },
+  created() {
+    this.loadDataBooksOutStanding();
+  },
+  data() {
+    return {
+      booksOutStanding: [],
+    };
+  },
+  methods: {
+    async loadDataBooksOutStanding() {
+      try {
+        const res = await bookService.getAll();
+        if (res.status === 200) {
+          this.booksOutStanding = res.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -319,5 +160,4 @@ export default {
   background-color: #fff;
   padding: 15px;
 }
-
 </style>

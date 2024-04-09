@@ -169,7 +169,7 @@ input.checkbox-add-cart[type="checkbox"] {
     align-items: center;
 }
 .info-product-cart .cart-fhsItem-price .price {
-    font-size: 14px;
+    font-size: 17px;
     line-height: 1.2em;
     font-weight: bold;
 }
@@ -278,7 +278,10 @@ font-size: 16px;
     font-size: 20px;
     color: #646464;
 }
-
+.div-of-btn-remove-cart .btn-remove-desktop-cart:hover i{
+    color: #C92127;
+    cursor: pointer;
+}
 
 .block-total-cart {
     background: white;

@@ -22,5 +22,8 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(08/04/2024
         Task<IEnumerable<DeliveryAddressDto>> GetByUserIdServiceAsync(Guid userId);
+
+        Task UpdateDeleliveryAddressDefalutAsync(Guid id);
+
     }
 }

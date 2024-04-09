@@ -26,5 +26,11 @@ namespace BookShopOnline.Api.Controllers
             var res = await _deliveryAddressService.GetByUserIdServiceAsync(userId);
             return Ok(res);
         }
+
+        [HttpPut("SetAddresDefault/{id}")]
+        public async Task SetAddressDefaultAsync(Guid id)
+        {
+           await _deliveryAddressService.UpdateDeleliveryAddressDefalutAsync(id);
+        }
     }
 }

@@ -35,52 +35,6 @@
             </div>
           </div>
         </div>
-        <div class="header__account">
-          <div v-if="isToken === false">
-            <a
-              @click="onShowFormLogin"
-              class="me-3 text-decoration-none text-uppercase fw-bold"
-              >Đăng nhập</a
-            >
-            <a
-              @click="onShowFormRegister"
-              class="text-decoration-none text-uppercase fw-bold"
-              >Đăng ký</a
-            >
-          </div>
-            <div class="header__user d-flex align-items-center gap-2" v-else>
-            <div class="user-image">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSbpqvNQMR7YBZ9eN_5qUeAzj6Vp-1ljDiuw&usqp=CAU"
-                alt="Ảnh"
-                class="header__navbar-item-avatar"
-              />
-            </div>
-            <span class="user-name">{{ userInfo.Fullname }}</span>
-            <div class="m-icon-arrow-down" style="scale: calc(10 / 14)"></div>
-            <ul class="header__navbar-user-list">
-              <li class="header__navbar-user-item">
-                <a class="header__navbar-user-item-link" href="customer/account/user-info"
-                  >Tài khoản của tôi</a
-                >
-              </li>
-              <li class="header__navbar-user-item">
-                <a class="header__navbar-user-item-link" href=""
-                  >Địa chỉ của tôi</a
-                >
-              </li>
-              <li class="header__navbar-user-item">
-                <a class="header__navbar-user-item-link" href="">Đơn mua</a>
-              </li>
-              <li
-                class="header__navbar-user-item header__navbar-user-item--logout"
-                @click="onLogout"
-              >
-                <p class="header__navbar-user-item-link">Đăng xuất</p>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -245,16 +199,175 @@
             </div>
           </div>
         </div>
-        <div class="header__support ms-5 d-flex align-items-center">
-          <img
-            class="header__support-image"
-            style="width: 32px; height: 32px"
-            src="../../../assets/img/phone-call.png"
-            alt=""
-          />
-          <div class="header__support-text ms-3">
-            <p>Tư vấn bán hàng</p>
-            <p>19006401</p>
+
+        <div class="header__block-right gap-3 ms-5 d-flex align-items-center">
+          <div class="block-item">
+            <a href="" class="block-item-link" id="btn-notification">
+              <div class="item-icon">
+                <i class="fa-regular fa-bell"></i>
+              </div>
+              <p class="item-title">Thông báo</p>
+            </a>
+          </div>
+          <div class="block-item">
+            <router-link
+              to="cart"
+              replace
+              class="block-item-link"
+              id="btn-cart"
+            >
+              <div class="item-icon d-flex justify-content-center">
+                <div class="m-icon-cart"></div>
+              </div>
+              <p class="item-title" style="margin-top: 3px !important">
+                Giỏ hàng
+              </p>
+              <span v-show="this.quantityOfCart > 0" class="cart-quantity">{{
+                this.quantityOfCart
+              }}</span>
+            </router-link>
+          </div>
+          <div
+            @click="this.isShowDropDownAccount = !this.isShowDropDownAccount"
+            class="block-item"
+            id="btn-account"
+          >
+            <div style="cursor: pointer" class="block-item-link">
+              <div class="item-icon">
+                <i class="fa-regular fa-user"></i>
+              </div>
+              <p class="item-title">
+                {{ isToken ? userInfo.Fullname : "Tài khoản" }}
+              </p>
+            </div>
+
+            <!-- Chưa đăng nhập -->
+            <div
+              class="fhs_top_account_dropdown fhs_dropdown right guest"
+              style="display: block"
+              v-show="isShowDropDownAccount && !isToken"
+            >
+              <div @click="onShowFormLogin">
+                <button
+                  type="button"
+                  title="Đăng nhập"
+                  class="fhs_btn_default active"
+                >
+                  <span>Đăng nhập</span>
+                </button>
+              </div>
+              <div @click="onShowFormRegister">
+                <button type="button" title="Đăng ký" class="fhs_btn_default">
+                  <span>Đăng ký</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Đã đăng nhập -->
+            <div
+              v-show="isShowDropDownAccount && isToken"
+              style="min-width: 300px"
+              class="fhs_top_account_dropdown fhs_dropdown right min"
+            >
+              <div>
+                <a
+                  class="fhs_center_space d-flex justify-content-between"
+                  href="/customer/account/"
+                  ><div class="fhs_center_left">
+                    <div
+                      class="fhs_center_left ico_vip_copper"
+                      style="margin-right: 8px"
+                    ></div>
+                    <div>
+                      <div
+                        class="fhs_center_left fhs_nowrap_one"
+                        style="
+                          font-size: 1.23em;
+                          color: #0d0e0f;
+                          font-weight: bold;
+                          max-width: 200px;
+                          height: 22px;
+                          text-transform: capitalize;
+                        "
+                      ></div>
+                      <div class="fhs_center_left" style="height: 22px">
+                        Thành viên Fahasa
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="icon_seemore_gray right"
+                    style="width: 24px; height: 24px"
+                  ></div
+                ></a>
+              </div>
+              <div style="border-top: 1px solid #f2f4f5">
+                <a class="fhs_center_left" href="/sales/order/history/"
+                  ><span class="icon_bill_gray" style="margin-right: 8px"></span
+                  ><span>Đơn hàng của tôi</span></a
+                >
+              </div>
+              <div style="border-top: 1px solid #f2f4f5">
+                <a class="fhs_center_left" href="/wishlist/"
+                  ><span class="ico_heart_gray" style="margin-right: 8px"></span
+                  ><span>Sản phẩm yêu thích</span></a
+                >
+              </div>
+              <div style="border-top: 1px solid #f2f4f5">
+                <a class="fhs_center_left" href="/tryout/voucher/"
+                  ><span
+                    class="ico_voucher_gray"
+                    style="margin-right: 8px"
+                  ></span
+                  ><span>Wallet Voucher</span></a
+                >
+              </div>
+              <div
+                class="fhs_center_space"
+                style="border-top: 1px solid #f2f4f5"
+              >
+                <div class="fhs_center_left fhs_nowrap_one fhs_flex_grow">
+                  <a
+                    class="fhs_center_left fhs_flex_grow"
+                    href="/tryout/history/"
+                    ><span
+                      class="ico_fpoint_gray"
+                      style="margin-right: 8px"
+                    ></span
+                    ><span>Tài khoản F-point</span></a
+                  >
+                </div>
+              </div>
+              <div
+                class="fhs_center_left fhs_mouse_point"
+                style="cursor: pointer; border-top: 1px solid #f2f4f5"
+                @click="onLogout"
+              >
+                <div class="fhs_center_left fhs_flex_grow">
+                  <span class="ico_logout_gray" style="margin-right: 8px"></span
+                  ><span>Thoát tài khoản</span>
+                </div>
+              </div>
+              <div
+                class="fhs_center_left fhs_mouse_point"
+                @click="
+                  (e) => {
+                    e.stopImmediatePropagation();
+                    this.isShowDropDownAccount = !this.isShowDropDownAccount;
+                  }
+                "
+                style="
+                  border-top: 1px solid #c27b86;
+                  display: flex;
+                  justify-content: center;
+                  cursor: pointer;
+                "
+              >
+                <span style="color: #c27b86 !important; font-size: 16px"
+                  >Đóng</span
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -272,27 +385,58 @@ import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 import userService from "@/utils/UserService";
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "TheHeaderUser",
   components: { TheLogin },
-  created() {},
-  beforeUnmount() {},
+  created() {
+    this.$emitter.on("getQuantityOfCart", this.getQuantityOfCart);
+    this.getQuantityOfCart();
+  },
+  mounted() {
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#btn-account")) {
+        this.isShowDropDownAccount = false;
+      }
+    });
+  },
+  beforeUnmount() {
+    this.$emitter.off("getQuantityOfCart", this.getQuantityOfCart);
+  },
   computed: {
     isToken: () => {
       return checkInfoTokensInStorage();
     },
     userInfo: () => {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo")
-    }
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+    },
+  },
+  watch:{
   },
   methods: {
+    /**
+     * Thực hiện lẩy ra tổng số lượng sản phẩm trong cart
+     * @author LQHUY(09/04/2024)
+     */
+    getQuantityOfCart() {
+      const cartList = cartLocalStorageService.getCartFromLocalStorage();
+      this.quantityOfCart = cartList.reduce(
+        (accumulator, item) => accumulator + item.Quantity,
+        0
+      );
+    },
+
     onShowFormLogin() {
+      event.stopImmediatePropagation();
       this.formAccount = this.$Enum.FormAccount.Login;
       this.isShowFormLoginOrRegister = true;
+      this.isShowDropDownAccount = false;
     },
     onShowFormRegister() {
+      event.stopImmediatePropagation();
       this.formAccount = this.$Enum.FormAccount.Register;
       this.isShowFormLoginOrRegister = true;
+      this.isShowDropDownAccount = false;
     },
     onHideFormLoginOrRegister() {
       this.isShowFormLoginOrRegister = false;
@@ -304,23 +448,23 @@ export default {
      * Thực hiện đăng xuất khi click đăng xuất
      * Author: LQHUY(06/04/2024)
      */
-    async onLogout(){
+    async onLogout() {
       try {
         var res = await userService.Logout(this.userInfo.Email);
-        if(res.status === 201){
+        if (res.status === 201) {
           this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-              "Đăng xuất thành công",
-              this.$Resource[this.$languageCode].ToastMessage.Status.Success
-            );
-            removeAllInfoTokenToStorage();
-            location.reload();
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Đăng xuất thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          removeAllInfoTokenToStorage();
+          location.reload();
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    },
   },
   data() {
     return {
@@ -329,6 +473,9 @@ export default {
       isShowSearchResult: false,
       formAccount: this.$Enum.FormAccount.Login,
       isShowFormLoginOrRegister: false,
+      isShowDropDownAccount: false,
+
+      quantityOfCart: 0,
     };
   },
 };
@@ -372,7 +519,7 @@ export default {
   padding: 0 !important;
   display: none;
 }
-.header__account:hover .header__navbar-user-list{
+.header__account:hover .header__navbar-user-list {
   display: block;
 }
 /* .header__navbar-user-list::before {
@@ -418,7 +565,7 @@ export default {
 .header__navbar-user-item--logout {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.header__navbar-user-item--logout p{
+.header__navbar-user-item--logout p {
   font-size: 14px;
   padding: 8px 12px !important;
   cursor: pointer;
@@ -435,21 +582,182 @@ export default {
 }
 .header {
   padding: 26px 0;
-  height: auto;
+  height: 68px;
+  display: flex;
+  align-items: center;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 2px 5px #ebebeb;
 }
 .header__logo img {
   width: 80%;
 }
-.header__support-text p {
-  color: #333;
-  font-size: 14px;
+.block-item {
+  margin-left: 8px;
 }
-.header__support-text p {
-  color: #333;
-  font-size: 14px;
+.block-item-link {
+  color: #7a7e7f;
+  font-size: 18px;
+}
+.block-item-link .item-icon {
+  font-weight: 600;
+}
+.block-item-link .item-title {
+  color: #646464;
+
+  font-size: 13px;
+}
+#btn-account {
+  position: relative;
+}
+.fhs_dropdown {
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+  -webkit-transform: translate(0, 100%);
+  -ms-transform: translate(0, 100%);
+  -moz-transform: translate(0, 100%);
+  transform: translate(0, 100%);
+  background-color: white;
+  z-index: 999;
+  white-space: nowrap;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -webkit-box-shadow: 0 4px 6px rgb(32 33 36 / 28%);
+  -moz-box-shadow: 0 4px 6px rgb(32 33 36 / 28%);
+  box-shadow: 0 4px 6px rgb(32 33 36 / 28%);
+  color: #7a7e7f;
+  max-width: 100vw;
+  cursor: default;
+  box-shadow: 0 2px 5px #bbb9b9;
+}
+.fhs_top_account_dropdown > div:first-of-type {
+  padding: 16px 12px 16px 12px;
+  -moz-border-top-left-radius: 8px;
+  -moz-border-top-right-radius: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+}
+.fhs_center_left {
+  display: flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
   text-align: left;
+  font-size: 14px;
+  color: #7a7e7f;
+}
+.fhs_nowrap_one {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.23em;
+  color: #0d0e0f;
+  font-weight: bold;
+  max-width: 200px;
+  height: 22px;
+  text-transform: capitalize;
+}
+.fhs_center_left {
+  display: flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}
+.icon_seemore_gray.right {
+  transform: rotate(-90deg);
+  transition: all 0.5s ease 0s;
+}
+
+.fhs_top_account_dropdown > div {
+  padding: 9px 12px;
+}
+
+.fhs_center_left span {
+  color: #7a7e7f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.fhs_top_account_dropdown.min > div:hover,
+.fhs_top_languages_dropdown > div:hover {
+  background-color: #f2f4f5;
+}
+
+.fhs_bar_bottom a,
+.fhs_btn_default {
+  width: 100%;
+  display: flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  color: #c92127;
+  background-color: #fff;
+  border: 2px solid #c92127;
+  font-size: 14px;
+  font-weight: 700;
+  width: 210px;
+  max-width: 100%;
+  height: 40px;
+  max-height: 100%;
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  cursor: pointer;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.fhs_bar_bottom a.active,
+.fhs_btn_default.active {
+  color: #fff;
+  background-color: #c92127;
+  border: 2px solid #c92127;
+}
+.fhs_top_account_dropdown.guest > div:first-of-type {
+  padding: 16px 12px 4px 12px;
+}
+.fhs_top_account_dropdown.guest > div:last-of-type {
+  padding: 4px 12px 16px 12px;
+}
+
+.fhs_btn_default:hover {
+  font-size: 15px;
+}
+
+#btn-cart {
+  position: relative;
+}
+#btn-cart .cart-quantity {
+  position: absolute;
+  top: -8px;
+  right: 5px;
+  font-size: 12px;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  background-color: #c92127;
+  border-radius: 50%;
+  border: 1px solid #fff;
 }
 .header__logo {
   flex-shrink: 0;

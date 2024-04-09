@@ -1,0 +1,109 @@
+import localStorageService from "./LocalStorageService";
+class CartLocalStorageService {
+  /**
+   * Thực hiện lấy giá trị của cart từ localStorage
+   * @returns
+   * @author LQHUY(09/04/2024)
+   */
+  getCartFromLocalStorage() {
+    try {
+      return localStorageService.getItemFromLocalStorage("cart") || [];
+    } catch (error) {
+      console.log("Error getting data from Local Storage:", error);
+      return undefined;
+    }
+  }
+
+  /**
+   * Thực hiện tạo mới hoặc sửa cart từ localStorage
+   * @param {array} value
+   * @author LQHUY(09/04/2024)
+   */
+  setCartToLocalStorage(value) {
+    try {
+      localStorageService.setItemToLocalStorage("cart", value);
+    } catch (error) {
+      console.log("Error getting data from Local Storage:", error);
+    }
+  }
+
+  /**
+   * Thực hiện thêm sản phẩm vào cart
+   * @param {array} value
+   * @author LQHUY(09/04/2024)
+   */
+  addItemToCart(value) {
+    try {
+      const data = this.getCartFromLocalStorage();
+      //Tìm kiếm xem item được thêm đã có trong cart hay chưa
+      if (data.length > 0) {
+        const checkItemExist = data.filter(
+          (item) => item.BookId === value.BookId
+        );
+        //Nếu chưa có thì thêm vào mảng giá trị
+        if (checkItemExist.length === 0) {
+          data.push(value);
+        }
+        //Nếu đã có thì update số lượng gỡ bỏ cái cũ thêm cái mới
+        else {
+          const itemExistObject = checkItemExist[0];
+          itemExistObject.Quantity = itemExistObject.Quantity + value.Quantity;
+        }
+      } else {
+        data.push(value);
+      }
+
+      //Cập nhật lại dữ liệu vào local
+      this.setCartToLocalStorage(data);
+    } catch (error) {
+      console.log("Error adding item to Local Storage:", error);
+    }
+  }
+
+  updateQuantityItemToCart(value) {
+    try {
+      const data = this.getCartFromLocalStorage();
+      //Tìm kiếm xem item được thêm đã có trong cart hay chưa
+      if (data.length > 0) {
+        const checkItemExist = data.filter(
+          (item) => item.BookId === value.BookId
+        );
+
+        //Update số lượng gỡ bỏ cái cũ thêm cái mới
+        const itemExistObject = checkItemExist[0];
+        itemExistObject.Quantity = value.Quantity;
+        itemExistObject.TotalAmount = value.Quantity * value.Price;
+      }
+
+      //Cập nhật lại dữ liệu vào local
+      this.setCartToLocalStorage(data);
+    } catch (error) {
+      console.log("Error adding item to Local Storage:", error);
+    }
+  }
+
+  /**
+   * Thực hiện gỡ bỏ item ra khỏi cart
+   * @param {string} itemId
+   * @author LQHUY(09/04/2024)
+   */
+  removeItemGetOutCart(itemId) {
+    try {
+      const data = this.getCartFromLocalStorage();
+      const updateData = data.filter((item) => item.BookId !== itemId);
+      this.setCartToLocalStorage(updateData);
+    } catch (error) {
+      console.log("Error adding item to Local Storage:", error);
+    }
+  }
+
+  removeCartLocalStorage() {
+    try {
+      localStorageService.removeItemLocalStorage("cart");
+    } catch (error) {
+      console.log("Error remove data from Local Storage:", error);
+    }
+  }
+}
+const cartLocalStorageService = new CartLocalStorageService();
+export default cartLocalStorageService;
