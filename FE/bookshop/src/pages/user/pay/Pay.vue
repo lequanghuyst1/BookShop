@@ -5,12 +5,12 @@
       <div class="row">
         <div class="col-7">
           <div class="delivery-address">
-            <div class="info-order-title">
+            <div class="info-order-title mb-3">
               <h3>Địa chỉ giao hàng</h3>
             </div>
-            <div class="select-address">
+            <div v-show="isAddressExist" class="select-address">
               <label style="margin-top: 20px" class="warrap__input-radio">
-                <input type="radio" name="address" />
+                <input type="radio" name="address" :checked="isAddressExist" />
                 <span class="checkmark"></span>
               </label>
               <div class="address-item">
@@ -43,12 +43,11 @@
                 </div>
               </div>
             </div>
-            <div class="address-different">
+            <div v-show="isAddressExist" class="address-different">
               <label class="warrap__input-radio">
                 <input
+                  @click="this.isShowFormAddress = true"
                   type="radio"
-                  :value="item"
-                  v-model="genderValue"
                   name="address"
                 />
                 <span class="checkmark"></span>
@@ -59,7 +58,10 @@
                 >Giao hàng đến địa chỉ khác</label
               >
             </div>
-            <div class="block-address-form">
+            <div
+              v-show="isAddressExist === false || isShowFormAddress"
+              class="block-address-form"
+            >
               <form v-on:submit.prevent action="">
                 <InputAccount
                   :label="textFields.reminiscentName.label"
@@ -194,6 +196,7 @@
                   v-model="address.HomeNumber"
                 ></InputAccount>
                 <div
+                  v-show="isAddressExist"
                   style="margin-top: 16px; margin-bottom: 16px"
                   @click="handleSave"
                   class="btn-add-address"
@@ -402,12 +405,12 @@
               <p class="total-price">832.000đ</p>
             </div>
             <div
-                  style="margin-top: 16px; margin-bottom: 16px"
-                  @click="handleSave"
-                  class="btn-add-address"
-                >
-                  <button style="width: 100%">Xác nhận thanh toán</button>
-                </div>
+              style="margin-top: 16px; margin-bottom: 16px"
+              @click="handleSave"
+              class="btn-add-address"
+            >
+              <button style="width: 100%">Xác nhận thanh toán</button>
+            </div>
           </div>
         </div>
       </div>
@@ -450,6 +453,8 @@ export default {
 
       order: {},
       isShowNote: false,
+      isAddressExist: false,
+      isShowFormAddress: false,
     };
   },
   computed: {
@@ -504,9 +509,15 @@ export default {
         const res = await deliveryAddressService.getAllByUserId(
           this.userInfo.UserId
         );
+        if (res.data.length === 0) {
+          this.addressDeliveryDefault = {};
+          return;
+        }
         const addressDeliveryDefault = res.data.filter(
           (item) => item.DeliveryAddressDefault === true
         );
+        this.isAddressExist = true;
+        console.log(this.isAddressExist);
         this.addressDeliveryDefault = addressDeliveryDefault[0];
       } catch (error) {
         console.log(error);

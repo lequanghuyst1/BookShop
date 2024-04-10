@@ -18,9 +18,7 @@ namespace BookShopOnline.Infrastructure.Repository
             _dbContext = dbContext;
             CartItems = cartItemRepository;
         }
-
         
-
         public ICartItemRepository CartItems { get; }
 
         public void BeginTransaction()

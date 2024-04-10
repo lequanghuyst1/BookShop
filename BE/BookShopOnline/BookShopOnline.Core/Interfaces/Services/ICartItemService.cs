@@ -11,5 +11,7 @@ namespace BookShopOnline.Core.Interfaces.Services
 {
     public interface ICartItemService : IBaseService<CartItem, CartItemDto>
     {
+        Task<List<CartItemDto>> InsertManyServiceAsync(List<CartItem> cartItems);
+
     }
 }

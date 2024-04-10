@@ -3,6 +3,7 @@ using BookShopOnline.Core.AutoMapper;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using BookShopOnline.Core.Interfaces.UnitOfWork;
 using BookShopOnline.Core.Services;
 using BookShopOnline.Infrastructure.DbContext;
 using BookShopOnline.Infrastructure.Interface;
@@ -88,7 +89,11 @@ builder.Services.AddScoped<IDeliveryAddressRepository, DeliveryAddressRepository
 builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+
+
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 //builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));

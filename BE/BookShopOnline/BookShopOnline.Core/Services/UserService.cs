@@ -21,11 +21,13 @@ namespace BookShopOnline.Core.Services
     {
         IRoleRepository _roleRepository;
         IUserRepository _userRepository;
+        ICartRepository _cartRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IImageService imageService, IRoleRepository roleRepository) : base(userRepository, mapper, imageService)
+        public UserService(IUserRepository userRepository, IMapper mapper, IImageService imageService, IRoleRepository roleRepository, ICartRepository cartRepository) : base(userRepository, mapper, imageService)
         {
             _roleRepository = roleRepository;
             _userRepository = userRepository;
+            _cartRepository = cartRepository;
         }
 
         public override async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
@@ -98,12 +100,22 @@ namespace BookShopOnline.Core.Services
         public async Task<int> RegisterUserServiceAsync(UserRegister userRegister)
         {
             var role = await _roleRepository.getByRoleNameAsync("User");
+
+            var newId = Guid.NewGuid();
             userRegister.RoleId = role.RoleId;
-            userRegister.UserId = Guid.NewGuid();
+            userRegister.UserId = newId;
+
             var user = _mapper.Map<User>(userRegister);
             await ValidateBeforeInsert(user);
 
             var res = await _userRepository.InsertAsync(user);
+            if(res > 0)
+            {
+                var cart = new Cart();
+                cart.UserId = user.UserId;
+                cart.CreatedBy = user.Fullname;
+                await _cartRepository.InsertAsync(cart);
+            }
             return res;
         }
         public override async Task ValidateBeforeInsert(User user)

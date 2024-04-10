@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Interfaces.Infrastructures
 {
-    public interface ICartItemRepository : IBaseRepository<CartItem>
+    public interface ICartRepository
     {
-        Task<int> InsertManyAsync(List<CartItem> cartItems);
+        Task<int> InsertAsync(Cart cart);
+        Task<int> DeleteAsync(string cartId);
     }
 }

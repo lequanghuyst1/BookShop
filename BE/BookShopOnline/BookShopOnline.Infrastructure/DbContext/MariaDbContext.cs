@@ -41,7 +41,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name.ToLower();
             var sqlCommand = $"Select * From view_{tableName}";
-            var res = await Connection.QueryAsync<TEntity>(sqlCommand);
+            var res = await Connection.QueryAsync<TEntity>(sqlCommand, transaction: Transaction);
             return res;
         }
 
