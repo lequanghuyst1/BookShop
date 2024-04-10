@@ -26,6 +26,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<UserRegister, User>();
             CreateMap<User, UserDto>();
             CreateMap<DeliveryAddress, DeliveryAddressDto>();
+            CreateMap<CartItem, CartItemDto>();
         }
     }
 }

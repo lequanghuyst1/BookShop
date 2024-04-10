@@ -85,6 +85,9 @@ builder.Services.AddScoped<IJWTAuthenticationRepository, JWTAuthenticationReposi
 builder.Services.AddScoped<IDeliveryAddressService, DeliveryAddressService>();
 builder.Services.AddScoped<IDeliveryAddressRepository, DeliveryAddressRepository>();
 
+builder.Services.AddScoped<ICartItemService, CartItemService>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 //builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
