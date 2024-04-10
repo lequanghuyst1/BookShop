@@ -17,7 +17,7 @@ import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 import BookAddressPage from "../pages/user/account/BookAddress.vue";
 import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
-
+import PayUserPage from "@/pages/user/pay/Pay.vue";
 import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 const routes = [
@@ -89,6 +89,10 @@ const routes = [
   {
     path: "/admin/login",
     component: LoginAdminPage,
+  },
+  {
+    path: "/checkout",
+    component: PayUserPage,
   },
   {
     path: "/admin",

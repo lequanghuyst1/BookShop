@@ -457,18 +457,20 @@ export default {
         const res = await deliveryAddressService.getById(
           this.addressIdSelected
         );
+
         if (res.status === 200) {
           this.address = res.data;
+          console.log(this.address);
           if (this.address.Province) {
             //lấy ra provinceSelected có tên trùng với Province
             this.provinceSelected = this.provinceData.filter(
               (item) => item.province_name === this.address.Province
             )[0];
             this.address.Province = null;
-            setTimeout(() => {
-              this.$emitter.emit("toggleShowLoading", false);
-            }, 300);
           }
+          setTimeout(() => {
+            this.$emitter.emit("toggleShowLoading", false);
+          }, 300);
         }
       } catch (error) {
         console.log(error);
@@ -772,47 +774,6 @@ export default {
   color: #333333;
   padding-bottom: 10px;
 }
-.address-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  padding: 10px 16px;
-  position: relative;
-}
-.address-item .item__image {
-  padding: 5px;
-  border-radius: 50%;
-  border: 1px solid #e2e2e2;
-  margin-right: 16px;
-}
-.address-item .item__image image {
-  height: 35px;
-}
-.address-item .item__content {
-  text-align: left;
-  flex: 1;
-}
-.item__content .content__title .title__name {
-  font-size: 16px;
-  font-weight: 700;
-}
-.item__content .content__title .title__type {
-  background: #ffecec;
-  border-radius: 5px;
-  color: #fd2424;
-  font-size: 15px;
-  height: -moz-fit-content;
-  height: fit-content;
-  padding: 1px 11px !important;
-  white-space: nowrap;
-}
-.item__content .content__address {
-  font-size: 13px;
-  margin-top: 2px;
-  color: #333;
-}
 
 .comboxbox {
   color: #333;
@@ -862,24 +823,6 @@ export default {
   color: #c92127;
   cursor: pointer;
 }
-.btn-add-address {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-.btn-add-address button {
-  background: #e0052b;
-  border: none;
-  border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 11px 0;
-  text-align: center;
-  width: 50%;
-}
 
 input[type="checkbox"] {
   -webkit-appearance: none;
@@ -910,28 +853,6 @@ input[type="checkbox"]:checked::after {
   left: calc(3px / 2);
 }
 
-.group-input {
-  padding: 4px 0;
-}
-.group-input .input-label {
-  width: 186px;
-  height: 32px;
-  transform: translateY(0px);
-}
-.group-input label {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-.field-required {
-  color: #c92127;
-  margin-left: 3px;
-}
-.group-input .m-textfield {
-  height: 32px;
-  padding: 8px 12px 9px 12px;
-}
 .group-input .m-textfield::placeholder {
   font-style: normal;
 }
