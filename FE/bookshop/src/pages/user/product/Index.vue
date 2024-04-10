@@ -492,7 +492,7 @@ export default {
   watch: {
     //Theo dõi biến số lượng cập nhật số tiền
     "cartItem.Quantity": function (newValue) {
-      this.cartItem.TotalAmount = this.cartItem.Price * newValue;
+      this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
     },
   },
   methods: {
@@ -508,7 +508,7 @@ export default {
           this.productInfo = res.data;
           this.cartItem = res.data;
           this.cartItem.Quantity = 1;
-          this.cartItem.TotalAmount = this.cartItem.Price;
+          this.cartItem.ProvisionalMoney = this.cartItem.Price;
         }
       } catch (error) {
         console.log(error);

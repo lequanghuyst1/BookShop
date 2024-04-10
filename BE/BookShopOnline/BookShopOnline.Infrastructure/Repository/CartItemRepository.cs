@@ -17,6 +17,14 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<CartItem> CheckBookExistInCartItemAsync(Guid bookId)
+        {
+            var procName = "Proc_CartItem_CheckBookExist";
+
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<CartItem>(procName, new { BookId = bookId });
+            return res;
+        }
+
         public async Task<int> InsertManyAsync(List<CartItem> cartItems)
         {
             var procName = "Proc_CartItem_InsertMany";

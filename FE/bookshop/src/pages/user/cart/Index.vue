@@ -306,7 +306,7 @@ export default {
         return this.lstIdItemSelected.includes(item.BookId);
       });
       const totalAmount = itemSelected.reduce(
-        (accumulator, item) => accumulator + item.TotalAmount,
+        (accumulator, item) => accumulator + item.ProvisionalMoney,
         0
       );
       this.totalAmountCart = this.$helper.formatMoney(totalAmount);

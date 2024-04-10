@@ -17,6 +17,6 @@ namespace BookShopOnline.Core.Dto
         public Guid CartId { get; set; }
         public Guid BookId { get; set; }
         public int Quantity { get; set; }
-        public double? Price { get; set; }
+        public double? ProvisionalMoney { get; set; }
     }
 }

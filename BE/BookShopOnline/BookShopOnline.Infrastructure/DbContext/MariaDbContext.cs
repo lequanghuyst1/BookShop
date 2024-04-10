@@ -33,7 +33,7 @@ namespace BookShopOnline.Infrastructure.DbContext
             {
                 Dictionary<string, string[]>? errors = new Dictionary<string, string[]>();
                 errors.Add("Database", new string[] { ResourceVN.ConnectDbException });
-                throw new ConnectDbException( ResourceVN.ConnectDbException, errors);
+                throw new ConnectDbException(ResourceVN.ConnectDbException, errors);
             }
         }
 
@@ -49,7 +49,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name;
             var sqlCommand = $"Select * From view_{tableName} where {tableName}Id = @EntityId";
-            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityId = entityId });
+            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityId = entityId }, Transaction);
             return res;
         }
 
@@ -57,7 +57,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name;
             var procName = $"Proc_{tableName}_Insert";
-            var res = await Connection.ExecuteAsync(procName, entity);
+            var res = await Connection.ExecuteAsync(procName, entity, transaction: Transaction);
             return res;
         }
 
@@ -66,7 +66,7 @@ namespace BookShopOnline.Infrastructure.DbContext
             var tableName = typeof(TEntity).Name;
             var procName = $"Proc_{tableName}_Update";
             entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, id);
-            var res = await Connection.ExecuteAsync(procName, entity);
+            var res = await Connection.ExecuteAsync(procName, entity, transaction: Transaction);
             return res;
         }
 
@@ -76,7 +76,7 @@ namespace BookShopOnline.Infrastructure.DbContext
             var sql = $"DELETE FROM {tableName} WHERE {tableName}Id = @{tableName}Id";
             DynamicParameters dynamicParameters = new DynamicParameters();
             dynamicParameters.Add($"@{tableName}Id", id);
-            var res = await Connection.ExecuteAsync(sql, dynamicParameters);
+            var res = await Connection.ExecuteAsync(sql, dynamicParameters, transaction: Transaction);
             return res;
         }
 
@@ -84,7 +84,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name;
             var sql = $"DELETE FROM {tableName} WHERE {tableName}Id IN @Ids";
-            var res = await Connection.ExecuteAsync(sql, new { Ids = ids });
+            var res = await Connection.ExecuteAsync(sql, new { Ids = ids }, Transaction);
             return res;
         }
 
@@ -130,9 +130,7 @@ namespace BookShopOnline.Infrastructure.DbContext
             }
         }
 
-        
 
-      
         public async Task<PagingEntity<TEntity>> GetFilterPagingAsync<TEntity>(string? searchString, int pageSize, int pageNumber)
         {
             var tableName = typeof(TEntity).Name;

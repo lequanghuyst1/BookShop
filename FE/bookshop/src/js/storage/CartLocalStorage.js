@@ -44,7 +44,7 @@ class CartLocalStorageService {
         if (checkItemExist.length === 0) {
           data.push(value);
         }
-        //Nếu đã có thì update số lượng gỡ bỏ cái cũ thêm cái mới
+        //Nếu đã có thì update số lượng
         else {
           const itemExistObject = checkItemExist[0];
           itemExistObject.Quantity = itemExistObject.Quantity + value.Quantity;
@@ -72,7 +72,7 @@ class CartLocalStorageService {
         //Update số lượng gỡ bỏ cái cũ thêm cái mới
         const itemExistObject = checkItemExist[0];
         itemExistObject.Quantity = value.Quantity;
-        itemExistObject.TotalAmount = value.Quantity * value.Price;
+        itemExistObject.ProvisionalMoney = value.Quantity * value.Price;
       }
 
       //Cập nhật lại dữ liệu vào local

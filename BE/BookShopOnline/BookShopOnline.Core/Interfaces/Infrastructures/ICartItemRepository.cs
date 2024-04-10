@@ -10,5 +10,6 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
     public interface ICartItemRepository : IBaseRepository<CartItem>
     {
         Task<int> InsertManyAsync(List<CartItem> cartItems);
+        Task<CartItem> CheckBookExistInCartItemAsync(Guid bookId);
     }
 }
