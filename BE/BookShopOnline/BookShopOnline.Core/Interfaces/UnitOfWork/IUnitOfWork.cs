@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShopOnline.Core.Interfaces.Infrastructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,8 @@ namespace BookShopOnline.Core.Interfaces.UnitOfWork
     public interface IUnitOfWork : IDisposable
     {
         
+        ICartItemRepository CartItems { get; }
+
         /// <summary>
         /// Bắt đầu transition
         /// </summary>

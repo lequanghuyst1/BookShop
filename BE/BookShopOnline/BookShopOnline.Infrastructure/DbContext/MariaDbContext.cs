@@ -20,6 +20,8 @@ namespace BookShopOnline.Infrastructure.DbContext
     {
         readonly string ConnectionString;
         public IDbConnection Connection { get; set; }
+        public IDbTransaction Transaction { get; set; }
+
         public MariaDbContext(IConfiguration configuration)
         {
             try

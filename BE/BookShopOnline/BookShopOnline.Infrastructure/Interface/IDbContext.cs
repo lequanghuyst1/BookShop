@@ -14,6 +14,7 @@ namespace BookShopOnline.Infrastructure.Interface
     public interface IDbContext
     {
         IDbConnection Connection { get; }
+        IDbTransaction Transaction { get; set; }
         Task<IEnumerable<TEntity>> GetAllAsync<TEntity>();
         Task<TEntity?> GetByIdAsync<TEntity>(Guid entityId);
         Task<PagingEntity<TEntity>> GetFilterPagingAsync<TEntity>(string? searchString, int pageSize, int pageNumber);
