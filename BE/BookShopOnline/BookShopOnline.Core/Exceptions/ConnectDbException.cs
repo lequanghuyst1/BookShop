@@ -27,6 +27,7 @@ namespace BookShopOnline.Core.Exceptions
 
         public ConnectDbException(string message) : base(message)
         {
+
         }
 
         public ConnectDbException(string message, Dictionary<string, string[]> errors) : base(message)

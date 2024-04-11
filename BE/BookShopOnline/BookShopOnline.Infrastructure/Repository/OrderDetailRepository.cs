@@ -10,12 +10,15 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Infrastructure.Repository
 {
-    public class OrderRepository : BaseRepository<Order>, IOrderRepository
+    public class OrderDetailRepository : BaseRepository<OrderDetail>, IOrderDetailRepository
     {
-        public OrderRepository(IDbContext dbContext) : base(dbContext)
+        public OrderDetailRepository(IDbContext dbContext) : base(dbContext)
         {
         }
 
-        
+        public Task<int> InsertManyAsync(List<OrderDetail> orderDetails)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

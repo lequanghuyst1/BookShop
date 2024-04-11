@@ -109,12 +109,13 @@ namespace BookShopOnline.Core.Services
             await ValidateBeforeInsert(user);
 
             var res = await _userRepository.InsertAsync(user);
-            if(res > 0)
+            if (res > 0)
             {
                 var cart = new Cart();
                 cart.UserId = user.UserId;
                 cart.CreatedBy = user.Fullname;
                 await _cartRepository.InsertAsync(cart);
+                return res;
             }
             return res;
         }

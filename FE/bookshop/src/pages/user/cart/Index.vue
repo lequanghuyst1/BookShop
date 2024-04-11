@@ -186,6 +186,7 @@
               <div class="checkout-type-button-cart" style="text-align: center">
                 <div class="method-button-cart">
                   <button
+                    @click="this.$router.push('checkout')"
                     type="button"
                     title="Thanh toán"
                     class="button btn-proceed-checkout btn-checkout"

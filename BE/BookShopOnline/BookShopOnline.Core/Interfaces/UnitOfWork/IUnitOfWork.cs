@@ -9,8 +9,10 @@ namespace BookShopOnline.Core.Interfaces.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        
+
         ICartItemRepository CartItems { get; }
+        IOrderDetailRepository OrderDetail { get; }
+        IOrderRepository Order { get; }
 
         /// <summary>
         /// Bắt đầu transition

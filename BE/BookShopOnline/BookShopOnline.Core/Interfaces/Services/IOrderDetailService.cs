@@ -1,5 +1,4 @@
-﻿
-using BookShopOnline.Core.Dto.Order;
+﻿using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using System;
@@ -10,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Interfaces.Services
 {
-    public interface IOrderService : IBaseService<Order, OrderDto>
+    public interface IOrderDetailService : IBaseService<OrderDetail, OrderDetailDto>
     {
-        Task<int> CheckoutServiceAsync(OrderData orderData);
+        Task<OrderDetailDto> InsertManyServiceAsync(List<OrderDetail> orderDetails);
+
     }
 }

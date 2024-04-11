@@ -1,6 +1,5 @@
 ﻿using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
-using BookShopOnline.Core.Interfaces.Services.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Interfaces.Infrastructures
 {
-    public interface IOrderRepository : IBaseRepository<Order>
+    public interface IOrderDetailRepository : IBaseRepository<OrderDetail>
     {
+        Task<int> InsertManyAsync(List<OrderDetail> orderDetails);
+
     }
 }

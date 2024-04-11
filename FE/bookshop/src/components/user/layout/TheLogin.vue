@@ -207,7 +207,6 @@ export default {
     textFieldsLogin: function () {
       return TEXT_FIELD[this.$languageCode].userLogin;
     },
-
     //Lấy ra tên và các rằng buộc của người dùng khi đăng ký
     textFieldsRegister: function () {
       return TEXT_FIELD[this.$languageCode].userRegister;
@@ -307,16 +306,18 @@ export default {
               "Đăng nhập thành công",
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
+            console.log(res.data)
             setInfoTokensToStorage(
               res.data.AccessToken,
               res.data.RefreshToken,
               res.data.UserDto
             );
             //lấy ra thông tin người dùng
-            var userInfo =
+            var user =
               localStorageService.getItemEncodeFromLocalStorage("userInfo");
+              console.log(user)
             //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
-            var result = await cartItemService.getByCartId(userInfo.CartId);
+            var result = await cartItemService.getByCartId(user.CartId);
             if (result.status === 200) {
               localStorageService.setItemToLocalStorage("cart", result.data);
             }

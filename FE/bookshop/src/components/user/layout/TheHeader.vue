@@ -232,7 +232,7 @@
                 <i class="fa-regular fa-user"></i>
               </div>
               <p class="item-title">
-                {{ isToken ? userInfo.Fullname : "Tài khoản" }}
+                {{ isToken ? userInfo?.Fullname : "Tài khoản" }}
               </p>
             </div>
 

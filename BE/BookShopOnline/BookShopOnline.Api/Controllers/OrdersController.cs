@@ -11,8 +11,16 @@ namespace BookShopOnline.Api.Controllers
     [ApiController]
     public class OrdersController : MBaseController<Order, OrderDto>
     {
+        IOrderService _orderService;
         public OrdersController(IOrderService orderService) : base(orderService)
         {
+            _orderService = orderService;
+        }
+        [HttpPost("Checkout")]
+        public async Task<IActionResult> CheckoutAsync(OrderData orderData)
+        {
+            var res = await _orderService.CheckoutServiceAsync(orderData);
+            return StatusCode(201, res);
         }
     }
 }

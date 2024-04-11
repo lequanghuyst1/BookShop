@@ -31,6 +31,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<CartItem, CartItemDto>();
             CreateMap<Cart, CartDto>();
             CreateMap<Order, OrderDto>();
+            CreateMap<OrderDetail, OrderDetailDto>();
         }
     }
 }

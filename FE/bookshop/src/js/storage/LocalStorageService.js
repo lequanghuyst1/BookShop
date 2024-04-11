@@ -60,6 +60,7 @@ class LocalstorageService {
    */
   setItemEncodeToLocalStorage(key, value) {
     try {
+      console.log(value)
       const serializeData = btoa(JSON.stringify(value));
       localStorage.setItem(key, serializeData);
     } catch (error) {

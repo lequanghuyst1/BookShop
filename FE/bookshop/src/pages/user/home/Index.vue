@@ -149,7 +149,6 @@ export default {
      * @author LQHUY(09/04/2024)
      */
     async handleOnAdd(item) {
-      console.log(this.userInfo);
       item.CartId = this.userInfo.CartId;
       item.UnitPrice = item.Price;
       item.Quantity = 1;
