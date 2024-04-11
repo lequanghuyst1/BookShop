@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using BookShopOnline.Core.Dto;
+using BookShopOnline.Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,13 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
     {
         Task<int> InsertManyAsync(List<CartItem> cartItems);
         Task<CartItem> CheckBookExistInCartItemAsync(Guid bookId);
+        /// <summary>
+        /// Hàm lấy ra danh sách các bản ghi theo cartId
+        /// </summary>
+        /// <param name="cartId">mã định danh giỏ hàng</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(11/04/2024)
+        Task<IEnumerable<CartItem>> GetByCartIdAsync(string cartId);
+
     }
 }

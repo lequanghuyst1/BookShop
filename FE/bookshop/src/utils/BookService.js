@@ -1,8 +1,8 @@
 import BaseService from "./BaseService";
-class BoolService extends BaseService{
+class BookService extends BaseService{
     constructor(){
         super("Books")
     }
 }
-const bookService = new BoolService();
+const bookService = new BookService();
 export default bookService;

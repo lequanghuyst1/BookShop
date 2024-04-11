@@ -131,10 +131,7 @@
                       </div>
                     </div>
                     <div class="wrap-addcart">
-                      <button
-                        @click="handleOnAddProductToCart"
-                        class="add-to-cart"
-                      >
+                      <button @click="handleOnAdd" class="add-to-cart">
                         <i class="fa-solid fa-cart-plus"></i>
                         <span>Thêm vào giỏ hàng</span>
                       </button>
@@ -477,7 +474,9 @@
 </template>
 <script>
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import localStorageService from "@/js/storage/LocalStorageService";
 import bookService from "@/utils/BookService";
+import cartItemService from "@/utils/CartItemService";
 // import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "ProductPage",
@@ -493,6 +492,11 @@ export default {
     //Theo dõi biến số lượng cập nhật số tiền
     "cartItem.Quantity": function (newValue) {
       this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
+    },
+  },
+  computed: {
+    userInfo: function () {
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
     },
   },
   methods: {
@@ -546,11 +550,21 @@ export default {
      * Thực hiện thêm vào giỏ hàng khi clcik btn Thêm vào giỏ hàng
      * @author LQHUY(09/04/2024)
      */
-    handleOnAddProductToCart() {
-      //thêm mới item vào cart
-      cartLocalStorageService.addItemToCart(this.cartItem);
+    async handleOnAdd() {
+      this.cartItem.CartId = this.userInfo.CartId;
+      this.cartItem.UnitPrice = this.cartItem.Price;
+      const formData = new FormData();
+      formData.append("dataJson", JSON.stringify(this.cartItem));
+      //gọi api thêm mới
+      const res = await cartItemService.post(formData);
+      if (res.status === 201) {
+        const result = await cartItemService.getByCartId(this.userInfo.CartId);
+        if (result.status === 200) {
+          const dataCart = result.data;
+          //thêm mới item vào cart local
+          cartLocalStorageService.setCartToLocalStorage(dataCart);
+        }
 
-      if (cartLocalStorageService.getCartFromLocalStorage().length > 0) {
         this.$emitter.emit(
           "onShowToastMessage",
           this.$Resource[this.$languageCode].ToastMessage.Type.Success,

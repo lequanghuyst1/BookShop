@@ -13,5 +13,13 @@ namespace BookShopOnline.Core.Interfaces.Services
     {
         Task<List<CartItemDto>> InsertManyServiceAsync(List<CartItem> cartItems);
 
+        /// <summary>
+        /// Hàm lấy ra danh sách các bản ghi theo cartId
+        /// </summary>
+        /// <param name="cartId">mã định danh giỏ hàng</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(11/04/2024)
+        Task<IEnumerable<CartItemDto>> GetByCartIdServiceAsync(string cartId);
+
     }
 }

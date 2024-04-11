@@ -25,6 +25,7 @@
   <MLoading v-show="showLoading"></MLoading>
 </template>
 <script>
+
 export default {
   name: "App",
   created() {

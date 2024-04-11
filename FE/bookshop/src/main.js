@@ -1,8 +1,8 @@
-import { createApp } from 'vue';
-import App from './App.vue';
+import { createApp } from "vue";
+import App from "./App.vue";
 
-import router from './router/route';
-import axios from 'axios';
+import router from "./router/route";
+import axios from "axios";
 
 import MButton from "./components/base/button/MButton.vue";
 import MButtonNoText from "./components/base/button/MButtonNoText.vue";
@@ -15,30 +15,29 @@ import MTable from "./components/base/table/MTable.vue";
 import MPagination from "./components/base/pagination/MPagination.vue";
 import MInput from "./components/base/input/MInput.vue";
 import MInputIcon from "./components/base/input/MInputIcon.vue";
-import MInputImage from './components/base/input/MInputImage.vue';
+import MInputImage from "./components/base/input/MInputImage.vue";
 import MGenderRadio from "./components/base/radio-group/MGenderRadio.vue";
 import MCombobox from "./components/base/combobox/MCombobox.vue";
 import MDropdown from "./components/base/dropdown/MDropdown.vue";
 import MTextarea from "./components/base/textarea/MTextarea.vue";
 
 import tinyEmitter from "tiny-emitter/instance";
-import Enum from './js/resource/enum';
-import Resource from './js/resource/resource';
-import helper from './js/helper';
-import httpRequest from './utils/request';
+import Enum from "./js/resource/enum";
+import Resource from "./js/resource/resource";
+import helper from "./js/helper";
+import httpRequest from "./utils/request";
 
-import VueTippy from 'vue-tippy'
-import 'tippy.js/dist/tippy.css' 
-import 'tippy.js/animations/scale.css'
-import 'tippy.js/animations/scale-subtle.css'
-import 'tippy.js/animations/scale-extreme.css'
+import VueTippy from "vue-tippy";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
+import "tippy.js/animations/scale-subtle.css";
+import "tippy.js/animations/scale-extreme.css";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 const app = createApp(App);
-
 
 app.component("MButton", MButton);
 app.component("MButtonNoText", MButtonNoText);
@@ -64,26 +63,25 @@ app.config.globalProperties.$languageCode = "VN";
 app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$axios = axios;
-app.config.globalProperties.$quantityOfCart = 0;
+
 
 app.use(
-    VueTippy,
-    // optional
-    {
-      directive: 'tippy', // => v-tippy
-      component: 'tippy', // => <tippy/>
-      componentSingleton: 'tippy-singleton', // => <tippy-singleton/>,
-      defaultProps: {
-        placement: 'auto-end',
-        allowHTML: true,
-      }, // => Global default options * see all props
-    }
-  )
-
+  VueTippy,
+  // optional
+  {
+    directive: "tippy", // => v-tippy
+    component: "tippy", // => <tippy/>
+    componentSingleton: "tippy-singleton", // => <tippy-singleton/>,
+    defaultProps: {
+      placement: "auto-end",
+      allowHTML: true,
+    }, // => Global default options * see all props
+  }
+);
 
 app.use(router);
 // Make BootstrapVue available throughout your project
 // Optionally install the BootstrapVue icon components plugin
 // Optionally install the BootstrapVue icon components plugin
 
-app.mount('#app')
+app.mount("#app");

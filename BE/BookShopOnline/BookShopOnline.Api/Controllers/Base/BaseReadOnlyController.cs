@@ -29,6 +29,12 @@ namespace BookShopOnline.Api.Controllers.Base
             var res = await _baseService.GetByIdAsync(id);
             return Ok(res);
         }
+        [HttpGet("GetByIds")]
+        public async Task<IActionResult> GetByIdsAsync([FromBody] List<Guid> ids)
+        {
+            var res = await _baseService.GetByIdsAsync(ids);
+            return Ok(res);
+        }
         [HttpGet("NewCode")]
         public async Task<IActionResult> GetNewCodeAsync()
         {

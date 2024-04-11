@@ -145,7 +145,7 @@
                       <span class="cart-price"
                         ><span class="price"
                           >{{
-                            this.$helper.formatMoney(item.Price * item.Quantity)
+                            this.$helper.formatMoney(item.ProvisionalMoney)
                           }}
                           đ</span
                         ></span
@@ -155,7 +155,7 @@
                 </div>
                 <div class="div-of-btn-remove-cart">
                   <a
-                    @click="handleOnRemoveItem(item.BookId)"
+                    @click="handleOnDelete(item.CartItemId)"
                     title="Remove Item"
                     class="btn-remove-desktop-cart"
                   >
@@ -210,7 +210,8 @@
 </template>
 <script>
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
-
+import cartItemService from "@/utils/CartItemService";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "CartPage",
   created() {
@@ -269,6 +270,9 @@ export default {
         }
       },
     },
+    userInfo: function () {
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+    },
   },
   methods: {
     /**
@@ -316,34 +320,54 @@ export default {
      * Thực hiện tăng số lượng khi click icon +
      * @author LQHUY(09/04/2024)
      */
-    handleOnIncreaseQuantity(item) {
+    async handleOnIncreaseQuantity(item) {
       item.Quantity++;
-      cartLocalStorageService.updateQuantityItemToCart(item);
-
-      //Gán dữ liệu cho cart lấy từ localStorage
-      this.cartData = cartLocalStorageService.getCartFromLocalStorage();
-
-      //Update lại tổng số lượng sản phẩm trong cart
-      this.$emitter.emit("getQuantityOfCart");
-      this.getQuantityOfCart();
+      await this.handleOnEdit(item);
     },
 
     /**
      * Thực hiện giảm số lượng khi click icon +
      * @author LQHUY(09/04/2024)
      */
-    hanldeOnReduceQuantity(item) {
+    async hanldeOnReduceQuantity(item) {
       item.Quantity--;
       if (item.Quantity < 1) {
         item.Quantity = 1;
       }
+      await this.handleOnEdit(item);
+    },
 
-      cartLocalStorageService.updateQuantityItemToCart(item);
-      //Gán dữ liệu cho cart lấy từ localStorage
-      this.cartData = cartLocalStorageService.getCartFromLocalStorage();
-      //Update lại tổng số lượng sản phẩm trong cart
-      this.$emitter.emit("getQuantityOfCart");
-      this.getQuantityOfCart();
+    /**
+     * Hàm update cart item
+     * @param {object} item
+     * @author LQHUY(11/04/2024)
+     */
+    async handleOnEdit(item) {
+      this.$emitter.emit("toggleShowLoading", true);
+      try {
+        //gán 1 số giá trị cho item
+        item.CartId = this.userInfo.CartId;
+        item.UnitPrice = item.Price;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(item));
+        //gọi api update
+        const res = await cartItemService.put(item.CartId, formData);
+        if (res.status === 200) {
+          //update số lượng vào local
+          cartLocalStorageService.updateQuantityItemToCart(item);
+          //Gán dữ liệu cho cart lấy từ localStorage
+          this.cartData = cartLocalStorageService.getCartFromLocalStorage();
+          //gọi hàm update lại tổng số lượng sản phẩm trong cart
+          this.$emitter.emit("getQuantityOfCart");
+          this.getQuantityOfCart();
+          setTimeout(() => {
+            this.$emitter.emit("toggleShowLoading", false);
+          }, 300);
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
     },
 
     /**
@@ -351,23 +375,21 @@ export default {
      * @param {string} id
      * @author LQHUY(09/04/2024)
      */
-    handleOnRemoveItem(id) {
-      const countItem =
-        cartLocalStorageService.getCartFromLocalStorage().length;
-
+    async handleOnDelete(id) {
       this.$emitter.emit("toggleShowLoading", true);
-      //thực hiện xỏa bỏ
-      cartLocalStorageService.removeItemGetOutCart(id);
 
-      if (
-        cartLocalStorageService.getCartFromLocalStorage().length ===
-        countItem - 1
-      ) {
+      const res = await cartItemService.delete(id);
+      if (res.status === 200) {
+        //thực hiện xỏa bỏ
+        cartLocalStorageService.removeItemGetOutCart(id);
+
         //xóa rồi gán lại dữ liệu cho cartData
         this.cartData = cartLocalStorageService.getCartFromLocalStorage();
 
         //Update lại tổng số lượng sản phẩm trong cart
         this.$emitter.emit("getQuantityOfCart");
+        this.getQuantityOfCart();
+
         setTimeout(() => {
           this.$emitter.emit("toggleShowLoading", false);
         }, 300);

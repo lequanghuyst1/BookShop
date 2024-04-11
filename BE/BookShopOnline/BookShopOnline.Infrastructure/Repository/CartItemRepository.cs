@@ -1,4 +1,5 @@
-﻿using BookShopOnline.Core.Entitites;
+﻿using BookShopOnline.Core.Dto;
+using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
@@ -21,8 +22,16 @@ namespace BookShopOnline.Infrastructure.Repository
         {
             var procName = "Proc_CartItem_CheckBookExist";
 
-            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<CartItem>(procName, new { BookId = bookId });
+            var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<CartItem>(procName, new { BookId = bookId }, _dbContext.Transaction);
             return res;
+        }
+
+        public async Task<IEnumerable<CartItem>> GetByCartIdAsync(string cartId)
+        {
+            var procName = "Proc_CartItem_GetByCartId";
+            var res = await _dbContext.Connection.QueryAsync<CartItem>(procName, new { CartId = cartId }, _dbContext.Transaction);
+            return res;
+
         }
 
         public async Task<int> InsertManyAsync(List<CartItem> cartItems)

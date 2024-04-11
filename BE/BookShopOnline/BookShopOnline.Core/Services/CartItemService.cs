@@ -23,6 +23,14 @@ namespace BookShopOnline.Core.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<IEnumerable<CartItemDto>> GetByCartIdServiceAsync(string cartId)
+        {
+            _unitOfWork.BeginTransaction();
+            var cartsItem = await _unitOfWork.CartItems.GetByCartIdAsync(cartId);
+            var cartsItemDto = cartsItem.Select(item => base.MapEntityToDto(item));
+            return cartsItemDto;
+        }
+
         public async Task<List<CartItemDto>> InsertManyServiceAsync(List<CartItem> cartItems)
         {
             _unitOfWork.BeginTransaction();
@@ -50,8 +58,10 @@ namespace BookShopOnline.Core.Services
                 if (result > 0)
                 {
                     _unitOfWork.Commit();
+                    return result;
                 }
                 _unitOfWork.Rollback();
+                return 0;
             }
 
             //Chưa có thì thêm mới
@@ -73,15 +83,14 @@ namespace BookShopOnline.Core.Services
             //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng hay chưa
             var cartItemExit = await _unitOfWork.CartItems.CheckBookExistInCartItemAsync(cartItem.BookId);
 
-            //Nếu có thì cập nhật lại số lượng
+            //Nếu có thì cập nhật
             if (cartItemExit != null)
             {
-                
-                cartItem.Quantity = cartItem.Quantity + cartItemExit.Quantity;
-                var result = await _unitOfWork.CartItems.UpdateAsync(cartItem.CartId, cartItem);
+                var result = await _unitOfWork.CartItems.UpdateAsync(id, cartItem);
                 if (result > 0)
                 {
                     _unitOfWork.Commit();
+                    return result;
                 }
                 _unitOfWork.Rollback();
             }

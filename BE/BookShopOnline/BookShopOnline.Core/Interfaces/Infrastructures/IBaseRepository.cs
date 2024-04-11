@@ -23,5 +23,14 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         Task<int> DeleteManyAsync(List<Guid> ids);
         Task<bool> CheckExitEntityNameAsync(string entityName);
         Task<string> GetNewCodeAsync();
+
+
+        /// <summary>
+        /// Hàm lấy ra danh sách các bản ghi theo list id
+        /// </summary>
+        /// <param name="ids">list id</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(11/04/2024)
+        Task<IEnumerable<TEntity>> GetByIdsAsync(List<Guid> ids);
     }
 }

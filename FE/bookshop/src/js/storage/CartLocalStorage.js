@@ -48,6 +48,8 @@ class CartLocalStorageService {
         else {
           const itemExistObject = checkItemExist[0];
           itemExistObject.Quantity = itemExistObject.Quantity + value.Quantity;
+          itemExistObject.ProvisionalMoney =
+            itemExistObject.Quantity * value.Price;
         }
       } else {
         data.push(value);
@@ -90,7 +92,7 @@ class CartLocalStorageService {
   removeItemGetOutCart(itemId) {
     try {
       const data = this.getCartFromLocalStorage();
-      const updateData = data.filter((item) => item.BookId !== itemId);
+      const updateData = data.filter((item) => item.CartItemId !== itemId);
       this.setCartToLocalStorage(updateData);
     } catch (error) {
       console.log("Error adding item to Local Storage:", error);

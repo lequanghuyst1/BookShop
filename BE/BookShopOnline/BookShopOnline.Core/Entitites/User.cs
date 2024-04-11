@@ -10,6 +10,7 @@ namespace BookShopOnline.Core.Entitites
     {
         public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
+        public Guid? CartId { get; set; }
         public string? RoleName { get; set; }
         public string Fullname { get; set; }
         public string? PhoneNumber { get; set; }

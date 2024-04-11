@@ -210,12 +210,7 @@
             </a>
           </div>
           <div class="block-item">
-            <router-link
-              to="cart"
-              replace
-              class="block-item-link"
-              id="btn-cart"
-            >
+            <a  style="cursor: pointer" @click="onGoToCartPage" class="block-item-link" id="btn-cart">
               <div class="item-icon d-flex justify-content-center">
                 <div class="m-icon-cart"></div>
               </div>
@@ -225,7 +220,7 @@
               <span v-show="this.quantityOfCart > 0" class="cart-quantity">{{
                 this.quantityOfCart
               }}</span>
-            </router-link>
+            </a>
           </div>
           <div
             @click="this.isShowDropDownAccount = !this.isShowDropDownAccount"
@@ -378,6 +373,44 @@
     @onCloseForm="onHideFormLoginOrRegister"
     :formAccount="formAccount"
   ></TheLogin>
+
+  <div v-if="isShowWaringLogin" class="m-dialog">
+    <div class="m-dialog__overlay"></div>
+    <div style="max-width: 300px" class="m-dialog__container">
+      <div class="m-dialog__header">
+        <slot name="header"></slot>
+        <h3 class="m-dialog__header-title">{{ "Thành viên" }}</h3>
+
+        <div class="m-dialog__header-action">
+          <div
+            v-tippy="{
+              content: 'Thoát',
+              placement: 'bottom',
+            }"
+            class="m-dialog__header-close"
+            @click="this.isShowWaringLogin = false"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
+      </div>
+      <div class="m-dialog__content">
+        <p>
+          Vui lòng đăng nhập tài khoản để xem ưu đãi và thanh toán dễ dàng hơn.
+        </p>
+      </div>
+      <div class="m-dialog__footer">
+        <div class="m-dialog__footer-left">
+          <button @click="onShowFormLogin" class="btn-login">Đăng nhập</button>
+        </div>
+        <div class="m-dialog__footer-right">
+          <button @click="onShowFormRegister" class="btn-register">
+            Đăng ký
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import TheLogin from "./TheLogin.vue";
@@ -411,8 +444,7 @@ export default {
       return localStorageService.getItemEncodeFromLocalStorage("userInfo");
     },
   },
-  watch:{
-  },
+  watch: {},
   methods: {
     /**
      * Thực hiện lẩy ra tổng số lượng sản phẩm trong cart
@@ -420,10 +452,11 @@ export default {
      */
     getQuantityOfCart() {
       const cartList = cartLocalStorageService.getCartFromLocalStorage();
-      this.quantityOfCart = cartList.reduce(
+        this.quantityOfCart = cartList.reduce(
         (accumulator, item) => accumulator + item.Quantity,
         0
       );
+      
     },
 
     onShowFormLogin() {
@@ -431,12 +464,14 @@ export default {
       this.formAccount = this.$Enum.FormAccount.Login;
       this.isShowFormLoginOrRegister = true;
       this.isShowDropDownAccount = false;
+      this.isShowWaringLogin = false;
     },
     onShowFormRegister() {
       event.stopImmediatePropagation();
       this.formAccount = this.$Enum.FormAccount.Register;
       this.isShowFormLoginOrRegister = true;
       this.isShowDropDownAccount = false;
+      this.isShowWaringLogin = false;
     },
     onHideFormLoginOrRegister() {
       this.isShowFormLoginOrRegister = false;
@@ -446,7 +481,7 @@ export default {
     },
     /**
      * Thực hiện đăng xuất khi click đăng xuất
-     * Author: LQHUY(06/04/2024)
+     * @author LQHUY(06/04/2024)
      */
     async onLogout() {
       try {
@@ -459,10 +494,23 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           removeAllInfoTokenToStorage();
+          localStorageService.removeItemLocalStorage("cart");
           location.reload();
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    /**
+     * Thực hiện đi tới trang giỏ hành khi click icon giỏ hàng
+     * @author LQHUY(01/04/2024)
+     */
+    onGoToCartPage() {
+      if (this.isToken) {
+        this.$router.push("cart");
+      } else {
+        this.isShowWaringLogin = true;
       }
     },
   },
@@ -474,7 +522,7 @@ export default {
       formAccount: this.$Enum.FormAccount.Login,
       isShowFormLoginOrRegister: false,
       isShowDropDownAccount: false,
-
+      isShowWaringLogin: false,
       quantityOfCart: 0,
     };
   },
@@ -906,5 +954,73 @@ export default {
 }
 .header__support {
   flex-shrink: 0;
+}
+.m-dialog__header h3 {
+  color: #d70018 !important;
+}
+.m-dialog__content {
+  margin: 12px 0 !important;
+}
+.m-dialog__content p {
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  color: #4a4a4a;
+}
+.m-dialog__footer {
+  height: auto !important;
+  padding: 12px 24px !important;
+}
+.m-dialog__footer-right,
+.m-dialog__footer-left {
+  flex-basis: 45%;
+}
+.btn-register {
+  -webkit-text-fill-color: transparent;
+  align-items: center;
+  background-size: 200% auto;
+  background: linear-gradient(90deg, #ff512f, #dd2440 51%, #ff512f);
+  -webkit-background-clip: text;
+  border: 2px solid #dd2440;
+  border-radius: 8px;
+  box-shadow: 0 0 20px #eee;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  transition: 0.5s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.btn-login {
+  align-items: center;
+  background-image: linear-gradient(90deg, #ff512f, #dd2440 51%, #ff512f);
+  background-size: 200% auto;
+  border-radius: 8px;
+  box-shadow: 0 0 20px #eee;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  transition: 0.5s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  border: none;
+  width: 100%;
+}
+.btn-login:hover,
+.btn-register:hover {
+  background-position: 100%;
+  color: #fff;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  transform: scale(1.02);
 }
 </style>

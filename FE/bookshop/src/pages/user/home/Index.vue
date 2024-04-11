@@ -73,7 +73,7 @@
                         </a>
                       </button>
                       <button class="btn-action button-add-cart">
-                        <a href="/cart">
+                        <a @click="handleOnAdd(item)">
                           <i class="fa-solid fa-cart-plus"></i>
                         </a>
                       </button>
@@ -113,6 +113,9 @@
 <script>
 import TheSidebar from "@/components/user/layout/TheSidebar.vue";
 import bookService from "@/utils/BookService";
+import cartItemService from "@/utils/CartItemService";
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "HomeUserPage",
   components: { TheSidebar },
@@ -124,6 +127,11 @@ export default {
       booksOutStanding: [],
     };
   },
+  computed: {
+    userInfo: function () {
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+    },
+  },
   methods: {
     async loadDataBooksOutStanding() {
       try {
@@ -133,6 +141,40 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    /**
+     * Thực hiện thêm vào giỏ hàng khi clcik btn Thêm vào giỏ hàng
+     * @author LQHUY(09/04/2024)
+     */
+    async handleOnAdd(item) {
+      console.log(this.userInfo);
+      item.CartId = this.userInfo.CartId;
+      item.UnitPrice = item.Price;
+      item.Quantity = 1;
+      this.ProvisionalMoney = item.Price;
+      const formData = new FormData();
+      formData.append("dataJson", JSON.stringify(item));
+      //gọi api thêm mới
+      const res = await cartItemService.post(formData);
+      if (res.status === 201) {
+        const result = await cartItemService.getByCartId(this.userInfo.CartId);
+        if (result.status === 200) {
+          const dataCart = result.data;
+          //thêm mới item vào cart local
+          cartLocalStorageService.setCartToLocalStorage(dataCart);
+        }
+
+        this.$emitter.emit(
+          "onShowToastMessage",
+          this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+          "Sản phẩm đã được thêm vào giỏ hàng.",
+          this.$Resource[this.$languageCode].ToastMessage.Status.Success
+        );
+
+        //Update lại tổng số lượng sản phẩm trong cart
+        this.$emitter.emit("getQuantityOfCart");
       }
     },
   },

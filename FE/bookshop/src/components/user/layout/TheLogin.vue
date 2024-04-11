@@ -181,6 +181,8 @@
 import TEXT_FIELD from "@/js/resource/text-field";
 import userService from "@/utils/UserService";
 import { setInfoTokensToStorage } from "@/js/token/TokenService";
+import localStorageService from "@/js/storage/LocalStorageService";
+import cartItemService from "@/utils/CartItemService";
 export default {
   name: "TheLoginUser",
   emits: ["onCloseForm"],
@@ -209,6 +211,9 @@ export default {
     //Lấy ra tên và các rằng buộc của người dùng khi đăng ký
     textFieldsRegister: function () {
       return TEXT_FIELD[this.$languageCode].userRegister;
+    },
+    userInfo: function () {
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
     },
   },
   methods: {
@@ -307,6 +312,14 @@ export default {
               res.data.RefreshToken,
               res.data.UserDto
             );
+            //lấy ra thông tin người dùng
+            var userInfo =
+              localStorageService.getItemEncodeFromLocalStorage("userInfo");
+            //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
+            var result = await cartItemService.getByCartId(userInfo.CartId);
+            if (result.status === 200) {
+              localStorageService.setItemToLocalStorage("cart", result.data);
+            }
             location.reload();
             break;
         }

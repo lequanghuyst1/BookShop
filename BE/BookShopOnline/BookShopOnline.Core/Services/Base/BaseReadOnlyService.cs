@@ -59,5 +59,12 @@ namespace BookShopOnline.Core.Services.Base
             var entityDto = _mapper.Map<TDto>(entity);
             return entityDto;
         }
+
+        public async Task<IEnumerable<TDto>> GetByIdsAsync(List<Guid> ids)
+        {
+            var res = await _baseRepository.GetByIdsAsync(ids);
+            var entitiesDto = res.Select(item => MapEntityToDto(item));
+            return entitiesDto;
+        }
     }
 }

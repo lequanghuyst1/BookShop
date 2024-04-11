@@ -28,5 +28,13 @@ namespace BookShopOnline.Infrastructure.Interface
         Task<string> GetNewCodeAsync<TEntity>();
 
 
+        /// <summary>
+        /// Hàm lấy ra danh sách các bản ghi theo list id
+        /// </summary>
+        /// <param name="ids">list id</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(11/04/2024)
+        Task<IEnumerable<TEntity>> GetByIdsAsync<TEntity>(List<Guid> ids);
+
     }
 }

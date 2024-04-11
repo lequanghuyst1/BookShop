@@ -42,7 +42,7 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task<int> DeleteAsync(Guid id)
+        public virtual async Task<int> DeleteAsync(Guid id)
         {
             var res = await _dbContext.DeleteAsync<TEntity>(id);
             return res;
@@ -69,6 +69,12 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<PagingEntity<TEntity>> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber)
         {
             var res = await _dbContext.GetFilterPagingAsync<TEntity>(searchString, pageSize, pageNumber);
+            return res;
+        }
+
+        public async Task<IEnumerable<TEntity>> GetByIdsAsync(List<Guid> ids)
+        {
+            var res = await _dbContext.GetByIdsAsync<TEntity>(ids);
             return res;
         }
     }

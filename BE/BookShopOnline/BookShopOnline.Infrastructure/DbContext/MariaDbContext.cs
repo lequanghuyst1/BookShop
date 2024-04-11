@@ -92,7 +92,7 @@ namespace BookShopOnline.Infrastructure.DbContext
         {
             var tableName = typeof(TEntity).Name;
             var sqlCommand = $"Select * From {tableName} where {tableName}Name = @EntityName";
-            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityName = entityName });
+            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { EntityName = entityName }, Transaction);
             if (res != null)
             {
                 return true;
@@ -153,6 +153,17 @@ namespace BookShopOnline.Infrastructure.DbContext
             pagingEntity.TotalPage = parameters.Get<int>("@totalPage");
 
             return pagingEntity;
+        }
+
+        public async Task<IEnumerable<TEntity>> GetByIdsAsync<TEntity>(List<Guid> ids)
+        {
+            var tableName = typeof(TEntity).Name;
+            string viewTable = $"View_{tableName}";
+            var sql = $"SELECT * FROM {viewTable} WHERE {tableName}Id IN @ids ORDER BY CreatedDate DESC";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add($"@ids", ids);
+            var res = await Connection.QueryAsync<TEntity>(sql, dynamicParameters);
+            return res;
         }
     }
 }
