@@ -303,10 +303,14 @@
               <h3>Chi tiết đơn hàng</h3>
             </div>
             <div class="order-summary">
-              <div class="product">
+              <div
+                v-for="item in orderDetailData"
+                :key="item.CartItemId"
+                class="product"
+              >
                 <div class="product__image">
                   <img
-                    src="https://product.hstatic.net/200000845405/product/nuance__1__f55d35e970c645f38f4ad14569f7d63b_small.jpg"
+                    :src="'https://localhost:7015/' + item.ImagePath"
                     alt=""
                   />
                 </div>
@@ -315,37 +319,23 @@
                     v-tippy="{ content: 'Nam,e', placement: 'top' }"
                     class="product__name"
                   >
-                    Nuance - 50 Sắc Thái Của Từ Nuance
+                    {{ item.BookName }}
                   </div>
                   <div class="product__price">
-                    <p class="product__price--show">10.000đ</p>
-                    <p class="product__price--through">10.000đ</p>
+                    <p class="product__price--show">
+                      {{ this.$helper.formatMoney(item.Price) }}đ
+                    </p>
+                    <p class="product__price--through">
+                      {{ this.$helper.formatMoney(item.Price) }}đ
+                    </p>
                   </div>
-                  <div class="product__quantity">Số lượng: 1</div>
-                </div>
-                <div class="product__total-amount">10.000đ</div>
-              </div>
-              <div class="product">
-                <div class="product__image">
-                  <img
-                    src="https://product.hstatic.net/200000845405/product/nuance__1__f55d35e970c645f38f4ad14569f7d63b_small.jpg"
-                    alt=""
-                  />
-                </div>
-                <div class="product__desc">
-                  <div
-                    v-tippy="{ content: 'Nam,e', placement: 'top' }"
-                    class="product__name"
-                  >
-                    Nuance - 50 Sắc Thái Của Từ Nuance
+                  <div class="product__quantity">
+                    Số lượng: {{ item.Quantity }}
                   </div>
-                  <div class="product__price">
-                    <p class="product__price--show">10.000đ</p>
-                    <p class="product__price--through">10.000đ</p>
-                  </div>
-                  <div class="product__quantity">Số lượng: 1</div>
                 </div>
-                <div class="product__total-amount">10.000đ</div>
+                <div class="product__total-amount">
+                  {{ this.$helper.formatMoney(item.Quantity * item.Price) }} đ
+                </div>
               </div>
             </div>
           </div>
@@ -402,11 +392,11 @@
             </div>
             <div class="total-line total-amount">
               <p class="total-name">Tổng số tiền</p>
-              <p class="total-price">832.000đ</p>
+              <p class="total-price">{{ totalAmountCart }} đ</p>
             </div>
             <div
               style="margin-top: 16px; margin-bottom: 16px"
-              @click="handleSave"
+              @click="handleCheckout"
               class="btn-add-address"
             >
               <button style="width: 100%">Xác nhận thanh toán</button>
@@ -424,12 +414,15 @@ import localStorageService from "@/js/storage/LocalStorageService";
 import InputAccount from "../account/GroupInput.vue";
 import deliveryAddressService from "@/utils/DeliveryAddressService";
 import PAYMENT_METHOD from "@/js/resource/payment-method";
+import cartItemService from "@/utils/CartItemService";
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "PayUserPage",
   components: { TheHeader, InputAccount },
   created() {
     this.getDataProvince();
     this.getAddressDeliveryDefault();
+    this.getOrderDetailsData();
   },
   data() {
     return {
@@ -451,10 +444,14 @@ export default {
 
       addressDeliveryDefault: {},
 
-      order: {},
+      orderInfo: {},
+
       isShowNote: false,
       isAddressExist: false,
       isShowFormAddress: false,
+      orderDetailData: [],
+      totalAmountCart: 0,
+      order: {},
     };
   },
   computed: {
@@ -468,6 +465,9 @@ export default {
     },
     paymentMethods: function () {
       return PAYMENT_METHOD[this.$languageCode];
+    },
+    orderDetailIds: function () {
+      return localStorageService.getItemFromLocalStorage("itemSelected");
     },
   },
   watch: {
@@ -504,6 +504,67 @@ export default {
     },
   },
   methods: {
+    /**
+     * Hàm thực hiện thanh toán khi click btn Thanh toán
+     * @author LQHUY(12/04/2024)
+     */
+    async handleCheckout() {
+      this.$emitter.emit("toggleShowLoading", true);
+
+      try {
+        //thiết lập các giá trị cho orderInfo
+        this.orderInfo.OrderDetails = this.orderDetailData;
+
+        this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
+        this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
+        this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
+        this.order.TotalAmount = this.$helper.formatMoneySendApi(this.totalAmountCart);
+        this.order.Status = "Chờ xác nhận";
+
+        this.orderInfo.Order = this.order;
+
+        this.orderInfo.CartItemIds = this.orderDetailIds;
+
+        //gọi api thanh toán
+        const res = await this.$httpRequest.post(
+          "Orders/Checkout",
+          this.orderInfo
+        );
+        if (res.status === 201) {
+          //gọi lấy lại giá trị giỏ hàng và gán vào local
+          const res = await cartItemService.getByCartId(this.userInfo.CartId);
+          cartLocalStorageService.setCartToLocalStorage(res.data);
+          this.$emitter.emit("getQuantityOfCart");
+          this.$emitter.emit("toggleShowLoading", false);
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+    /**
+     * Thực hiện tính toán tổng số tiền trong giỏ hàng
+     * @author LQHUY(09/04/2024)
+     */
+    calculatorTotalAmountCart() {
+      const totalAmount = this.orderDetailData.reduce(
+        (accumulator, item) => accumulator + item.ProvisionalMoney,
+        0
+      );
+      this.totalAmountCart = this.$helper.formatMoney(totalAmount);
+    },
+    async getOrderDetailsData() {
+      try {
+        const res = await cartItemService.getByIds(this.orderDetailIds);
+        if (res.status === 200) {
+          this.orderDetailData = res.data;
+          this.calculatorTotalAmountCart();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async getAddressDeliveryDefault() {
       try {
         const res = await deliveryAddressService.getAllByUserId(
@@ -517,7 +578,6 @@ export default {
           (item) => item.DeliveryAddressDefault === true
         );
         this.isAddressExist = true;
-        console.log(this.isAddressExist);
         this.addressDeliveryDefault = addressDeliveryDefault[0];
       } catch (error) {
         console.log(error);

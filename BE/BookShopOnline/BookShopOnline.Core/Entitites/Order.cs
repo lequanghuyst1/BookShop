@@ -19,6 +19,6 @@ namespace BookShopOnline.Core.Entitites
         public double TotalAmount { get; set; }
         public string Status { get; set; }
         public DateTime OrderDate { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
     }
 }

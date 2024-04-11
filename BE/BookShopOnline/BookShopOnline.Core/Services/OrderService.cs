@@ -28,6 +28,7 @@ namespace BookShopOnline.Core.Services
             var ordersDetail = orderData.OrderDetails;
             var cartItemIds = orderData.CartItemIds;
             var orderId = Guid.NewGuid();
+            order.OrderId = orderId;
             var res = await _unitOfWork.Order.InsertAsync(order);
             var count = 0;
             if(res > 0)

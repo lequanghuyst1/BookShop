@@ -39,13 +39,13 @@
             <div class="product-cart-left">
               <div
                 v-for="item in cartData"
-                :key="item.BookId"
+                :key="item.CartItemId"
                 class="item-product-cart"
               >
                 <div class="checked-product-cart">
                   <input
                     type="checkbox"
-                    :value="item.BookId"
+                    :value="item.CartItemId"
                     v-model="lstIdItemSelected"
                     @click="handleOnSelectItem(item)"
                     class="checkbox-add-cart"
@@ -145,7 +145,7 @@
                       <span class="cart-price"
                         ><span class="price"
                           >{{
-                            this.$helper.formatMoney(item.ProvisionalMoney)
+                            this.$helper.formatMoney(item.Quantity * item.Price)
                           }}
                           đ</span
                         ></span
@@ -243,7 +243,7 @@ export default {
       get: function () {
         return this.cartData
           ? this.cartData
-              .map((item) => item.BookId)
+              .map((item) => item.CartItemId)
               .every((ele) => this.lstIdItemSelected.includes(ele)) &&
               this.lstIdItemSelected.length >= this.cartData.length &&
               this.lstIdItemSelected.length > 0
@@ -255,18 +255,22 @@ export default {
           this.cartData.forEach((item) => {
             if (
               !this.lstIdItemSelected
-                .map((ele) => ele.BookId)
-                .includes(item.BookId)
+                .map((ele) => ele.CartItemId)
+                .includes(item.CartItemId)
             ) {
-              this.lstIdItemSelected.push(item.BookId);
+              this.lstIdItemSelected.push(item.CartItemId);
             }
           });
           this.lstIdItemSelected = [...this.lstIdItemSelected];
+      localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
         } else {
           if (this.lstIdItemSelected.length > 0) {
             return;
           } else {
             this.lstIdItemSelected = [];
+
+            localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
+
           }
         }
       },
@@ -294,7 +298,7 @@ export default {
      */
     getQuantityItemSelected() {
       const itemSelected = this.cartData.filter((item) => {
-        return this.lstIdItemSelected.includes(item.BookId);
+        return this.lstIdItemSelected.includes(item.CartItemId);
       });
       this.quantityItemSected = itemSelected.reduce(
         (accumulator, item) => accumulator + item.Quantity,
@@ -308,7 +312,7 @@ export default {
      */
     calculatorTotalAmountCart() {
       const itemSelected = this.cartData.filter((item) => {
-        return this.lstIdItemSelected.includes(item.BookId);
+        return this.lstIdItemSelected.includes(item.CartItemId);
       });
       const totalAmount = itemSelected.reduce(
         (accumulator, item) => accumulator + item.ProvisionalMoney,
@@ -404,15 +408,16 @@ export default {
      */
     handleOnSelectItem(item) {
       // this.lstIdItemSelected[index] = true;
-      const index = this.lstIdItemSelected.indexOf(item.BookId);
+      const index = this.lstIdItemSelected.indexOf(item.CartItemId);
       if (index === -1) {
         // Nếu phần tử không tồn tại trong mảng, thêm nó vào mảng
-        this.lstIdItemSelected.push(item.BookId);
+        this.lstIdItemSelected.push(item.CartItemId);
       } else {
         // Nếu phần tử tồn tại trong mảng, loại bỏ nó khỏi mảng
         this.lstIdItemSelected.splice(index, 1);
       }
       this.lstIdItemSelected = [...this.lstIdItemSelected];
+      localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
     },
   },
 };

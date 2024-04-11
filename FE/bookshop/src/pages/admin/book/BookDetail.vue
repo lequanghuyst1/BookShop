@@ -317,7 +317,6 @@ export default {
         switch (res.status) {
           case 200:
             this.book = res.data;
-            console.log(this.book)
             break;
           default:
             break;

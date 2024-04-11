@@ -152,7 +152,7 @@ export default {
       item.CartId = this.userInfo.CartId;
       item.UnitPrice = item.Price;
       item.Quantity = 1;
-      this.ProvisionalMoney = item.Price;
+      item.ProvisionalMoney = item.Price;
       const formData = new FormData();
       formData.append("dataJson", JSON.stringify(item));
       //gọi api thêm mới
