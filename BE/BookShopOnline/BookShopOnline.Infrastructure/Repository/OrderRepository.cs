@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
-        
+        public async Task<IEnumerable<Order>> GetByUserId(Guid userId)
+        {
+            var procName = "Proc_Order_GetByUserId";
+            var res = await _dbContext.Connection.QueryAsync<Order>(procName, new { UserId = userId }, _dbContext.Transaction);
+            return res;
+        }
     }
 }

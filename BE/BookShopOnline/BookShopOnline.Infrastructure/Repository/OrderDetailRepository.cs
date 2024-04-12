@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Infrastructure.Interface;
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,19 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<IEnumerable<OrderDetail>> GetByOrderIdAsync(Guid orderId)
+        {
+            var sqlCommand = "Select * From view_orderdetail where OrderId = @OrderId";
+            var param = new DynamicParameters();
+            param.Add("@OrderId", orderId);
+            var res = await _dbContext.Connection.QueryAsync<OrderDetail>(sqlCommand, param,_dbContext.Transaction);
+            return res;
+        }
+
         public Task<int> InsertManyAsync(List<OrderDetail> orderDetails)
         {
             throw new NotImplementedException();
+
         }
     }
 }

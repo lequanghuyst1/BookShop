@@ -23,5 +23,18 @@ namespace BookShopOnline.Api.Controllers
             var res = await _orderService.CheckoutServiceAsync(orderData);
             return StatusCode(201, res);
         }
+
+        /// <summary>
+        /// Api thực hiện lấy ra các bản ghi theo userId
+        /// </summary>
+        /// <param name="id">mã đingj danh người dùng</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(12/04/2024)
+        [HttpGet("GetByUserId/{id}")]
+        public async Task<IActionResult> CheckoutAsync(Guid id)
+        {
+            var res = await _orderService.GetByUserId(id);
+            return StatusCode(200, res);
+        }
     }
 }

@@ -53,7 +53,6 @@
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">
         <div class="header__logo me-5">
-          
           <div
             class="fhs_mouse_point"
             onclick="location.href = '/';"
@@ -286,7 +285,7 @@
               <div>
                 <a
                   class="fhs_center_space d-flex justify-content-between"
-                  href="/customer"
+                  href="/customer/home"
                   ><div class="fhs_center_left">
                     <div
                       class="fhs_center_left ico_vip_copper"
@@ -526,7 +525,7 @@ export default {
      */
     onGoToCartPage() {
       if (this.isToken) {
-        this.$router.push("cart");
+        location.href = "http://localhost:8080/cart";
       } else {
         this.isShowWaringLogin = true;
       }

@@ -67,6 +67,14 @@ namespace BookShopOnline.Core.Services
 
         }
 
+        public async Task<IEnumerable<OrderDto>> GetByUserId(Guid userId)
+        {
+            _unitOfWork.BeginTransaction();
+            var orders = await _unitOfWork.Order.GetByUserId(userId);
+            var ordersDto = orders.Select(item => base.MapEntityToDto(item));
+            return ordersDto;
+        }
+
         private async Task<string> GetOrderCode()
         {
             Random rand = new Random();

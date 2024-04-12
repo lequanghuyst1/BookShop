@@ -155,9 +155,24 @@
   </div>
 </template>
 <script>
+import localStorageService from '@/js/storage/LocalStorageService';
 export default {
   name: "OrderPage",
-  methods: {},
+  data() {
+    return {
+        orders: [],
+    }
+  },
+  computed: {
+    userInfo: function(){
+        return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+    },
+  },
+  methods: {
+    getOrdersData(){
+
+    },
+  },
 };
 </script>
 <style scoped>

@@ -6,7 +6,10 @@
         :key="index"
         class="sidebar-account-item"
       >
-        <router-link :to="item.path" class="sidebar-account-item-link">
+        <router-link
+          :to="item.path"
+          class="sidebar-account-item-link"
+        >
           <div class="sidebar-account-item-icon">
             <i :class="item.icon"></i>
           </div>
@@ -36,12 +39,21 @@ import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "SidebarAccount",
+  mounted() {},
+
   computed: {
     user: () => {
       return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
   methods: {
+    // goToPage(item, index) {
+    //   location.href = item.href;
+    //   this.activeSidebar = sidebarAccount.map(() => false);
+    //   setTimeout(() => {
+    //     this.activeSidebar[index] = true;
+    //   }, 2000);
+    // },
     /**
      * Thực hiện đăng xuất khi click đăng xuất
      * Author: LQHUY(06/04/2024)

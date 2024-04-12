@@ -64,14 +64,14 @@ const routes = [
         },
         children: [
           {
-            path: "/",
+            path: "home",
             name: "home-account",
             components: {
               ViewRouterMainContentAccount: HomeAccountUserPage,
             },
           },
           {
-            path: "account/user-info",
+            path: "user-info",
             name: "edit-account",
             components: {
               ViewRouterMainContentAccount: InfoAccountUserPage,
@@ -83,7 +83,6 @@ const routes = [
             components: {
               ViewRouterMainContentAccount: BookAddressPage,
             },
-         
           },
           {
             path: "order",

@@ -11,8 +11,16 @@ namespace BookShopOnline.Api.Controllers
     [ApiController]
     public class OrderDetailsController : MBaseController<OrderDetail, OrderDetailDto>
     {
+        IOrderDetailService _orderDetailService;
         public OrderDetailsController(IOrderDetailService orderDetailService) : base(orderDetailService)
         {
+            _orderDetailService = orderDetailService;
+        }
+        [HttpGet("GetByOrderId")]
+        public async Task<IActionResult> GetByOrderIdAsync(Guid id)
+        {
+            var res = await _orderDetailService.GetByOrderIdAsync(id);
+            return Ok(res);
         }
     }
 }

@@ -12,6 +12,21 @@ namespace BookShopOnline.Core.Interfaces.Services
 {
     public interface IOrderService : IBaseService<Order, OrderDto>
     {
+        /// <summary>
+        /// Hàm thực hiện thanh toán
+        /// </summary>
+        /// <param name="orderData">thực thể OrderData</param>
+        /// <returns>
+        /// 1 - thanh toán thành công 
+        /// 0 - thanh toán thất bại</returns>
+        /// Created By: LQHUY(12/02/2024)
         Task<int> CheckoutServiceAsync(OrderData orderData);
+        /// <summary>
+        /// Lấy ra danh sách các bản ghi theo userId
+        /// </summary>
+        /// <param name="userId">mã định danh người dùng</param>
+        /// <returns>danh sách các bản ghi</returns>
+        /// Created By: LQHUY(12/02/2024)
+        Task<IEnumerable<OrderDto>> GetByUserId(Guid userId);
     }
 }
