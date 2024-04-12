@@ -416,6 +416,7 @@ import deliveryAddressService from "@/utils/DeliveryAddressService";
 import PAYMENT_METHOD from "@/js/resource/payment-method";
 import cartItemService from "@/utils/CartItemService";
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import orderService from "@/utils/OrderService";
 export default {
   name: "PayUserPage",
   components: { TheHeader, InputAccount },
@@ -520,16 +521,15 @@ export default {
         this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
         this.order.TotalAmount = this.$helper.formatMoneySendApi(this.totalAmountCart);
         this.order.Status = "Chờ xác nhận";
+        this.order.UserId = this.userInfo.UserId;
+        this.order.OrderCode = '';
 
         this.orderInfo.Order = this.order;
 
         this.orderInfo.CartItemIds = this.orderDetailIds;
 
         //gọi api thanh toán
-        const res = await this.$httpRequest.post(
-          "Orders/Checkout",
-          this.orderInfo
-        );
+        const res = await orderService.checkout(this.orderInfo);
         if (res.status === 201) {
           //gọi lấy lại giá trị giỏ hàng và gán vào local
           const res = await cartItemService.getByCartId(this.userInfo.CartId);

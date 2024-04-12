@@ -24,6 +24,16 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         Task<bool> CheckExitEntityNameAsync(string entityName);
         Task<string> GetNewCodeAsync();
 
+        /// <summary>
+        /// Kiểm tra enityCode đã tồn tại trong database chưa
+        /// </summary>
+        /// <param name="entityCode">mã code</param>
+        /// <returns>
+        /// true - đã có trong database
+        /// flase - chưa có trong database
+        /// </returns>
+        /// Created by: LQHUY(12/04/2024)
+        Task<bool> CheckDuplicateCodeAsync(string entityCode);
 
         /// <summary>
         /// Hàm lấy ra danh sách các bản ghi theo list id

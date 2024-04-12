@@ -36,5 +36,16 @@ namespace BookShopOnline.Infrastructure.Interface
         /// Created By: LQHUY(11/04/2024)
         Task<IEnumerable<TEntity>> GetByIdsAsync<TEntity>(List<Guid> ids);
 
+        /// <summary>
+        /// Kiểm tra enityCode đã tồn tại trong database chưa
+        /// </summary>
+        /// <param name="entityCode">mã khách hàng</param>
+        /// <returns>
+        /// true - đã có trong database
+        /// flase - chưa có trong database
+        /// </returns>
+        /// Created by: LQHUY(12/04/2024)
+        Task<bool> CheckDuplicateCodeAsync<TEntity>(string entityCode);
+
     }
 }

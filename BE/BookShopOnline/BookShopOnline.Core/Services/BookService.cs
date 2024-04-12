@@ -16,13 +16,20 @@ namespace BookShopOnline.Core.Services
 {
     public class BookService : BaseService<Book, BookDto>, IBookService
     {
-      
+
+        IBookRepository _bookRepository;
         public BookService(IBookRepository bookRepository, IMapper mapper, IImageService imageService) : base(bookRepository, mapper, imageService)
         {
+            _bookRepository = bookRepository;
         }
 
         public override async Task ValidateBeforeInsert(Book book)
         {
+            if(await _bookRepository.CheckDuplicateCodeAsync(book.BookCode))
+            {
+                errors.Add("BookCode", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
+                throw new ValidateException($"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống.", errors);
+            }
             if(book.BookName == "" || book.BookName == null)
             {
                 errors.Add("BookName", new string[] { "Tên sách không được để trống" });
@@ -34,7 +41,6 @@ namespace BookShopOnline.Core.Services
                 throw new ValidateException("Tên tác giả không được để trống", errors);
             }
 
-            await Task.CompletedTask;
         }
     }
 }

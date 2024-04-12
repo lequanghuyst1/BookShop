@@ -28,55 +28,6 @@
         </ul>
       </div>
     </div>
-    <div class="widget">
-      <div class="widget-title mb-2">
-        <span>Sách bán chạy</span>
-      </div>
-      <div class="widget-collection-list">
-        <div class="product-item d-flex column-gap-3">
-          <div class="product-img">
-            <div class="procduct-discount">-10%</div>
-            <a href="/" class="product-link">
-              <img class="w-100" src="../../../assets/img/anh-mau.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-content">
-            <div class="product-title">
-              <a href="/" class="product-link">
-                Sự ỷ lại nguy hiểm Sự ỷ lại nguy hiểm
-              </a>
-            </div>
-            <div class="product-price d-flex flex-wrap">
-              <div class="product-pirce--discount me-2">46,000đ</div>
-              <div class="product-pirce--original text-decoration-line-through">
-                79,000đ
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="product-item d-flex column-gap-3">
-          <div class="product-img">
-            <div class="procduct-discount">-10%</div>
-            <a href="/" class="product-link">
-              <img class="w-100" src="../../../assets/img/anh-mau.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-content">
-            <div class="product-title">
-              <a href="/" class="product-link">
-                Sự ỷ lại nguy hiểm Sự ỷ lại nguy hiểm
-              </a>
-            </div>
-            <div class="product-price d-flex flex-wrap">
-              <div class="product-pirce--discount me-2">46,000đ</div>
-              <div class="product-pirce--original text-decoration-line-through">
-                79,000đ
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -112,6 +63,8 @@ export default {
 .sidebar {
   background-color: #fff;
   height: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,.1), 0 2px 6px 2px rgba(60,64,67,.15);
 }
 .widget {
   padding: 10px 18px;
@@ -142,7 +95,7 @@ export default {
   display: block;
 }
 .sidbar__menu-item:hover a {
-  color: #417505;
+  color: #ff5653;
   animation: rightIn linear 0.5s forwards;
 }
 @keyframes rightIn {

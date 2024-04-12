@@ -28,6 +28,7 @@ namespace BookShopOnline.Core.Dto.Book
         public string? CategoryName { get; set; }
         public string? PublisherName { get; set; }
         public int QuantityInStock { get; set; }
+        public int? QuantitySold { get; set; }
 
     }
 }

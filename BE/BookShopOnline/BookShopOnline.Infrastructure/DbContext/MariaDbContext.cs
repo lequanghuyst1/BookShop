@@ -165,5 +165,20 @@ namespace BookShopOnline.Infrastructure.DbContext
             var res = await Connection.QueryAsync<TEntity>(sql, dynamicParameters);
             return res;
         }
+
+        public async Task<bool> CheckDuplicateCodeAsync<TEntity>(string entityCode)
+        {
+            var tableName = typeof(TEntity).Name;
+            tableName.ToLower();
+            var sqlCommand = $"select {tableName}Code from view_{tableName} where {tableName}Code = @{tableName}Code";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add($"@{tableName}Code", entityCode);
+            var res = await Connection.QueryFirstOrDefaultAsync<string>(sql: sqlCommand, param: parameters, transaction: Transaction);
+            if (res != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

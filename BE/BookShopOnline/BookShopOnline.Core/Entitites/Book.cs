@@ -33,5 +33,6 @@ namespace BookShopOnline.Core.Entitites
         public string? CategoryName { get; set; }
         public string? PublisherName { get; set; }
         public int? QuantityInStock { get; set; }
+        public int? QuantitySold { get; set; }
     }
 }

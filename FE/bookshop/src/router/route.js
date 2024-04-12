@@ -18,6 +18,9 @@ import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 import BookAddressPage from "../pages/user/account/BookAddress.vue";
 import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
 import PayUserPage from "@/pages/user/pay/Pay.vue";
+import OrderPage from "@/pages/user/order/OrderPage.vue";
+import OrderDatail from "@/pages/user/order/OrderDatail.vue";
+
 import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 const routes = [
@@ -54,21 +57,21 @@ const routes = [
         props: true,
       },
       {
-        path: "customer/account",
-        name: "account",
+        path: "customer",
+        name: "customer",
         components: {
           ViewRouterContainer: UserAccountPage,
         },
         children: [
           {
-            path: "",
+            path: "/",
             name: "home-account",
             components: {
               ViewRouterMainContentAccount: HomeAccountUserPage,
             },
           },
           {
-            path: "user-info",
+            path: "account/user-info",
             name: "edit-account",
             components: {
               ViewRouterMainContentAccount: InfoAccountUserPage,
@@ -80,7 +83,21 @@ const routes = [
             components: {
               ViewRouterMainContentAccount: BookAddressPage,
             },
-            children: {},
+         
+          },
+          {
+            path: "order",
+            name: "order",
+            components: {
+              ViewRouterMainContentAccount: OrderPage,
+            },
+          },
+          {
+            path: "order/order-detail/:id",
+            name: "order-detail",
+            components: {
+              ViewRouterMainContentAccount: OrderDatail,
+            },
           },
         ],
       },

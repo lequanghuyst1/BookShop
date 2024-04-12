@@ -12,7 +12,8 @@ namespace BookShopOnline.Core.Interfaces.UnitOfWork
 
         ICartItemRepository CartItems { get; }
         IOrderDetailRepository OrderDetail { get; }
-        IOrderRepository Order { get; }
+        IOrderRepository Order { get; } 
+        IBookRepository Book { get; }
 
         /// <summary>
         /// Bắt đầu transition

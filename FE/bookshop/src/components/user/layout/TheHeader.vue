@@ -2,7 +2,7 @@
   <div class="topbar">
     <div class="container">
       <div class="topbar-wrap d-lg-flex justify-content-between">
-        <div class="header__contact d-flex align-items-center">
+        <!-- <div class="header__contact d-flex align-items-center">
           <div class="header-contact d-lg-flex flex-grow-1">
             <div class="item d-flex align-items-center">
               <div class="icon me-2">
@@ -34,6 +34,15 @@
               </div>
             </div>
           </div>
+        </div> -->
+        <div class="top-banner-block">
+          <p>
+            <a href="https://www.fahasa.com/minh-long?fhs_campaign=topbanner"
+              ><img
+                src="https://cdn0.fahasa.com/media/wysiwyg/Thang-04-2024/MinhLongT4_Header_1263x60.jpg"
+                alt=""
+            /></a>
+          </p>
         </div>
       </div>
     </div>
@@ -44,13 +53,18 @@
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">
         <div class="header__logo me-5">
-          <a style="cursor: pointer" @click="goToHomePage">
+          
+          <div
+            class="fhs_mouse_point"
+            onclick="location.href = '/';"
+            title="FAHASA.COM"
+          >
             <img
-              style="width: 220px; height: 60px"
-              src="../../../assets/logo.png"
+              src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png"
               alt=""
+              style="width: 220px; vertical-align: middle"
             />
-          </a>
+          </div>
         </div>
         <div class="header__search">
           <div class="header__search-box d-flex">
@@ -210,7 +224,12 @@
             </a>
           </div>
           <div class="block-item">
-            <a  style="cursor: pointer" @click="onGoToCartPage" class="block-item-link" id="btn-cart">
+            <a
+              style="cursor: pointer"
+              @click="onGoToCartPage"
+              class="block-item-link"
+              id="btn-cart"
+            >
               <div class="item-icon d-flex justify-content-center">
                 <div class="m-icon-cart"></div>
               </div>
@@ -267,7 +286,7 @@
               <div>
                 <a
                   class="fhs_center_space d-flex justify-content-between"
-                  href="/customer/account/"
+                  href="/customer"
                   ><div class="fhs_center_left">
                     <div
                       class="fhs_center_left ico_vip_copper"
@@ -452,11 +471,10 @@ export default {
      */
     getQuantityOfCart() {
       const cartList = cartLocalStorageService.getCartFromLocalStorage();
-        this.quantityOfCart = cartList.reduce(
+      this.quantityOfCart = cartList.reduce(
         (accumulator, item) => accumulator + item.Quantity,
         0
       );
-      
     },
 
     onShowFormLogin() {
@@ -530,12 +548,12 @@ export default {
 </script>
 <style scoped>
 .topbar {
-  background: #417505;
   align-items: center;
   display: flex;
   position: relative;
   color: #fff;
   min-height: 40px;
+  background-color: #ff5653;
 }
 .item {
   margin-right: 30px;

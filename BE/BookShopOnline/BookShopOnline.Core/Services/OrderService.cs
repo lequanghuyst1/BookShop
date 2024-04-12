@@ -16,7 +16,7 @@ namespace BookShopOnline.Core.Services
     public class OrderService : BaseService<Order, OrderDto>, IOrderService
     {
         IUnitOfWork _unitOfWork;
-        public OrderService(IOrderRepository orderRepository, IMapper mapper, IImageService imageService, IUnitOfWork unitOfWork ) : base(orderRepository, mapper, imageService)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, IImageService imageService, IUnitOfWork unitOfWork) : base(orderRepository, mapper, imageService)
         {
             _unitOfWork = unitOfWork;
         }
@@ -29,21 +29,33 @@ namespace BookShopOnline.Core.Services
             var cartItemIds = orderData.CartItemIds;
             var orderId = Guid.NewGuid();
             order.OrderId = orderId;
+            order.OrderCode = await GetOrderCode();
             var res = await _unitOfWork.Order.InsertAsync(order);
             var count = 0;
-            if(res > 0)
+            if (res > 0)
             {
                 //var result = await _unitOfWork.OrderDetail.InsertManyAsync(ordersDetail);
-                foreach(var item in ordersDetail)
+                foreach (var item in ordersDetail)
                 {
                     item.OrderId = orderId;
                     var result = await _unitOfWork.OrderDetail.InsertAsync(item);
-                    count = count + result;
+                    var book = await _unitOfWork.Book.GetByIdAsync(item.BookId);
+                    book.QuantityInStock = book.QuantityInStock - item.Quantity;
+                    if(book.QuantitySold == null)
+                    {
+                        book.QuantitySold = 0;
+                    }
+                    book.QuantitySold = book.QuantitySold + item.Quantity;
+                    await _unitOfWork.Book.UpdateAsync(book.BookId, book);
+                    if (result > 0)
+                    {
+                        count = count + result;
+                    }
                 }
-                if(count == ordersDetail.Count)
+                if (count == ordersDetail.Count)
                 {
                     var resultDelete = await _unitOfWork.CartItems.DeleteManyAsync(cartItemIds);
-                    if(resultDelete > 0)
+                    if (resultDelete > 0)
                     {
                         _unitOfWork.Commit();
                         return res;
@@ -53,6 +65,18 @@ namespace BookShopOnline.Core.Services
             }
             return 0;
 
+        }
+
+        private async Task<string> GetOrderCode()
+        {
+            Random rand = new Random();
+            var orderCodeNew = "";
+            do
+            {
+                orderCodeNew = rand.Next(100000000, 1000000000).ToString();
+            }
+            while (await _unitOfWork.Order.CheckDuplicateCodeAsync(orderCodeNew));
+            return orderCodeNew;
         }
     }
 }
