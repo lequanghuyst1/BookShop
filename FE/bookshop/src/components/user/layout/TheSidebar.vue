@@ -69,7 +69,6 @@ export default {
 .widget {
   padding: 10px 18px;
   background-color: #fff;
-  margin-bottom: 10px;
   border-radius: 4px;
 }
 .sidebar__heading {

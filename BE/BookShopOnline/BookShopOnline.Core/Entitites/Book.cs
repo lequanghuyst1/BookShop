@@ -17,12 +17,10 @@ namespace BookShopOnline.Core.Entitites
         public string BookCode { get; set; }
         public string BookName { get; set; }
         public string ImagePath { get; set; }
-
         public double Price { get; set; }
         public string Author { get; set; }
         public int QuantityImported { get; set; }
         public string? Description { get; set; }
-
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
         public int? NumberOfPage { get; set; }

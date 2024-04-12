@@ -8,29 +8,37 @@
           class="order-view-status"
           style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
         >
-          Đơn hàng Bị hủy
+          {{ order.Status }}
         </div>
         <div class="order-view-id">
-          <span>Mã đơn hàng: </span><span>103431888</span>
+          <span>Mã đơn hàng: </span><span>{{ order.OrderCode }}</span>
         </div>
         <div class="order-view-date">
-          <span>Ngày mua: </span><span>10/04/2024</span>
+          <span>Ngày mua: </span
+          ><span>{{ this.$helper.formatDate(order.OrderDate) }}</span>
         </div>
         <div class="order-view-total">
           <span>Tổng Tiền: </span
           ><span
-          
-            ><span style="font-size: 14px !important;" class="price">105.870</span
-            ><span style="font-size: 14px !important;" class="sym-totals">đ</span></span
+            ><span style="font-size: 14px !important" class="price">{{
+              this.$helper.formatMoney(order.TotalAmount)
+            }}</span
+            ><span style="font-size: 14px !important" class="sym-totals"
+              >đ</span
+            ></span
           >
         </div>
         <div class="order-view-vat">
           <span style="flex: 1">Thông tin xuất hóa đơn GTGT: </span>
-          <span class="dont-have-info" style="flex: 5">(Không có)</span>
+          <span class="dont-have-info" style="flex: 5; font-weight: 500"
+            >(Không có)</span
+          >
         </div>
         <div class="order-view-note">
           <span style="flex: 1">Ghi chú: </span>
-          <span class="dont-have-info" style="flex: 16">(Không có)</span>
+          <span class="dont-have-info" style="flex: 16; font-weight: 500">{{
+            order.Note ? oreder.Note : "(Không có)"
+          }}</span>
         </div>
       </div>
 
@@ -428,13 +436,13 @@
           </div>
           <div class="order-box-info">
             <address>
-              Huy Lê Quang
+              {{ order.Fullname }}
               <br />
 
-              Số nhà 174<br />
+              {{ order.Address }}
+              <br />
 
-              Xã Đồng Tháp, Huyện Đan Phượng, Hà Nội, Việt Nam<br />
-              Tel: 0974907964
+              Tel: {{ order.PhoneNumber }}
             </address>
           </div>
         </div>
@@ -519,7 +527,7 @@
               ></div>
             </div>
             <div class="order-view-icon-content">
-              <p>Bị hủy</p>
+              <p>{{ order.Status }}</p>
               <p>10/04/2024 - 13:26</p>
             </div>
           </div>
@@ -534,22 +542,25 @@
             id="103431888"
             onclick="showOnProductDetails(this.id);"
           >
-            <div><span>Đơn hàng:</span><span>103431888</span></div>
+            <div>
+              <span>Đơn hàng:</span><span>{{ order.OrderCode }}</span>
+            </div>
             <div
               class="subOder-progress-bar"
               style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
             >
-              Đơn hàng Bị hủy
+              {{ order.Status }}
             </div>
             <div>
               <span>Tổng tiền:</span
               ><span
-                ><span class="price">105.870</span
-                ><span style="sym-totals">đ</span></span
+                ><span class="price"
+                  >{{ this.$helper.formatMoney(order.TotalAmount) }}đ</span
+                ></span
               >
             </div>
             <div class="order-subOrder-quantity">
-              <span>Số lượng:</span><span>1</span>
+              <span>Số lượng:</span><span>{{ this.totalQuantity }}</span>
             </div>
             <div class="order-subOrder-arrow">
               <i class="fa fa-chevron-right" aria-hidden="true"></i>
@@ -564,7 +575,7 @@
               Sản phẩm
             </div>
             <div class="table-subOrder-row table-subOrder-header">
-              <div class="table-subOrder-cell" style="width: 100px">
+              <div class="table-subOrder-cell" style="width: 120px">
                 Hình ảnh
               </div>
               <div class="table-subOrder-cell">Tên sản phẩm</div>
@@ -576,20 +587,21 @@
           </div>
           <!-- Check if Buffet Combo Event is Active -->
           <div class="table-subOrder-parent-img-and-cell">
-            
-            <div class="table-subOrder-row">
-              <div class="table-subOrder-cell table-subOrder-img-web">
-                <img
-                  src="https://cdn0.fahasa.com/media/catalog/product/m/o/montessori---phuong-phap-gd-toan-dien-cho-tre-0-_-6-t----b_a-1.jpg"
-                />
+            <div
+              v-for="orderDetail in orderDetails"
+              :key="orderDetail.OrderDetailId"
+              class="table-subOrder-row"
+            >
+              <div style="width: 120px; text-align: left;" class="table-subOrder-cell table-subOrder-img-web">
+                <img :src="orderDetail.ImagePath" />
               </div>
               <div class="table-subOrder-cell table-subOrder-name-product">
-                <div class="table-subOrder-name-tag-a">
+                <div  class="table-subOrder-name-tag-a">
                   <a
                     href="https://www.fahasa.com/montessori-phuong-phap-giao-duc-toan-dien-cho-tre-0-6-tuoi.html"
                     style="height: auto"
                   >
-                    Montessori - Phương Pháp Giáo Dục Toàn Diện Cho Trẻ 0-6 Tuổi
+                    {{ orderDetail.BookName }}
                   </a>
                 </div>
               </div>
@@ -604,7 +616,12 @@
                   <!--<span class="price-incl-tax">-->
                   <span class="cart-price">
                     <div class="cart-orderHs-price">
-                      <div><span class="price">86.870</span> đ</div>
+                      <div>
+                        <span class="price">{{
+                          this.$helper.formatMoney(orderDetail.Price)
+                        }}</span>
+                        đ
+                      </div>
                       <div>
                         <span class="orderHs-price-old"
                           ><span class="price">119.000</span> đ</span
@@ -617,7 +634,7 @@
               </div>
               <div class="table-subOrder-cell">
                 <span class="table-subOrder-hidden-desktop"
-                  >Số lượng:&nbsp;</span
+                  >{{ orderDetail.Quantity }}:&nbsp;</span
                 >
                 <span> <strong>1</strong><br /> </span>
               </div>
@@ -628,7 +645,12 @@
                 <span>
                   <!--<span class="price-incl-tax">-->
                   <span class="cart-price">
-                    <span class="price">86.870</span> đ
+                    <span class="price">{{
+                      this.$helper.formatMoney(
+                        orderDetail.Quantity * orderDetail.Price
+                      )
+                    }}</span>
+                    đ
                     <!--</span>-->
                   </span>
                 </span>
@@ -642,9 +664,8 @@
           <div>
             <span>Thành tiền: </span>
             <span class="order-totals-price"
-              ><span class="price">86.870</span>&nbsp;<span class="sym-totals"
-                >đ</span
-              ></span
+              ><span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span
+              >&nbsp;<span class="sym-totals">đ</span></span
             >
           </div>
 
@@ -675,7 +696,7 @@
           </div>
           <div>
             <p class="order-totals-price">
-              <span class="price">86.870</span>&nbsp;<span class="sym-totals"
+              <span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span>&nbsp;<span class="sym-totals"
                 >đ</span
               >
             </p>
@@ -686,7 +707,7 @@
               >
             </p>
             <p class="order-totals-price">
-              <span class="price">105.870</span>&nbsp;<span class="sym-totals"
+              <span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span>&nbsp;<span class="sym-totals"
                 >đ</span
               >
             </p>
@@ -697,8 +718,53 @@
   </div>
 </template>
 <script>
+import orderService from "@/utils/OrderService";
 export default {
   name: "OrderDetail",
+  created() {
+    this.getOrderDetailsData();
+    this.getOrderData();
+  },
+  data() {
+    return {
+      orderDetails: [],
+      order: [],
+      totalQuantity: 0,
+    };
+  },
+  methods: {
+    /**
+     * Hàm thực hiện gán giá trị cho orderDetails
+     * @author LQHUY(12/04/2024)
+     */
+    async getOrderDetailsData() {
+      try {
+        const res = await this.$httpRequest.get(
+          `OrderDetails/GetByOrderId/${this.$route.params.id}`
+        );
+        if (res.status === 200) {
+          this.orderDetails = res.data;
+          this.totalQuantity = this.orderDetails.reduce(
+            (previousValue, item) => previousValue + item.Quantity,
+            0
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getOrderData() {
+      try {
+        const res = await orderService.getById(this.$route.params.id);
+        if (res.status === 200) {
+          this.order = res.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 <style>

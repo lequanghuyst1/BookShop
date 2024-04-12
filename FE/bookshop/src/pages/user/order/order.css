@@ -573,7 +573,7 @@
 .review-order-body-icon-text {
   font-weight: 600;
   font-size: 18px;
-  color: #f39801;
+  color: #efece6;
   width: 150px;
   font-weight: 600;
   line-height: 26px;
@@ -753,10 +753,8 @@ address {
     flex-basis: 10%;
 }
 .table-subOrder-img-web {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
+   
+    width: 120px;
 }
 .table-subOrder-img-web img {
     width: 80px;

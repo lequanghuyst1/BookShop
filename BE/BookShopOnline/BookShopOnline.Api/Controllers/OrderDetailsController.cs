@@ -16,7 +16,7 @@ namespace BookShopOnline.Api.Controllers
         {
             _orderDetailService = orderDetailService;
         }
-        [HttpGet("GetByOrderId")]
+        [HttpGet("GetByOrderId/{id}")]
         public async Task<IActionResult> GetByOrderIdAsync(Guid id)
         {
             var res = await _orderDetailService.GetByOrderIdAsync(id);
