@@ -1,9 +1,8 @@
 <template>
   <div class="content__header">
     <div class="content__header-title">
-      <h3>Quản lý danh mục</h3>
+      <h3>Quản lý sách</h3>
     </div>
-
     <div class="content__header-group-button">
       <tippy content="Thêm mới" placement="bottom" animation="scale">
         <MButton
@@ -12,7 +11,7 @@
           id="btn-add-employee"
           text="Thêm mới"
           style="font-weight: 600"
-          @click="onBtnAddNew"
+          @click="onCreateItem"
         >
         </MButton>
       </tippy>
@@ -24,7 +23,7 @@
         <div
           v-show="isShowToolbarAction"
           class="content__toolbar-left--action"
-          style="display: flex"
+          style="display: flex; column-gap: 20px"
         >
           <p class="content__toolbar-left--selected">
             Đã chọn
@@ -44,7 +43,7 @@
             class="m-button-icon m-button--sub m-button-none"
             id="btn-delete-all"
             text="Xóa tất cả"
-            @click="btnDeleteAllCategory"
+            @click="onDeleteAll"
           >
           </MButton>
         </div>
@@ -54,7 +53,7 @@
           <MInputIcon
             refEl="txtSearchString"
             v-model="searchString"
-            placeholder="Tìm kiếm theo tên danh mục"
+            placeholder="Tìm kiếm theo tên sách, tên tác giả"
           ></MInputIcon>
         </div>
       </div>
@@ -63,15 +62,17 @@
     <!-- Table -->
 
     <MTable
+      id="book-data"
+      idObject="CategoryId"
+      codeObject="CategoryCode"
       :columnsTable="columnsTable"
-      idObject="categoryId"
-      codeObject="categoryCode"
       :pageData="pageData"
       :selectAll="selectAll"
-      @toggleShowForm="toggleShowForm"
-      @updateItemId="updateItemId"
+      :imageData="imageData"
+      :image="false"
+      @onDelete="onDeleteItem"
+      @onUpdate="onUpdateItem"
       @updateListItemId="updateListItemId"
-      @updateItemIdClone="updateItemIdClone"
       @toggleShowToolbarAction="toggleShowToolbarAction"
       @updateTotalRecordSelected="updateTotalRecordSelected"
     >
@@ -86,46 +87,62 @@
     ></MPagination>
     <CategoryDetail
       v-if="isShowForm"
-      @loadData="loadData"
+      @loadData="loadDataTable"
+      @onCloseForm="onCloseFormDetail"
+      :formMode="formMode"
       :categoryIdSelected="categoryIdSelected"
     ></CategoryDetail>
+
+    <MDialog
+      v-if="isShowDialogDelete"
+      title="Xác nhận xóa"
+      @onCloseDialog="onHideDialogDelete"
+      :message="messageDialog"
+      :type="this.$Resource[this.$languageCode].Dialog.Type.Question"
+    >
+      <template #footerLeft>
+        <MButton
+          @click="onHideDialogDelete"
+          class="m-button--sub"
+          text="Hủy"
+        ></MButton>
+      </template>
+      <template #footerRight>
+        <MButton @click="handleDeleteConfirm" text="Xác nhận"></MButton>
+      </template>
+    </MDialog>
   </div>
 </template>
 <script>
-import categoryColumns from "@/js/data/category";
-import categoryService from "@/utils/CategoryService";
 import CategoryDetail from "./CategoryDetail.vue";
+import categoryService from "@/utils/CategoryService";
+import categoryColumns from "@/js/data/category";
 export default {
   name: "CategoryPage",
   components: { CategoryDetail },
-  created() {
-    this.loadData();
-    this.$emitter.on("toggleShowForm", this.toggleShowForm);
-    this.$emitter.on("deleteCategory", this.deleteCategory);
-    this.$emitter.on("deleteManyCategory", this.deleteManyCategory);
-    this.$emitter.on("updatePageSize", this.updatePageSize);
-  },
+  created() {},
   mounted() {
+    this.loadData();
     this.$emitter.emit("toggleShowLoadingTable", true);
   },
-  beforeUnmount() {
-    this.$emitter.off("toggleShowForm", this.toggleShowForm);
-    this.$emitter.off("deleteCategory", this.deleteCategory);
-    this.$emitter.off("deleteManyCategory", this.deleteManyCategory);
-    this.$emitter.off("updatePageSize", this.updatePageSize);
-  },
+  beforeUnmount() {},
   watch: {
-    pageSize() {
-      this.loadData();
-    },
-    pageNumber() {
-      this.loadData();
+    pageNumber(newValue) {
+      if (newValue) {
+        this.loadData();
+      }
     },
     searchString() {
       this.loadData();
     },
   },
   methods: {
+    onHideDialogDelete() {
+      this.isShowDialogDelete = false;
+    },
+    loadDataTable() {
+      this.loadData();
+    },
     async loadData() {
       this.$emitter.emit("toggleShowLoadingTable", true);
       try {
@@ -142,9 +159,9 @@ export default {
         const res = await categoryService.getFilterPaging({ params });
         switch (res.status) {
           case 200:
-            this.pageData = res.data.data;
-            this.totalRecord = res.data.totalRecord;
-            this.totalPage = res.data.totalPage;
+            this.pageData = res.data.Data;
+            this.totalRecord = res.data.TotalRecord;
+            this.totalPage = res.data.TotalPage;
             this.$emitter.emit("toggleShowLoadingTable", false);
             break;
         }
@@ -154,25 +171,75 @@ export default {
         this.$emitter.emit("toggleShowLoadingTable", false);
       }
     },
-    onBtnAddNew() {
-      this.toggleShowForm(true);
+
+    async loadDataImage() {
+      try {
+        const res = await this.$httpRequest.get("Images");
+        switch (res.status) {
+          case 200:
+            this.imageData = res.data;
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("handleApiError", error);
+      }
+    },
+
+    onCreateItem() {
       this.categoryIdSelected = null;
+      this.isShowForm = true;
+      this.formMode = this.$Enum.FormMode.Add;
+      this.$emitter.emit("toggleShowLoading", true);
     },
-    toggleShowForm(isShow) {
-      this.isShowForm = isShow;
+
+    onUpdateItem(id) {
+      this.categoryIdSelected = id;
+      this.isShowForm = true;
+      this.formMode = this.$Enum.FormMode.Edit;
+      this.$emitter.emit("toggleShowLoading", true);
     },
-    updateItemId(value) {
-      this.categoryIdSelected = value;
+
+    onShowFormDetail() {
+      this.isShowForm = true;
     },
+
+    onCloseFormDetail() {
+      this.isShowForm = false;
+    },
+
     updateListItemId(ids) {
       this.lstCategoryIdSelected = ids;
     },
-    async deleteCategory() {
+
+    onDeleteItem(message, id) {
+      this.typeDelete = "single";
+      this.isShowDialogDelete = true;
+      this.messageDialog = message;
+      this.categoryIdSelected = id;
+    },
+
+    onDeleteAll() {
+      this.typeDelete = "all";
+      this.isShowDialogDelete = true;
+      this.messageDialog =
+        this.$Resource[this.$languageCode].ConfirmDeleteAll("Cuốn sách");
+    },
+
+    async handleDeleteConfirm() {
+      if (this.typeDelete === "single") {
+        await this.handleDeteleItem();
+      } else if (this.typeDelete === "all") {
+        await this.handleDeleteMany();
+      }
+    },
+
+    async handleDeteleItem() {
       try {
+        this.onHideDialogDelete();
         const res = await categoryService.delete(this.categoryIdSelected);
         switch (res.status) {
           case 200:
-            this.$emitter.emit("toggleDialogNotice", false);
             this.$emitter.emit(
               "onShowToastMessage",
               this.$Resource[this.$languageCode].ToastMessage.Type.Success,
@@ -180,25 +247,17 @@ export default {
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
             this.loadData();
-
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError");
         console.log(error);
       }
     },
-    btnDeleteAllCategory() {
-      this.$emitter.emit(
-        "toggleDialogNotice",
-        true,
-        true,
-        "Xác nhận xóa",
-        this.$Resource[this.$languageCode].ConfirmDeleteAll("Danh mục"),
-        this.$Resource[this.$languageCode].Dialog.Type.Question
-      );
-    },
-    async deleteManyCategory() {
+
+    async handleDeleteMany() {
       try {
+        this.onHideDialogDelete();
         const res = await categoryService.deleteMany({
           data: this.lstCategoryIdSelected,
         });
@@ -211,24 +270,24 @@ export default {
               "Xoá thành công",
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
-            this.loadData();
+            this.loadDataTable();
             this.btnRemoveRowSelected();
-
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError");
         console.log(error);
       }
     },
+
     toggleShowToolbarAction(isShow) {
       this.isShowToolbarAction = isShow;
     },
+
     updateTotalRecordSelected(total) {
       this.totalRecordSelected = total;
     },
-    updatePageSize(pageSize) {
-      this.pageSize = pageSize;
-    },
+
     btnRemoveRowSelected() {
       this.selectAll = false;
       setTimeout(() => {
@@ -238,31 +297,31 @@ export default {
   },
   provide() {
     return {
-      pageSize: 10,
+      pageSizeDefault: 10,
     };
   },
   data() {
     return {
-      /**biến dùng cho paging */
-      totalRecord: null,
-      totalPage: null,
-      pageSize: 10,
-      pageNumber: 1,
-
-      /**biến dùng cho table */
-      selectAll: null,
+      isShowDialogDelete: false,
+      formMode: this.$Enum.FormMode.Add,
       columnsTable: categoryColumns,
       pageData: [],
+      isShowForm: false,
+      categoryIdSelected: null,
+      lstCategoryIdSelected: [],
+      selectAll: false,
 
       /**chuỗi tìm kiếm nhanh các bản ghi */
       searchString: null,
-
-      /**danh sách id để xóa */
-      lstCategoryIdSelected: [],
       isShowToolbarAction: false,
       totalRecordSelected: null,
-      isShowForm: false,
-      categoryIdSelected: null,
+      pageSize: 10,
+      pageNumber: 1,
+      totalRecord: null,
+      totalPage: null,
+      typeDelete: "single",
+
+      imageData: [],
     };
   },
 };

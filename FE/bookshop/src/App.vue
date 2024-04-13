@@ -25,7 +25,6 @@
   <MLoading v-show="showLoading"></MLoading>
 </template>
 <script>
-
 export default {
   name: "App",
   created() {
@@ -66,11 +65,18 @@ export default {
 
     /**
      * Hàm xử lí ẩn hiện loading
-     * @param {object} req
+     * @param {boolean} req
      * Author: LQHUY(08/12/2023)
      */
-    toggleShowLoading(isShow) {
-      this.showLoading = isShow;
+    toggleShowLoading(isShow, duration = 300) {
+      if (isShow) {
+        this.showLoading = isShow;
+      }
+      if (!isShow) {
+        setTimeout(() => {
+          this.showLoading = isShow;
+        }, duration);
+      }
     },
 
     /**
@@ -113,7 +119,7 @@ export default {
             break;
           //Lỗi từ phía backend
           case 500:
-          this.$emitter.emit("toggleShowLoading", false);
+            this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
             this.$emitter.emit(
               "onShowToastMessage",

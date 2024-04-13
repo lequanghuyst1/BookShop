@@ -90,6 +90,41 @@ const TEXT_FIELD = {
         },
       },
     },
+    category: {
+      categoryCode: {
+        name: "CategoryCode",
+        label: "Mã danh mục",
+        ref: "refCategoryCode",
+        placeholder: "Nhập mã danh mục",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      categoryName: {
+        name: "CategoryName",
+        label: "Tên danh mục",
+        ref: "refCategoryName",
+        placeholder: "Nhập tên danh mục",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+      },
+      decription: {
+        name: "Decription",
+        label: "Mô tả",
+        ref: "refDecription",
+        placeholder: "Nhập mô tả",
+        rules: {
+          lengthMax: 255,
+          required: false,
+          rule: [],
+        },
+      },
+    },
     user: {
       fullname: {
         name: "Fullname",

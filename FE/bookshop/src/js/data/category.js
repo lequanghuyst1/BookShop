@@ -1,18 +1,18 @@
 const categoryColumns = [
   {
-    field: "categoryCode",
+    field: "CategoryCode",
     nameField: "Mã danh mục",
     class: "table-align-text",
     width: "182px",
   },
   {
-    field: "categoryName",
+    field: "CategoryName",
     nameField: "Tên danh mục",
     class: "table-align-text",
     width: "182px",
   },
   {
-    field: "description",
+    field: "Description",
     nameField: "Mô tả",
     class: "table-align-text",
     width: "182px",

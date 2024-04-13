@@ -26,7 +26,6 @@ namespace BookShopOnline.Core.Services.Base
 
         public async Task<int> DeleteManyServiceAsync(List<Guid> ids)
         {
-
             var res = await _baseRepository.DeleteManyAsync(ids);
             return res;
         }
@@ -57,17 +56,20 @@ namespace BookShopOnline.Core.Services.Base
                     await _imageService.InsertServiceAsync(image, imageFile);
                 }
                 return res;
-
             }
-            var result = await _baseRepository.InsertAsync(entity);
-            return result;
+            else
+            {
+                var result = await _baseRepository.InsertAsync(entity);
+                return result;
+            }
+            
         }
 
         public virtual async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
         {
             var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
             var tableName = typeof(TEntity).Name;
-            await ValidateBeforeInsert(entity);
+            await ValidateBeforeUpdate(entity);
             entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, id);
 
             if (imageFile != null && imageFile.Length > 0)

@@ -5,101 +5,65 @@
         <TheSidebar></TheSidebar>
       </div>
       <div class="col-9">
-        <div class="home-slider w-100 mb-5">
-          <div class="image">
-            <a href="">
-              <img
-                class="w-100"
-                src="https://theme.hstatic.net/200000845405/1001198377/14/home_slider_image_2.jpg?v=437"
-                alt=""
-              />
-            </a>
-          </div>
-        </div>
-        <div class="home-banner mb-4">
-          <div class="row">
-            <div class="col-6">
-              <div class="banner-item">
-                <a class="banner-item-link" href="">
+        <TheSlideHome></TheSlideHome>
+      </div>
+    </div>
+    <div class="home-tab-product">
+      <div class="tab-heading">
+        <h4>Sách mới nổi bật</h4>
+      </div>
+      <div class="tab-content">
+        <div class="row">
+          <div
+            v-for="item in booksOutStanding"
+            :key="item.BookId"
+            class="col-lg-5ths"
+          >
+            <div class="product-item">
+              <div class="product-image d-block text-center">
+                <div class="product-sale">-10%</div>
+                <a :href="'product/' + item.BookId" class="d-block">
                   <img
-                    src="https://theme.hstatic.net/200000845405/1001198377/14/htb_img_1.jpg?v=437"
-                    class="banner-item-picture"
+                    :src="
+                      item.ImagePath
+                        ? item.ImagePath
+                        : 'https://t3.ftcdn.net/jpg/04/34/72/82/240_F_34728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg'
+                    "
                     alt=""
                   />
                 </a>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="banner-item">
-                <a class="banner-item-link" href="">
-                  <img
-                    src="https://theme.hstatic.net/200000845405/1001198377/14/htb_img_1.jpg?v=437"
-                    class="banner-item-picture"
-                    alt=""
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="home-tab-product">
-          <div class="tab-heading">
-            <h4>Sách mới nổi bật</h4>
-          </div>
-          <div class="tab-content">
-            <div class="row">
-              <div
-                v-for="item in booksOutStanding"
-                :key="item.BookId"
-                class="col-3"
-              >
-                <div class="product-item">
-                  <div class="product-image d-block text-center">
-                    <div class="product-sale">-10%</div>
-                    <a :href="'product/' + item.BookId" class="d-block">
-                      <img
-                        :src="
-                          item.ImagePath
-                            ? item.ImagePath
-                            : 'https://t3.ftcdn.net/jpg/04/34/72/82/240_F_34728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg'
-                        "
-                        alt=""
-                      />
+                <div class="group-button">
+                  <button class="btn-action button-add-like">
+                    <a href="/heart">
+                      <i class="fa-solid fa-heart"></i>
                     </a>
-                    <div class="group-button">
-                      <button class="btn-action button-add-like">
-                        <a href="/heart">
-                          <i class="fa-solid fa-heart"></i>
-                        </a>
-                      </button>
-                      <button class="btn-action button-add-cart">
-                        <a @click="handleOnAdd(item)">
-                          <i class="fa-solid fa-cart-plus"></i>
-                        </a>
-                      </button>
-                      <button class="btn-action button-detail">
-                        <a href="/detail">
-                          <i class="fa-solid fa-eye"></i>
-                        </a>
-                      </button>
-                    </div>
+                  </button>
+                  <button class="btn-action button-add-cart">
+                    <a @click="handleOnAdd(item)">
+                      <i class="fa-solid fa-cart-plus"></i>
+                    </a>
+                  </button>
+                  <button class="btn-action button-detail">
+                    <a href="/detail">
+                      <i class="fa-solid fa-eye"></i>
+                    </a>
+                  </button>
+                </div>
+              </div>
+              <div class="product-detail">
+                <h3 class="product-name">
+                  <a href="">
+                    {{ item.BookName }}
+                  </a>
+                </h3>
+                <div class="product-price d-flex flex-wrap">
+                  <div class="product-pirce--discount me-2">
+                    {{ this.$helper.formatMoney(item.Price) }}đ
                   </div>
-                  <div class="product-detail">
-                    <h3 class="product-name">
-                      <a href="">
-                        {{ item.BookName }}
-                      </a>
-                    </h3>
-                    <div class="product-price d-flex flex-wrap">
-                      <div class="product-pirce--discount me-2">
-                        {{ this.$helper.formatMoney(item.Price) }}đ
-                      </div>
-                      <div
-                        class="product-pirce--original text-decoration-line-through"
-                      >
-                        79,000đ
-                      </div>
-                    </div>
+                  <div
+                    class="product-pirce--original text-decoration-line-through"
+                  >
+                    79,000đ
                   </div>
                 </div>
               </div>
@@ -116,9 +80,10 @@ import bookService from "@/utils/BookService";
 import cartItemService from "@/utils/CartItemService";
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 import localStorageService from "@/js/storage/LocalStorageService";
+import TheSlideHome from "../../../components/user/layout/TheSlideHome.vue";
 export default {
   name: "HomeUserPage",
-  components: { TheSidebar },
+  components: { TheSidebar, TheSlideHome },
   created() {
     this.loadDataBooksOutStanding();
   },
@@ -198,7 +163,6 @@ export default {
   color: #ec8000;
 }
 .tab-content {
-  background-color: #fff;
-  padding: 15px;
+  
 }
 </style>

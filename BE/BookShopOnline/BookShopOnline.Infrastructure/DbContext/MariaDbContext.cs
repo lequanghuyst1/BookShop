@@ -13,6 +13,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BookShopOnline.Infrastructure.DbContext
 {
@@ -175,6 +176,36 @@ namespace BookShopOnline.Infrastructure.DbContext
             parameters.Add($"@{tableName}Code", entityCode);
             var res = await Connection.QueryFirstOrDefaultAsync<string>(sql: sqlCommand, param: parameters, transaction: Transaction);
             if (res != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> CheckEntityCodeUpdateAsync<TEnity>(string entityCode, Guid id)
+        {
+            var tableName = typeof(TEnity).Name;
+            var sql = $"SELECT {tableName}Code FROM view_{tableName} WHERE {tableName}Id = @{tableName}Id";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add($"@{tableName}Id", id);
+            var code = await Connection.QueryFirstOrDefaultAsync<string>(sql, parameters);
+            var isDuplicateCode = await CheckDuplicateCodeAsync<TEnity>(entityCode);
+            if (entityCode == code || !isDuplicateCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> CheckEntityNameUpdateAsync<TEntity>(string entityName, Guid id)
+        {
+            var tableName = typeof(TEntity).Name;
+            var sql = $"SELECT {tableName}Name FROM view_{tableName} WHERE {tableName}Id = @{tableName}Id";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add($"@{tableName}Id", id);
+            var name = await Connection.QueryFirstOrDefaultAsync<string>(sql, parameters);
+            var isDuplicateName = await CheckExitEntityNameAsync<TEntity>(entityName);
+            if (entityName == name || !isDuplicateName)
             {
                 return true;
             }

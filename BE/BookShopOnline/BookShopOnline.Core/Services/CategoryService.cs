@@ -4,6 +4,7 @@ using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
+using BookShopOnline.Core.Resources;
 using BookShopOnline.Core.Services.Base;
 using System;
 using System.Collections.Generic;
@@ -15,26 +16,35 @@ namespace BookShopOnline.Core.Services
 {
     public class CategoryService : BaseService<Category, CategoryDto>, ICategoryService
     {
-        readonly IMapper _mapper;
         ICategoryRepository _categoryRepository;
         public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IImageService imageService) : base(categoryRepository, mapper, imageService)
         {
-            _mapper = mapper;
             _categoryRepository = categoryRepository;
         }
-        //public override CategoryDto MapEntityToDto(Category category)
-        //{
-        //    var categoryDto = _mapper.Map<CategoryDto>(category);
-        //    return categoryDto;
 
-        //}
         public async override Task ValidateBeforeInsert(Category category)
         {
+            //categoryCode không hợp lệ ném ra exception
             if (await _categoryRepository.CheckExitEntityNameAsync(category.CategoryName))
             {
-                Dictionary<string, string[]>? errors = new Dictionary<string, string[]>();
-                errors.Add("categoryName", new string[] { $"Danh mục {category.CategoryName} đã tồn tại trong hệ thống!" });
-                throw new ValidateException( $"Danh mục{category.CategoryName} đã tồn tại trong hệ thống", errors);
+                errors.Add("CategoryName", new string[] { $"Danh mục {category.CategoryName} đã tồn tại trong hệ thống!" });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
+        }
+
+        public override async Task ValidateBeforeUpdate(Category category)
+        {
+            //categoryCode không hợp lệ ném ra exception
+            if(!await _categoryRepository.CheckEntityCodeUpdateAsync(category.CategoryCode, category.CategoryId)) {
+                errors.Add("CategoryCode", new string[] { $"Mã danh mục <{category.CategoryCode}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
+
+            //categoryName không hợp lệ ném ra exception
+            if (!await _categoryRepository.CheckEntityNameUpdateAsync(category.CategoryName, category.CategoryId))
+            {
+                errors.Add("CategoryName", new string[] { $"Danh mục <{category.CategoryName}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
             }
         }
     }

@@ -61,7 +61,7 @@ builder.Services.AddCors(options =>
 //config Auto Mapper
 builder.Services.AddAutoMapper
 (typeof(AutoMapperProfile).Assembly);
-
+        
 //config DI
 builder.Services.AddScoped<IDbContext, MariaDbContext>();
 

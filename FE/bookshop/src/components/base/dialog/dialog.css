@@ -23,7 +23,7 @@
   background-color: #ffffff;
   border-radius: 4px;
   animation: fadeIn linear 0.4s;
-  min-width: 350px;
+  width: 400px;
 }
 @keyframes fadeIn {
   from {

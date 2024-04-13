@@ -278,8 +278,6 @@ export default {
         switch (res.status) {
           case 201:
             this.successResponse("Thêm mới thành công");
-            this.$emit("loadData");
-            this.$emit("onCloseForm");
             break;
           default:
             break;
@@ -293,14 +291,13 @@ export default {
     async editBook() {
       try {
         var formData = new FormData();
+        console.log(this.book)
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));
         const res = await bookService.put(this.bookIdSelected, formData);
         switch (res.status) {
           case 200:
             this.successResponse("Sửa thành công");
-            this.$emit("loadData");
-            this.$emit("onCloseForm");
             break;
           default:
             break;
@@ -317,13 +314,13 @@ export default {
         switch (res.status) {
           case 200:
             this.book = res.data;
+            this.book.QuantityImported = Number(null);
             break;
           default:
             break;
         }
       } catch (error) {
         this.$emitter.emit("handleApiError", error);
-
         console.log(error);
       }
     },
@@ -371,6 +368,7 @@ export default {
           message,
           this.$Resource[this.$languageCode].ToastMessage.Status.Success
         );
+        this.$emit("onCloseForm");
         this.$emit("loadData");
       } catch (error) {
         console.error(error);

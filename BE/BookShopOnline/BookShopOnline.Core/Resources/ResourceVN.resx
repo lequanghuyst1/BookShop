@@ -120,7 +120,10 @@
   <data name="ConnectDbException" xml:space="preserve">
     <value>Không thể kết nối với cơ sở dữ liệu</value>
   </data>
+  <data name="Exception_Validate_Default" xml:space="preserve">
+    <value>Dữ liệu không hợp lệ, vui lòng kiểm tra lại.</value>
+  </data>
   <data name="UserMessage" xml:space="preserve">
-    <value>Có lỗi vui lòng liên hệ quản trị viên để được tư vấn</value>
+    <value>Có lỗi vui lòng liên hệ quản trị viên để được tư vấn.</value>
   </data>
 </root>

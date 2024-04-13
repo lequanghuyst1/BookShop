@@ -70,7 +70,16 @@ namespace BookShopOnline.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Có lỗi vui lòng liên hệ quản trị viên để được tư vấn.
+        ///   Looks up a localized string similar to Dữ liệu không hợp lệ, vui lòng kiểm tra lại..
+        /// </summary>
+        public static string Exception_Validate_Default {
+            get {
+                return ResourceManager.GetString("Exception_Validate_Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Có lỗi vui lòng liên hệ quản trị viên để được tư vấn..
         /// </summary>
         public static string UserMessage {
             get {

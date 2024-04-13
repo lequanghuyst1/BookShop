@@ -1,5 +1,4 @@
 ﻿using BookShopOnline.Core.Entitites;
-using BookShopOnline.Core.Entitites;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -46,6 +45,29 @@ namespace BookShopOnline.Infrastructure.Interface
         /// </returns>
         /// Created by: LQHUY(12/04/2024)
         Task<bool> CheckDuplicateCodeAsync<TEntity>(string entityCode);
+
+        /// <summary>
+        /// Kiểm tra entityCode có phù hợp để Update hay không
+        /// </summary>
+        /// <param name="entityCode">mã code</param>
+        /// <param name="id">mã định danh enity</param>
+        /// <returns>
+        /// true - hợp lệ
+        /// false - không hợp lệ
+        /// </returns>
+        Task<bool> CheckEntityCodeUpdateAsync<TEnity>(string entityCode, Guid id);
+
+        /// <summary>
+        /// Hàm kiểm tra entityName có phù hợp để Update hay không
+        /// </summary>
+        /// <param name="entityName">tên entity</param>
+        /// <param name="id">mã định danh enity</param>
+        /// <returns>
+        /// true - hợp lệ
+        /// false - không hợp lệ
+        /// </returns>
+        Task<bool> CheckEntityNameUpdateAsync<TEntity>(string entityName, Guid id);
+
 
     }
 }

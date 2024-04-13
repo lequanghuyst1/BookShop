@@ -25,7 +25,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         Task<string> GetNewCodeAsync();
 
         /// <summary>
-        /// Kiểm tra enityCode đã tồn tại trong database chưa
+        /// Hàm kiểm tra enityCode đã tồn tại trong database chưa
         /// </summary>
         /// <param name="entityCode">mã code</param>
         /// <returns>
@@ -42,5 +42,27 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(11/04/2024)
         Task<IEnumerable<TEntity>> GetByIdsAsync(List<Guid> ids);
+
+        /// <summary>
+        /// Hàm kiểm tra entityCode có phù hợp để Update hay không
+        /// </summary>
+        /// <param name="entityCode">mã code</param>
+        /// <param name="id">mã định danh enity</param>
+        /// <returns>
+        /// true - hợp lệ
+        /// false - không hợp lệ
+        /// </returns>
+        Task<bool> CheckEntityCodeUpdateAsync(string entityCode, Guid id);
+
+        /// <summary>
+        /// Hàm kiểm tra entityName có phù hợp để Update hay không
+        /// </summary>
+        /// <param name="entityName">tên entity</param>
+        /// <param name="id">mã định danh enity</param>
+        /// <returns>
+        /// true - hợp lệ
+        /// false - không hợp lệ
+        /// </returns>
+        Task<bool> CheckEntityNameUpdateAsync(string entityName, Guid id);
     }
 }

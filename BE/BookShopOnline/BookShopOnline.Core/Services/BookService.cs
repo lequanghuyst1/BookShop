@@ -25,11 +25,11 @@ namespace BookShopOnline.Core.Services
 
         public override async Task ValidateBeforeInsert(Book book)
         {
-            if(await _bookRepository.CheckDuplicateCodeAsync(book.BookCode))
-            {
-                errors.Add("BookCode", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
-                throw new ValidateException($"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống.", errors);
-            }
+            //if(await _bookRepository.CheckDuplicateCodeAsync(book.BookCode))
+            //{
+            //    errors.Add("BookCode", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
+            //    throw new ValidateException($"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống.", errors);
+            //}
             if(book.BookName == "" || book.BookName == null)
             {
                 errors.Add("BookName", new string[] { "Tên sách không được để trống" });

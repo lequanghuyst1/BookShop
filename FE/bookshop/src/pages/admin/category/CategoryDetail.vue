@@ -1,173 +1,200 @@
 <template>
-  <MForm id="m-dialog__info-category" title="Thêm mới danh mục">
-    <template #form>
-      <form action="" style="width: 100%">
-        <div class="row">
-          <div class="col l-12">
-            <MInput
-              ref="categoryCode"
-              v-model="category.categoryCode"
-              label="Mã danh mục"
-              :message="lstErrorMessage.categoryCode"
-            ></MInput>
+  <div id="m-dialog__info-category" class="m-dialog">
+    <div class="m-dialog__overlay"></div>
+    <div class="m-dialog__container">
+      <div class="m-dialog__header">
+        <h3 class="m-dialog__header-title">
+          {{
+            this.formMode === this.$Enum.FormMode.Add
+              ? "Thêm mới sách"
+              : "Sửa thông tin sách"
+          }}
+        </h3>
+        <div class="m-dialog__header-action">
+          <div
+            v-tippy="{
+              content: 'Giúp',
+              placement: 'bottom',
+            }"
+            class="m-dialog__header-help"
+          >
+            <i class="fa-regular fa-circle-question"></i>
+          </div>
+          <div
+            v-tippy="{
+              content: 'Đóng',
+              placement: 'bottom',
+            }"
+            class="m-dialog__header-close"
+            @click="this.$emit('onCloseForm')"
+          >
+            <i class="fa-solid fa-xmark"></i>
           </div>
         </div>
-        <div class="row">
-          <div class="col l-12">
-            <MInput
-              ref="categoryName"
-              v-model="category.categoryName"
-              label="Tên danh mục"
-              :message="lstErrorMessage.categoryName"
-            ></MInput>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col l-12">
-            <MTextarea label="Mô tả" v-model="category.description"></MTextarea>
-          </div>
-        </div>
-      </form>
-    </template>
-    <template #footer>
-      <MButton class="m-button--sub" text="Hủy"></MButton>
-      <div
-        v-if="
-          formMode === this.$Enum.FormMode.Add ||
-          formMode === this.$Enum.FormMode.Clone
-        "
-        class="m-dialog__group-button"
-      >
-        <MButton
-          v-tippy="{
-            content: 'Lưu',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Lưu"
-          class="m-button--sub"
-        ></MButton>
-        <MButton
-          v-tippy="{
-            content: 'Lưu và thêm mới',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Lưu và thêm mới"
-        ></MButton>
       </div>
-      <div
-        v-else-if="formMode === this.$Enum.FormMode.Edit"
-        class="m-dialog__group-button"
-      >
-        <MButton
-          v-tippy="{
-            content: 'Sửa thông tin',
-            placement: 'top',
-          }"
-          @click="onSaveData"
-          text="Sửa thông tin"
-        ></MButton>
+      <div class="m-dialog__content">
+        <form action="" style="width: 100%">
+          <div class="row">
+            <div class="col l-12">
+              <MInput
+                :ref="textFields.categoryCode.ref"
+                :label="textFields.categoryCode.label"
+                :rules="textFields.categoryCode.rules"
+                v-model="category.CategoryCode"
+              ></MInput>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col l-12">
+              <MInput
+                :ref="textFields.categoryName.ref"
+                :label="textFields.categoryName.label"
+                :rules="textFields.categoryName.rules"
+                v-model="category.CategoryName"
+              ></MInput>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col l-12">
+              <MTextarea
+                label="Mô tả"
+                v-model="category.Description"
+              ></MTextarea>
+            </div>
+          </div>
+        </form>
       </div>
-    </template>
-  </MForm>
+      <div class="m-dialog__footer">
+        <div class="m-dialog__footer-left">
+          <MButton
+            v-tippy="{
+              content: 'Hủy',
+              placement: 'top',
+            }"
+            class="m-button--sub"
+            @click="this.$emit('onCloseForm')"
+            text="Hủy"
+          ></MButton>
+        </div>
+        <div class="m-dialog__footer-right">
+          <div class="m-dialog__group-button">
+            <MButton
+              v-tippy="{
+                content: 'Thêm mới',
+                placement: 'top',
+              }"
+              @click="handleSaveDataWithMode"
+              :text="
+                this.formMode === this.$Enum.FormMode.Add
+                  ? 'Thêm mới'
+                  : 'Sửa thông tin'
+              "
+              class="m-button"
+            ></MButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import TEXT_FIELD from "@/js/resource/text-field";
 import categoryService from "@/utils/CategoryService";
 export default {
-  name: "CategoryDetail",
+  name: "categoryDetail",
   props: {
     categoryIdSelected: {
       type: String,
     },
+    formMode: {
+      type: Number,
+    },
   },
-  emits: ["loadData"],
+  emits: ["loadData", "onCloseForm"],
   created() {
-    if (this.formMode == this.$Enum.FormMode.Edit) {
-      this.getCategoryDetail();
-    } else {
-      this.getNewCode();
-    }
+    this.checkModeForm();
   },
   mounted() {
-    this.$refs["categoryCode"].setFocus();
+    this.$refs[this.textFields.categoryCode.ref].setFocus();
   },
   computed: {
-    /**
-     * Trạng thái của form (thêm, sửa, nhân bản)
-     * Author: LQHUY (26/11/2023)
-     */
-    formMode() {
-      if (this.categoryIdSelected) {
-        return this.$Enum.FormMode.Edit;
-      } else {
-        return this.$Enum.FormMode.Add;
-      }
+    textFields() {
+      return TEXT_FIELD[this.$languageCode].category;
     },
   },
   methods: {
-    onSaveData() {
-      try {
-        this.lstErorr = [];
-        this.validateData();
-        if (this.lstErorr.length > 0) {
-          this.setFocusInputFirstError();
-          return;
-        }
-        if (this.formMode === this.$Enum.FormMode.Add) {
-          this.addNewCategory();
-        } else if (this.formMode === this.$Enum.FormMode.Clone) {
-          this.addNewEmployee();
-        } else {
-          this.editCategory();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    validateData() {
-      try {
-        this.setError("categoryCode", this.$refs.categoryCode.label);
-        this.setError("categoryName", this.$refs.categoryName.label);
-      } catch (error) {
-        console.error(error);
-      }
-    },
     /**
-     * Hàm xét message lỗi
-     * @param {string} field
-     * @param {string} title
-     * Author: LQHUY (26/11/2023)
+     * Hàm thực hiện kiểm tra giá trị formMode
+     * @author LQHUY(13/04/2024)
      */
-    setError(field, title) {
-      try {
-        if (
-          this.category[field] === "" ||
-          this.category[field] === null ||
-          this.category[field] === undefined
-        ) {
-          this.lstErrorMessage[`${field}`] =
-            this.$Resource[this.$languageCode].ErrorMessage(title);
-          this.lstErorr.push(field);
-        } else {
-          this.lstErorr.filter((item) => item !== field);
-        }
-      } catch (error) {
-        console.error(error);
+    checkModeForm() {
+      if (this.formMode == this.$Enum.FormMode.Edit) {
+        this.getCategoryDetail();
+      } else {
+        this.getNewCode();
       }
-    },
-    /**
-     * Set vào ô input lỗi đầu tiên
-     * Author: LQHUY(07/12/2002)
-     */
-    setFocusInputFirstError() {
-      this.$refs[this.lstErorr[0]].setFocus();
     },
 
+    /**
+     * Hàm thực hiện save khi click btn Thêm mới hoặc sửa
+     * @author LQHUY(13/04/2024)
+     */
+    handleSaveDataWithMode() {
+      this.handleValidateField();
+      try {
+        if (this.listErr.length > 0) {
+          this.$refs[this.listErr[0]].setFocus();
+          return;
+        }
+        if (this.formMode === this.$Enum.FormMode.Edit) {
+          this.editCategory();
+        } else {
+          this.addNewCategory();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    /**
+     * Hàm thực hiện validate dữ liệu
+     * @author LQHUY(13/04/2024)
+     */
+    handleValidateField() {
+      try {
+        for (let key in this.textFields) {
+          let ref = this.textFields[key].ref;
+          this.$refs[ref].validate();
+          let rules = this.textFields[key].rules;
+          let nameField = this.textFields[key].name;
+          if (rules.required === true) {
+            if (
+              this.category[nameField] === "" ||
+              this.category[nameField] === null ||
+              this.category[nameField] === undefined
+            ) {
+              this.listErr.push(ref);
+            } else {
+              this.listErr = this.listErr.filter((item) => item !== ref);
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    /**
+     * Hàm thực hiện thêm mới một category
+     * @author LQHUY(13/04/2024)
+     */
     async addNewCategory() {
       try {
-        const res = await categoryService.post(this.category);
+        var formData = new FormData();
+        formData.append("imageFile", this.imageFile);
+        formData.append("dataJson", JSON.stringify(this.category));
+        const res = await categoryService.post(formData);
         switch (res.status) {
           case 201:
             this.successResponse("Thêm mới thành công");
@@ -181,11 +208,20 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện sửa thông tin category theo id
+     * @author LQHUY(13/04/2024)
+     */
     async editCategory() {
       try {
+        var formData = new FormData();
+        console.log(this.category);
+        formData.append("imageFile", this.imageFile);
+        formData.append("dataJson", JSON.stringify(this.category));
+        //gọi api thực hiện sửa
         const res = await categoryService.put(
           this.categoryIdSelected,
-          this.category
+          formData
         );
         switch (res.status) {
           case 200:
@@ -196,39 +232,56 @@ export default {
         }
       } catch (error) {
         this.$emitter.emit("handleApiError", error);
+
         console.log(error);
       }
     },
 
+    /**
+     * Hàm thực hiện lấy ra thông tin chi tiết category theo id
+     * @author LQHUY(13/04/2024)
+     */
     async getCategoryDetail() {
       try {
         const res = await categoryService.getById(this.categoryIdSelected);
         switch (res.status) {
           case 200:
             this.category = res.data;
+            this.category.QuantityImported = Number(null);
+              this.$emitter.emit("toggleShowLoading", false);
             break;
           default:
             break;
         }
       } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
     },
+
+    /**
+     * Hàm thực hiện lấy ra mã code mới
+     * @author LQHUY(13/04/2024)
+     */
     async getNewCode() {
       try {
         const res = await categoryService.getNewCode();
         switch (res.status) {
           case 200:
-            this.category.categoryCode = res.data;
+            this.category.CategoryCode = res.data;
+            setTimeout(() => {
+              this.$emitter.emit("toggleShowLoading", false);
+            }, 300);
             break;
           default:
             break;
         }
       } catch (error) {
+        this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
     },
-
     /**
      * Hàm xử lí khi thêm hoặc sửa thông tin thành công
      * @param {string} message
@@ -243,6 +296,7 @@ export default {
           message,
           this.$Resource[this.$languageCode].ToastMessage.Status.Success
         );
+        this.$emit("onCloseForm");
         this.$emit("loadData");
       } catch (error) {
         console.error(error);
@@ -252,12 +306,9 @@ export default {
   data() {
     return {
       category: {},
-      lstErrorMessage: {},
-      lstErorr: [],
+      listErr: [],
     };
   },
 };
 </script>
-<style scoped>
-@import url(./category.css);
-</style>
+<style scoped></style>

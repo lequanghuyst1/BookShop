@@ -83,5 +83,17 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.CheckDuplicateCodeAsync<TEntity>(entityCode);
             return res;
         }
+
+        public async Task<bool> CheckEntityCodeUpdateAsync(string entityCode, Guid id)
+        {
+            var res = await _dbContext.CheckEntityCodeUpdateAsync<TEntity>(entityCode,id);
+            return res;
+        }
+
+        public async Task<bool> CheckEntityNameUpdateAsync(string entityName, Guid id)
+        {
+            var res = await _dbContext.CheckEntityNameUpdateAsync<TEntity>(entityName, id);
+            return res;
+        }
     }
 }
