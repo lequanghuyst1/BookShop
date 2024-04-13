@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,25 @@ namespace BookShopOnline.Core.Entitites
     public class Book : BaseEntity
     {
         public Guid BookId { get; set; }
+        [Required(ErrorMessage ="Mã sách không được để trống.")]
         public string BookCode { get; set; }
+        [Required(ErrorMessage = "Tên sách không được để trống.")]
         public string BookName { get; set; }
-        public string ImagePath { get; set; }
+
+        [Required(ErrorMessage = "Giá sách không được để trống")]
+        [Range(0, int.MaxValue, ErrorMessage = "Giá sách nhập vào phải là số.")]
         public double Price { get; set; }
+
+        [Required(ErrorMessage = "Tác giả không được để trống")]
         public string Author { get; set; }
+
+        [Required(ErrorMessage = "Số lượng nhập không được để trống")]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng nhập vào phải là số.")]
         public int QuantityImported { get; set; }
         public string? Description { get; set; }
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Tổng số trang nhập vào phải là số.")]
         public int? NumberOfPage { get; set; }
         public double? Heavy { get; set; }
         public string? Image { get; set; }

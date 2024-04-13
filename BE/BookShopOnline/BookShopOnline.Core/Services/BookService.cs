@@ -5,6 +5,7 @@ using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
+using BookShopOnline.Core.Resources;
 using BookShopOnline.Core.Services.Base;
 using System;
 using System.Collections.Generic;
@@ -25,22 +26,49 @@ namespace BookShopOnline.Core.Services
 
         public override async Task ValidateBeforeInsert(Book book)
         {
-            //if(await _bookRepository.CheckDuplicateCodeAsync(book.BookCode))
+           
+            //if(book.BookName == "" || book.BookName == null)
             //{
-            //    errors.Add("BookCode", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
-            //    throw new ValidateException($"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống.", errors);
+            //    errors.Add("BookName", new string[] { "Tên sách không được để trống." });
+            //    throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
             //}
-            if(book.BookName == "" || book.BookName == null)
+            //if (book.Author == "" || book.Author == null)
+            //{
+            //    errors.Add("Author", new string[] { "Tên tác giả không được để trống." });
+            //    throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            //}
+
+            //validate nghiệp vụ
+            //bookCode không hợp lệ ném ra exception
+            if (await _bookRepository.CheckDuplicateCodeAsync(book.BookCode))
             {
-                errors.Add("BookName", new string[] { "Tên sách không được để trống" });
-                throw new ValidateException("Tên sách không được để trống", errors);
-            }
-            if (book.Author == "" || book.Author == null)
-            {
-                errors.Add("Author", new string[] { "Tên tác giả không được để trống" });
-                throw new ValidateException("Tên tác giả không được để trống", errors);
+                errors.Add("BookName", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
             }
 
+            //bookName không hợp lệ ném ra exception
+            if (await _bookRepository.CheckExitEntityNameAsync(book.BookName))
+            {
+                errors.Add("BookName", new string[] { $"Tên sách <{book.BookName}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
+        }
+
+        public override async Task ValidateBeforeUpdate(Book book)
+        {
+            //bookCode không hợp lệ ném ra exception
+            if (!await _bookRepository.CheckEntityCodeUpdateAsync(book.BookCode, book.BookId))
+            {
+                errors.Add("BookCode", new string[] { $"Mã sách <{book.BookCode}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
+
+            //bookName không hợp lệ ném ra exception
+            if (!await _bookRepository.CheckEntityNameUpdateAsync(book.BookName,book.BookId))
+            {
+                errors.Add("BookName", new string[] { $"Tên sách <{book.BookName}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
         }
     }
 }

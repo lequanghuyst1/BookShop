@@ -86,7 +86,7 @@ const TEXT_FIELD = {
         rules: {
           lengthMax: 50,
           required: true,
-          rule: [],
+          rule: ['number'],
         },
       },
     },

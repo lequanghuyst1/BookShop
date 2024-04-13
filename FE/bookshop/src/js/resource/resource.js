@@ -38,7 +38,7 @@ const Resource = {
     VALIDATE_STATUS: {
       loginFail: "Tên đăng nhập hoặc mật khẩu không đúng",
       email: "Email không đúng định dạng",
-      number: "Trường nhập liệu không đúng định dạng",
+      number: "Trường dữ liệu phải là số.",
       invalidData: "Dữ liệu nhập không tồn tại",
       phoneNumber: "Số điên thoại không hợp lệ",
       phoneDeck: "Số điện thoại bàn không hợp lệ",

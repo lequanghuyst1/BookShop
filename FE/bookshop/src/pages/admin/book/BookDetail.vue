@@ -338,7 +338,6 @@ export default {
         switch (res.status) {
           case 200:
             this.book = res.data;
-            this.book.QuantityImported = Number(null);
             break;
           default:
             break;
