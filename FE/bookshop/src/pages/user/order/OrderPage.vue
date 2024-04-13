@@ -11,56 +11,68 @@
           <div class="swiper-wrapper">
             <div
               class="tab-history-item swiper-slide tab-history-item-active swiper-slide-active"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=All';"
+              @click="getOrdersData()"
               style="width: 150px"
             >
               <div class="tab-history-item-border-left"></div>
-              <div class="tab-history-item-number">{{ orders.length }}</div>
+              <div class="tab-history-item-number">{{ quantityOrder }}</div>
               <div class="tab-history-item-text">Tất Cả</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
               class="tab-history-item swiper-slide swiper-slide-next"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=pending_payment';"
+              @click="
+                getOrdersData(this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION)
+              "
               style="width: 150px"
             >
-              <div class="tab-history-item-number">0</div>
+              <div class="tab-history-item-number">
+                {{ quantityOrderWatting }}
+              </div>
               <div class="tab-history-item-text">Chờ xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
               class="tab-history-item swiper-slide"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=pending';"
+              @click="getOrdersData(this.$Enum.ORDER_STATUS.CONFIRMED)"
               style="width: 150px"
             >
-              <div class="tab-history-item-number">0</div>
+              <div class="tab-history-item-number">
+                {{ quantityOrderConfirmed }}
+              </div>
               <div class="tab-history-item-text">Đã xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
               class="tab-history-item swiper-slide"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=processing';"
+              @click="getOrdersData(this.$Enum.ORDER_STATUS.SHIPPING)"
               style="width: 150px"
             >
-              <div class="tab-history-item-number">0</div>
+              <div class="tab-history-item-number">
+                {{ quantityOrderShipping }}
+              </div>
               <div class="tab-history-item-text">Đang vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
               class="tab-history-item swiper-slide"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=complete';"
+              @click="getOrdersData(this.$Enum.ORDER_STATUS.DELIVERED)"
               style="width: 150px"
             >
-              <div class="tab-history-item-number">0</div>
+              <div class="tab-history-item-number">
+                {{ quantityOrderShipping }}
+              </div>
               <div class="tab-history-item-text">Đã vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
               class="tab-history-item swiper-slide"
-              onclick="location.href='https://www.fahasa.com/sales/order/history/?status=canceled';"
+              @click="getOrdersData(this.$Enum.ORDER_STATUS.CANCELLED)"
               style="width: 150px"
             >
-              <div class="tab-history-item-number">1</div>
+              <div class="tab-history-item-number">
+                {{ quantityOrderCancelled }}
+              </div>
               <div class="tab-history-item-text">Bị hủy</div>
               <div class="tab-history-item-border"></div>
             </div>
@@ -141,13 +153,15 @@
             <div class="table-order-cell-content">
               <div class="order-history-total-mobile">Tổng Tiền:</div>
               <div>
-                <span class="price">{{ order.TotalAmount }}</span
+                <span class="price">{{
+                  this.$helper.formatMoney(order.TotalAmount)
+                }}</span
                 >&nbsp;đ
               </div>
             </div>
           </div>
           <div class="table-order-cell hidden-max-width-992">
-            {{ order.Status }}
+            {{ orderStatusString(order.Status) }}
           </div>
           <div
             class="table-order-cell table-order-link-more hidden-max-width-992"
@@ -168,12 +182,33 @@ export default {
   created() {
     this.getOrdersData();
   },
+  mounted() {
+    document.addEventListener("click", function (e) {
+      if (e.target.closest(".tab-container-order-history-container")) {
+        const tabHistory = document.querySelectorAll(".tab-history-item");
+        const tabActive = document.querySelector(
+          ".tab-history-item.tab-history-item-active"
+        );
+        tabHistory.forEach((item) => {
+          item.onclick = function () {
+            tabActive.classList.remove("tab-history-item-active");
+            item.classList.add("tab-history-item-active");
+          };
+        });
+      }
+    });
+  },
   data() {
     return {
       //Lưu danh sách các đơn hàng đã đặt
       orders: [],
       //Lưu giá trị tổng số đơn hàng bị hủy
       quantityOrderCancelled: 0,
+      quantityOrder: 0,
+      quantityOrderWatting: 0,
+      quantityOrderConfirmed: 0,
+      quantityOrderShipping: 0,
+      quantityOrderDelivered: 0,
       ordersCancelled: [],
       orderStatus: null,
     };
@@ -182,34 +217,95 @@ export default {
     userInfo: function () {
       return localStorageService.getItemEncodeFromLocalStorage("userInfo");
     },
+    resource: function () {
+      return this.$Resource[this.$languageCode];
+    },
   },
   methods: {
     /**
      * Hàm thực hiện lấy danh sách các bản ghi
      * @author LQHUY(12/04/2024)
      */
-    async getOrdersData() {
+    async getOrdersData(orderStatus) {
       try {
+        this.$emitter.emit("toggleShowLoading", true);
         const res = await orderService.GetByUserId(this.userInfo.UserId);
         if (res.status === 200) {
-          switch (this.orderStatus) {
+          switch (orderStatus) {
             case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
               this.orders = res.data.filter(
-                (item) => item.Status === "Chờ xác nhận"
+                (item) =>
+                  item.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+              );
+              break;
+            case this.$Enum.ORDER_STATUS.CONFIRMED:
+              this.orders = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.CONFIRMED
+              );
+              break;
+            case this.$Enum.ORDER_STATUS.SHIPPING:
+              this.orders = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.SHIPPING
+              );
+              break;
+            case this.$Enum.ORDER_STATUS.DELIVERED:
+              this.orders = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.DELIVERED
+              );
+              break;
+            case this.$Enum.ORDER_STATUS.CANCELLED:
+              this.orders = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
               );
               break;
             default:
               this.orders = res.data;
+              this.quantityOrder = this.orders.length;
+              this.quantityOrderWatting = res.data.filter(
+                (item) =>
+                  item.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+              ).length;
+              this.quantityOrderConfirmed = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.CONFIRMED
+              ).length;
+              this.quantityOrderShipping = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.SHIPPING
+              ).length;
+              this.quantityOrderDelivered = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
+              ).length;
+              this.quantityOrderCancelled = res.data.filter(
+                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
+              ).length;
               break;
           }
+          this.$emitter.emit("toggleShowLoading", false);
         }
       } catch (error) {
         console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
       }
     },
 
     goToOrderDetail(orderId) {
       this.$router.push("order/order-detail/" + orderId);
+    },
+
+    orderStatusString(orderStatus) {
+      switch (orderStatus) {
+        case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
+          return this.resource.ORDER_STATUS.waitForConfirmation;
+        case this.$Enum.ORDER_STATUS.CONFIRMED:
+          return this.resource.ORDER_STATUS.confirmed;
+        case this.$Enum.ORDER_STATUS.SHIPPING:
+          return this.resource.ORDER_STATUS.shipping;
+        case this.$Enum.ORDER_STATUS.DELIVERED:
+          return this.resource.ORDER_STATUS.delivered;
+        case this.$Enum.ORDER_STATUS.CANCELLED:
+          return this.resource.ORDER_STATUS.cancelled;
+        default:
+          return "";
+      }
     },
   },
 };

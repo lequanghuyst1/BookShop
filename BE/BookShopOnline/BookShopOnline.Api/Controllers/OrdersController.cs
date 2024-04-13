@@ -37,6 +37,14 @@ namespace BookShopOnline.Api.Controllers
             return StatusCode(200, res);
         }
 
+        /// <summary>
+        /// Api thực hiện hủy đơn hàng
+        /// </summary>
+        /// <param name="order">thông tin đơn hàng</param>
+        /// <returns>
+        /// 1 - hủy thành công
+        /// </returns>
+        /// Created By: LQHUY(13/04/2024)
         [HttpPut("CancelOrder")]
         public async Task<IActionResult> CancelOrderAsync(Order order)
         {

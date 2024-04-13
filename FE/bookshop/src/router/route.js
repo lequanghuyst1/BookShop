@@ -10,7 +10,7 @@ import HomeAdminPage from "../pages/admin/home/Index.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
-import CartPage from "../pages/user/cart/Index.vue";
+import CartPage from "../pages/user/cart/CartPage.vue";
 import CategoryUserPage from "../pages/user/category/Index.vue";
 import ProductPage from "../pages/user/product/Index.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";

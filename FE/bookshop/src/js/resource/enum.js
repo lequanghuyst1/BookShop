@@ -17,7 +17,7 @@ const Enum = {
         WAIT_FOR_CONFIRMATION: 0,
         CONFIRMED: 1,
         SHIPPING: 2,
-        DELIVERYED: 3,
+        DELIVERED: 3,
         CANCELLED: 4,
     }
 };

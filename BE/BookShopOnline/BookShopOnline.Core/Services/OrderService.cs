@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Enums;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
@@ -31,6 +32,7 @@ namespace BookShopOnline.Core.Services
             var orderId = Guid.NewGuid();
             order.OrderId = orderId;
             order.OrderCode = await GetOrderCode();
+            order.Status = (OrderStatus)order.Status;
             var res = await _unitOfWork.Order.InsertAsync(order);
             var count = 0;
             if (res > 0)
@@ -78,7 +80,7 @@ namespace BookShopOnline.Core.Services
 
         public async Task<int> CancelOrderAsync(Order order)
         {
-            order.Status = "Đã hủy";
+            order.Status = OrderStatus.CANCELLED;
             order.CancellationDate = DateTime.Now;
             _unitOfWork.BeginTransaction();
             var res = await _unitOfWork.Order.UpdateAsync(order.OrderId, order);

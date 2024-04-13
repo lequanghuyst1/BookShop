@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShopOnline.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace BookShopOnline.Core.Entitites
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public double TotalAmount { get; set; }
-        public string Status { get; set; }
+        public OrderStatus Status { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? CancellationDate { get; set; }
         public DateTime? DeliveryDate { get; set; }

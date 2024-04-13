@@ -219,6 +219,15 @@ export default {
     //Gán dữ liệu cho cart lấy từ localStorage
     this.cartData = cartLocalStorageService.getCartFromLocalStorage();
     this.getQuantityOfCart();
+
+  },
+  mounted() {
+    this.lstIdItemSelected = localStorageService.getItemFromLocalStorage(
+      "itemSelected"
+    )
+    ? localStorageService.getItemFromLocalStorage("itemSelected")
+    : [];
+    console.log(this.lstIdItemSelected);
   },
   data() {
     return {
@@ -262,15 +271,20 @@ export default {
             }
           });
           this.lstIdItemSelected = [...this.lstIdItemSelected];
-      localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
+          localStorageService.setItemToLocalStorage(
+            "itemSelected",
+            this.lstIdItemSelected
+          );
         } else {
           if (this.lstIdItemSelected.length > 0) {
             return;
           } else {
             this.lstIdItemSelected = [];
 
-            localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
-
+            localStorageService.setItemToLocalStorage(
+              "itemSelected",
+              this.lstIdItemSelected
+            );
           }
         }
       },
@@ -307,7 +321,7 @@ export default {
     },
 
     /**
-     * Thực hiện tính toán tổng số tiền trong giỏ hàng
+     * Thực hiện tính toán tổng số tiền các sản phẩm được chọn trong giỏ hàng
      * @author LQHUY(09/04/2024)
      */
     calculatorTotalAmountCart() {
@@ -315,7 +329,7 @@ export default {
         return this.lstIdItemSelected.includes(item.CartItemId);
       });
       const totalAmount = itemSelected.reduce(
-        (accumulator, item) => accumulator + item.ProvisionalMoney,
+        (accumulator, item) => accumulator + item.Price * item.Quantity,
         0
       );
       this.totalAmountCart = this.$helper.formatMoney(totalAmount);
@@ -417,7 +431,10 @@ export default {
         this.lstIdItemSelected.splice(index, 1);
       }
       this.lstIdItemSelected = [...this.lstIdItemSelected];
-      localStorageService.setItemToLocalStorage("itemSelected",this.lstIdItemSelected);
+      localStorageService.setItemToLocalStorage(
+        "itemSelected",
+        this.lstIdItemSelected
+      );
     },
   },
 };
@@ -431,5 +448,33 @@ button > span {
   padding: 10px 20px;
   border-radius: 8px;
   transition: all 0.3s;
+}
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  border: 2px solid #cacece;
+  padding: 9px;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  transition-duration: 0.1s;
+  height: 0;
+}
+input[type="checkbox"]:checked {
+  /* background-color: #ffffff;
+    border: 1px solid #50b83c;
+    color: white; */
+  background-color: #c92127;
+  border: 2px solid #c92127;
+  color: #fff;
+}
+
+input[type="checkbox"]:checked::after {
+  display: block;
+  position: absolute;
+  content: "\2714";
+  font-size: 17px;
+  top: calc(-8px / 2);
+  left: calc(5px / 2);
 }
 </style>

@@ -519,10 +519,12 @@ export default {
         this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
         this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
         this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
-        this.order.TotalAmount = this.$helper.formatMoneySendApi(this.totalAmountCart);
-        this.order.Status = "Chờ xác nhận";
+        this.order.TotalAmount = this.$helper.formatMoneySendApi(
+          this.totalAmountCart
+        );
+        this.order.Status = this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION;
         this.order.UserId = this.userInfo.UserId;
-        this.order.OrderCode = '';
+        this.order.OrderCode = "";
 
         this.orderInfo.Order = this.order;
 
@@ -536,6 +538,8 @@ export default {
           cartLocalStorageService.setCartToLocalStorage(res.data);
           this.$emitter.emit("getQuantityOfCart");
           this.$emitter.emit("toggleShowLoading", false);
+          localStorageService.setItemToLocalStorage("itemSelected", []);
+          location.href = "http://localhost:8080/customer/order";
         }
       } catch (error) {
         console.log(error);
@@ -548,7 +552,7 @@ export default {
      */
     calculatorTotalAmountCart() {
       const totalAmount = this.orderDetailData.reduce(
-        (accumulator, item) => accumulator + item.ProvisionalMoney,
+        (accumulator, item) => accumulator + item.Price * item.Quantity,
         0
       );
       this.totalAmountCart = this.$helper.formatMoney(totalAmount);

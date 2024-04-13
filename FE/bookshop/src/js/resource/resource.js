@@ -54,6 +54,15 @@ const Resource = {
         return ` ${label} không hợp lệ`;
       },
     },
+
+    ORDER_STATUS: {
+      waitForConfirmation: "Chờ xác nhận",
+      confirmed: "Đã xác nhận",
+      shipping: "Đang giao hàng",
+      delivered: "Đã giao hàng",
+      cancelled: "Bị hủy",
+      
+    },
   },
 };
 export default Resource;

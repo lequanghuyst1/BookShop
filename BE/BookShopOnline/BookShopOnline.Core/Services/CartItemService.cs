@@ -63,7 +63,7 @@ namespace BookShopOnline.Core.Services
                 _unitOfWork.Rollback();
                 return 0;
             }
-
+            cartItem.CartItemId = Guid.NewGuid();
             //Chưa có thì thêm mới
             var res = await _unitOfWork.CartItems.InsertAsync(cartItem);
             if (res > 0)

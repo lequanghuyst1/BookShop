@@ -5,19 +5,12 @@
 
       <div>
         <div
-          v-if="order.Status === 'Đã hủy'"
           class="order-view-status"
           style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
         >
-          {{ "Đơn hàng đã bị hủy" }}
+          {{ "Đơn hàng " + orderStatusString(order.Status) }}
         </div>
-        <div
-          v-else
-          class="order-view-status"
-          style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
-        >
-          {{ order.Status }}
-        </div>
+
         <div class="order-view-id">
           <span>Mã đơn hàng: </span><span>{{ order.OrderCode }}</span>
         </div>
@@ -54,16 +47,14 @@
         <!--<input type="button" class="order-view-buy-again" value="Mua Lai">-->
         <!--<span class="back-link"><a href=""><small>&laquo; </small></a></span>-->
         <!--<a href="" class="link-rss f-none"></a>-->
-        <div class="order-view-buttons-color-child">
-          <a
-            href="https://www.fahasa.com/sales/order/reorder/order_id/7740567/"
-            class="link-reorder order-view-buy-again-btn"
-            >Đặt hàng lại</a
-          >
+        <div @click="handleReOder" class="order-view-buttons-color-child">
+          <a class="link-reorder order-view-buy-again-btn">Đặt hàng lại</a>
         </div>
         <div
           @click="handleCancelOrder"
-          v-show="order.Status === 'Chờ xác nhận'"
+          v-show="
+            order.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+          "
           class="button-cancel-order order-view-buttons-color-child"
         >
           <a class="link-reorder order-view-buy-again-btn">Hủy đơn hàng</a>
@@ -542,7 +533,7 @@
               ></div>
             </div>
             <div class="order-view-icon-content">
-              <p>{{ order.Status }}</p>
+              <p>{{ orderStatusString(order.Status) }}</p>
               <p>10/04/2024 - 13:26</p>
             </div>
           </div>
@@ -560,19 +551,12 @@
             <div>
               <span>Đơn hàng:</span><span>{{ order.OrderCode }}</span>
             </div>
+
             <div
-              v-if="order.Status === 'Đã hủy'"
               class="order-view-status"
               style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
             >
-              {{ "Đơn hàng đã bị hủy" }}
-            </div>
-            <div
-              v-else
-              class="order-view-status"
-              style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
-            >
-              {{ order.Status }}
+              {{ "Đơn hàng " + orderStatusString(order.Status) }}
             </div>
             <div>
               <span>Tổng tiền:</span
@@ -751,12 +735,23 @@
   </div>
 </template>
 <script>
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import localStorageService from "@/js/storage/LocalStorageService";
+import cartItemService from "@/utils/CartItemService";
 import orderService from "@/utils/OrderService";
 export default {
   name: "OrderDetail",
   created() {
     this.getOrderDetailsData();
     this.getOrderData();
+  },
+  computed: {
+    resource: function () {
+      return this.$Resource[this.$languageCode];
+    },
+    userInfo: function () {
+      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+    },
   },
   data() {
     return {
@@ -766,7 +761,7 @@ export default {
       order: [],
       //Lưu tổng số lượng của đơn hàng
       totalQuantity: 0,
-
+      orderIdReOrder: [],
     };
   },
   methods: {
@@ -781,7 +776,6 @@ export default {
         );
         if (res.status === 200) {
           this.orderDetails = res.data;
-          console.log(this.orderDetails);
           this.totalQuantity = this.orderDetails.reduce(
             (previousValue, item) => previousValue + item.Quantity,
             0
@@ -820,11 +814,65 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          await this.getOrderData();
         }
       } catch (error) {
         this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
+    },
+    orderStatusString(orderStatus) {
+      switch (orderStatus) {
+        case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
+          return this.resource.ORDER_STATUS.waitForConfirmation;
+        case this.$Enum.ORDER_STATUS.CONFIRMED:
+          return this.resource.ORDER_STATUS.confirmed;
+        case this.$Enum.ORDER_STATUS.SHIPPING:
+          return this.resource.ORDER_STATUS.shipping;
+        case this.$Enum.ORDER_STATUS.DELIVERED:
+          return this.resource.ORDER_STATUS.delivered;
+        case this.$Enum.ORDER_STATUS.CANCELLED:
+          return this.resource.ORDER_STATUS.cancelled;
+        default:
+          return "";
+      }
+    },
+    
+    /**
+     * Thực hiện đặt lại hàng khi nhấn btn đặt lại hàng
+     * @author LQHUY(14/04/2024)
+     */
+    handleReOder() {
+      this.orderDetails.forEach(async (item) => {
+        const formData = new FormData();
+        item.CartId = this.userInfo.CartId;
+        item.ProvisionalMoney = item.Price * item.Quantity;
+        formData.append("dataJson", JSON.stringify(item));
+        //gọi api thêm mới cartItem
+        const res = await cartItemService.post(formData);
+        if (res.status === 201) {
+          //gọi api lấy cartItem theo cartID
+          const res = await cartItemService.getByCartId(this.userInfo.CartId);
+          if (res.status === 200) {
+            //gán lại cart vào storage
+            cartLocalStorageService.setCartToLocalStorage(res.data);
+            //lấy ra danh sác cart có book id vừa thêm
+            const cartItem = res.data.filter((cartItem) => {
+              return cartItem.BookId === item.BookId;
+            });
+            //lấy ra cartItem được chon và gán lại vào storage
+            this.orderIdReOrder.push(cartItem[0].CartItemId);
+            localStorageService.setItemToLocalStorage(
+              "itemSelected",
+              this.orderIdReOrder
+            );
+            //Update lại tổng số lượng sản phẩm trong cart
+            this.$emitter.emit("getQuantityOfCart");
+            location.href = "http://localhost:8080/cart";
+          }
+        }
+      });
     },
   },
 };
