@@ -63,13 +63,13 @@
 
     <MTable
       id="book-data"
-      idObject="CategoryId"
-      codeObject="CategoryCode"
+      idObject="BookId"
+      codeObject="BookCode"
       :columnsTable="columnsTable"
       :pageData="pageData"
       :selectAll="selectAll"
+      :image="true"
       :imageData="imageData"
-      :image="false"
       @onDelete="onDeleteItem"
       @onUpdate="onUpdateItem"
       @updateListItemId="updateListItemId"
@@ -85,13 +85,13 @@
       v-model:pageNumber="pageNumber"
       v-model:pageSize="pageSize"
     ></MPagination>
-    <CategoryDetail
+    <BookDetail
       v-if="isShowForm"
       @loadData="loadDataTable"
       @onCloseForm="onCloseFormDetail"
       :formMode="formMode"
-      :categoryIdSelected="categoryIdSelected"
-    ></CategoryDetail>
+      :bookIdSelected="bookIdSelected"
+    ></BookDetail>
 
     <MDialog
       v-if="isShowDialogDelete"
@@ -114,35 +114,53 @@
   </div>
 </template>
 <script>
-import CategoryDetail from "./CategoryDetail.vue";
-import categoryService from "@/utils/CategoryService";
-import categoryColumns from "@/js/data/category";
+import BookDetail from "./BookDetail.vue";
+import bookColumns from "@/js/data/book";
+import bookService from "../../../utils/BookService";
 export default {
-  name: "CategoryPage",
-  components: { CategoryDetail },
+  name: "BookPage",
+  components: { BookDetail },
   created() {},
   mounted() {
     this.loadData();
+    this.loadDataImage();
     this.$emitter.emit("toggleShowLoadingTable", true);
   },
   beforeUnmount() {},
   watch: {
+    //Theo dõi biến pageNumber
     pageNumber(newValue) {
       if (newValue) {
         this.loadData();
       }
     },
+    //Theo dõi biến searchString
     searchString() {
       this.loadData();
     },
   },
   methods: {
+    /**
+     * Thực hiện ẩn dialog xác nhận xóa
+     * @author LQHUY(19/03/2024)
+     */
     onHideDialogDelete() {
       this.isShowDialogDelete = false;
     },
+
+    /**
+     * Thực hiện load dữ liệu cho table
+     * @author LQHUY(19/03/2024)
+     */
     loadDataTable() {
       this.loadData();
+      this.loadDataImage();
     },
+
+    /**
+     * Thực hiện gọi API lấy dữ liệu cho page
+     * @author LQHUY(19/03/2024)
+     */
     async loadData() {
       this.$emitter.emit("toggleShowLoadingTable", true);
       try {
@@ -156,7 +174,7 @@ export default {
               pageSize: this.pageSize,
               pageNumber: this.pageNumber,
             };
-        const res = await categoryService.getFilterPaging({ params });
+        const res = await bookService.getFilterPaging({ params });
         switch (res.status) {
           case 200:
             this.pageData = res.data.Data;
@@ -172,6 +190,10 @@ export default {
       }
     },
 
+    /**
+     * Thực hiện gọi API lấy dữ liệu hình ảnh
+     * @author LQHUY(19/03/2024)
+     */
     async loadDataImage() {
       try {
         const res = await this.$httpRequest.get("Images");
@@ -186,39 +208,66 @@ export default {
       }
     },
 
+    /**
+     * Thực hiện hiển thị form khi click btn thêm mới
+     * @author LQHUY(19/03/2024)
+     */
     onCreateItem() {
-      this.categoryIdSelected = null;
+      this.bookIdSelected = null;
       this.isShowForm = true;
       this.formMode = this.$Enum.FormMode.Add;
-      this.$emitter.emit("toggleShowLoading", true);
     },
 
+    /**
+     * Thực hiện hiển thị form khi click icon sửa
+     * @param {string} id
+     * @author LQHUY(19/03/2024)
+     */
     onUpdateItem(id) {
-      this.categoryIdSelected = id;
+      this.bookIdSelected = id;
       this.isShowForm = true;
       this.formMode = this.$Enum.FormMode.Edit;
-      this.$emitter.emit("toggleShowLoading", true);
     },
 
+    /**
+     * Thực hiện hiển thị form
+     * @author LQHUY(19/03/2024)
+     */
     onShowFormDetail() {
       this.isShowForm = true;
     },
 
+    /**
+     * Thực hiện ẩn form
+     * @author LQHUY(19/03/2024)
+     */
     onCloseFormDetail() {
       this.isShowForm = false;
     },
 
+    /**
+     * Thực hiện update danh sách các bản ghi được chọn
+     * @author LQHUY(19/03/2024)
+     */
     updateListItemId(ids) {
-      this.lstCategoryIdSelected = ids;
+      this.lstBookIdSelected = ids;
     },
 
+    /**
+     * Hiển thị dialog xóa khi click btn xóa tất cả
+     * @author LQHUY(19/03/2024)
+     */
     onDeleteItem(message, id) {
       this.typeDelete = "single";
       this.isShowDialogDelete = true;
       this.messageDialog = message;
-      this.categoryIdSelected = id;
+      this.bookIdSelected = id;
     },
 
+    /**
+     * Thực hiện hiển thị dialog xóa khi click btn xóa tất cả
+     * @author LQHUY(19/03/2024)
+     */
     onDeleteAll() {
       this.typeDelete = "all";
       this.isShowDialogDelete = true;
@@ -226,6 +275,10 @@ export default {
         this.$Resource[this.$languageCode].ConfirmDeleteAll("Cuốn sách");
     },
 
+    /**
+     * Thực hiện gọi API xóa 1 bản ghi
+     * @author LQHUY(19/03/2024)
+     */
     async handleDeleteConfirm() {
       if (this.typeDelete === "single") {
         await this.handleDeteleItem();
@@ -234,10 +287,14 @@ export default {
       }
     },
 
+    /**
+     * Thực hiện gọi API xóa 1 bản ghi
+     * @author LQHUY(19/03/2024)
+     */
     async handleDeteleItem() {
       try {
         this.onHideDialogDelete();
-        const res = await categoryService.delete(this.categoryIdSelected);
+        const res = await bookService.delete(this.bookIdSelected);
         switch (res.status) {
           case 200:
             this.$emitter.emit(
@@ -255,11 +312,15 @@ export default {
       }
     },
 
+    /**
+     * Thực hiện gọi API xóa nhiều bản ghi
+     * @author LQHUY(19/03/2024)
+     */
     async handleDeleteMany() {
       try {
         this.onHideDialogDelete();
-        const res = await categoryService.deleteMany({
-          data: this.lstCategoryIdSelected,
+        const res = await bookService.deleteMany({
+          data: this.lstBookIdSelected,
         });
         switch (res.status) {
           case 200:
@@ -280,14 +341,28 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện ẩn hiện toolbar
+     * @param {boolean} isShow
+     * @author LQHUY(19/03/2024)
+     */
     toggleShowToolbarAction(isShow) {
       this.isShowToolbarAction = isShow;
     },
 
+    /**
+     * Hàm thực hiện update tổng số bản ghi được chọn
+     * @param {number} total
+     * @author LQHUY(19/03/2024)
+     */
     updateTotalRecordSelected(total) {
       this.totalRecordSelected = total;
     },
 
+    /**
+     * Hàm thực hiện gỡ bỏ tất cả các dòng được chọn khi click btn bỏ chọn
+     * @author LQHUY(19/03/2024)
+     */
     btnRemoveRowSelected() {
       this.selectAll = false;
       setTimeout(() => {
@@ -302,30 +377,47 @@ export default {
   },
   data() {
     return {
+      /** Ẩn hiển thị dialog xóa*/
       isShowDialogDelete: false,
-      formMode: this.$Enum.FormMode.Add,
-      columnsTable: categoryColumns,
-      pageData: [],
+      /** Ẩn hiển thị form*/
       isShowForm: false,
-      categoryIdSelected: null,
-      lstCategoryIdSelected: [],
-      selectAll: false,
+      /** Ẩn hiển thị boolbar*/
+      isShowToolbarAction: false,
 
+      //columns bảng danh mục
+      columnsTable: bookColumns,
       /**chuỗi tìm kiếm nhanh các bản ghi */
       searchString: null,
-      isShowToolbarAction: false,
-      totalRecordSelected: null,
+      //Số bản ghi được hiển thị trong 1 trang
       pageSize: 10,
+      //Số trang hiển thị
       pageNumber: 1,
-      totalRecord: null,
-      totalPage: null,
+
+      /**Trạng thái form */
+      formMode: this.$Enum.FormMode.Add,
+      //Trạng thái xóa bản ghi
       typeDelete: "single",
 
+      //Lưu danh sách các bản ghi của page
+      pageData: [],
+      /**Lưu id bản ghi được chọn */
+      bookIdSelected: null,
+      /**Lưu danh sách id các bản ghi được chọn */
+      lstBookIdSelected: [],
+      //Lưu giá trị chọn tất cả
+      selectAll: false,
+      //Lưu tổng số bản ghi được chọn
+      totalRecordSelected: null,
+      //Lưu tổng số bản ghi của trang
+      totalRecord: null,
+      //Lưu tổng số trang
+      totalPage: null,
+      //Lưu danh sách các hình ảnh
       imageData: [],
     };
   },
 };
 </script>
 <style scoped>
-@import url(./category.css);
+@import url(./book.css);
 </style>

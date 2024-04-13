@@ -113,10 +113,68 @@ const TEXT_FIELD = {
           rule: [],
         },
       },
-      decription: {
-        name: "Decription",
+      description: {
+        name: "Description",
         label: "Mô tả",
-        ref: "refDecription",
+        ref: "refDescription",
+        placeholder: "Nhập mô tả",
+        rules: {
+          lengthMax: 255,
+          required: false,
+          rule: [],
+        },
+      },
+    },
+    publisher: {
+      publisherCode: {
+        name: "PublisherCode",
+        label: "Mã nhà xuất bản",
+        ref: "refPublisherCode",
+        placeholder: "Nhập mã nhà xuất bản",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      publisherName: {
+        name: "PublisherName",
+        label: "Tên nhà xuất bản",
+        ref: "refPublisherName",
+        placeholder: "Nhập tên nhà xuất bản",
+        rules: {
+          lengthMax: 100,
+          required: true,
+          rule: [],
+        },
+        
+      },
+      phoneNumber: {
+        name: "PhoneNumber",
+        label: "Số điện thoại",
+        ref: "refPhoneNumber",
+        placeholder: "Nhập số điện thoại",
+        rules: {
+          lengthMax: 255,
+          required: false,
+          rule: [],
+        },
+      },
+      address: {
+        name: "Address",
+        label: "Địa chi",
+        ref: "refAddress",
+        placeholder: "Nhập địa chi",
+        rules: {
+          lengthMax: 255,
+          required: false,
+          rule: [],
+        },
+      },
+      description: {
+        name: "Description",
+        label: "Mô tả",
+        ref: "refDescription",
         placeholder: "Nhập mô tả",
         rules: {
           lengthMax: 255,

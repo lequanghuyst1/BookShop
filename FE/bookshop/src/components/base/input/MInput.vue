@@ -32,8 +32,7 @@
 <script>
 import { validateValue } from "@/js/validate/validate";
 export default {
-  created() {
-  },
+  created() {},
 
   name: "MInput",
   props: {
@@ -163,7 +162,7 @@ export default {
         }
       }
     },
-    
+
     validate() {
       if (this.rules) {
         if (this.rules?.required === true) {

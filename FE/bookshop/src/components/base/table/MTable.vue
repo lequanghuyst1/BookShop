@@ -59,7 +59,7 @@
           >
             <img
               v-if="col.field === 'Image'"
-              :src="this.getImagePath(data[idObject])"
+              :src="this.getImagePath(data)"
               alt=""
               style="
                 width: 80px;
@@ -289,9 +289,11 @@ export default {
     },
   },
   methods: {
-    getImagePath(valueId) {
+    getImagePath(data) {
       let imageItem = this.imageData.filter(
-        (item) => item[this.idObject] === valueId
+        (item) => {
+          return item[this.$props.idObject] === data[this.$props.idObject]
+        }
       );
       if (imageItem.length > 0) {
         return "https://localhost:7015/" + imageItem[0].ImagePath;

@@ -57,12 +57,10 @@ namespace BookShopOnline.Core.Services.Base
                 }
                 return res;
             }
-            else
-            {
-                var result = await _baseRepository.InsertAsync(entity);
-                return result;
-            }
-            
+
+            var result = await _baseRepository.InsertAsync(entity);
+            return result;
+
         }
 
         public virtual async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)

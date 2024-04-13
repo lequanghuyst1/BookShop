@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import { validateValue } from '@/js/validate/validate';
 export default {
   name: "MTextarea",
   props: {
@@ -26,7 +27,11 @@ export default {
     id: {
       type: String,
 
-    }
+    },
+    rules: {
+      type: Object,
+      required: false,
+    },
   },
   watch: {
     value(newValue) {
@@ -38,6 +43,25 @@ export default {
     },
     modelValue(newValue) {
       this.value = newValue;
+    },
+  },
+  methods: {
+    validate() {
+      if (this.rules) {
+        if (this.rules?.required === true) {
+          this.messageError = validateValue.required(
+            this.inputValue,
+            this.label
+          );
+          if (!this.messageError) {
+            if (this.rules?.rule.length > 0) {
+              this.rules?.rule.forEach((item) => {
+                this.messageError = validateValue[item](this.inputValue);
+              });
+            }
+          }
+        }
+      }
     },
   },
   data() {

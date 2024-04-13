@@ -219,6 +219,10 @@ export default {
     },
   },
   methods: {
+    /**
+     * Thực hiện kiểm tra giá trị formMode
+     * @author LQHUY(13/04/2024)
+     */
     checkModeForm() {
       if (this.formMode == this.$Enum.FormMode.Edit) {
         this.getImageDetail();
@@ -228,6 +232,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện save dữ liệu theo formMode khi click btn Thêm mới hoặc sửa
+     * @author LQHUY(13/04/2024)
+     */
     handleSaveDataWithMode() {
       this.handleValidateField();
       try {
@@ -245,6 +253,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện validate dữ liệu
+     * @author LQHUY(13/04/2024)
+     */
     handleValidateField() {
       try {
         for (let key in this.textFields) {
@@ -269,6 +281,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện gọi API thêm mới một book
+     * @author LQHUY(13/04/2024)
+     */
     async addNewBook() {
       try {
         var formData = new FormData();
@@ -288,10 +304,14 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện gọi API sửa thông tin category theo id
+     * @author LQHUY(13/04/2024)
+     */
     async editBook() {
       try {
         var formData = new FormData();
-        console.log(this.book)
+        console.log(this.book);
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));
         const res = await bookService.put(this.bookIdSelected, formData);
@@ -308,6 +328,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện gọi API lấy ra thông tin chi tiết book theo id
+     * @author LQHUY(13/04/2024)
+     */
     async getBookDetail() {
       try {
         const res = await bookService.getById(this.bookIdSelected);
@@ -324,6 +348,11 @@ export default {
         console.log(error);
       }
     },
+
+    /**
+     * Hàm thực hiện gọi API lấy ra mã code mới
+     * @author LQHUY(13/04/2024)
+     */
     async getNewCode() {
       try {
         const res = await bookService.getNewCode();
@@ -339,6 +368,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện gọi API lấy hình ảnh thep bookId
+     * @author LQHUY(13/04/2024)
+     */
     async getImageDetail() {
       try {
         var res = await this.$httpRequest.get("Images/" + this.bookIdSelected);

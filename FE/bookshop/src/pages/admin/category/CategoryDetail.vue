@@ -102,7 +102,7 @@
 import TEXT_FIELD from "@/js/resource/text-field";
 import categoryService from "@/utils/CategoryService";
 export default {
-  name: "categoryDetail",
+  name: "CategoryDetail",
   props: {
     categoryIdSelected: {
       type: String,
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     /**
-     * Hàm thực hiện kiểm tra giá trị formMode
+     * Thực hiện kiểm tra giá trị formMode
      * @author LQHUY(13/04/2024)
      */
     checkModeForm() {
@@ -137,7 +137,7 @@ export default {
     },
 
     /**
-     * Hàm thực hiện save khi click btn Thêm mới hoặc sửa
+     * Hàm thực hiện save dữ liệu theo formMode khi click btn Thêm mới hoặc sửa
      * @author LQHUY(13/04/2024)
      */
     handleSaveDataWithMode() {
@@ -186,7 +186,7 @@ export default {
     },
 
     /**
-     * Hàm thực hiện thêm mới một category
+     * Hàm thực hiện gọi API thêm mới một category
      * @author LQHUY(13/04/2024)
      */
     async addNewCategory() {
@@ -209,7 +209,7 @@ export default {
     },
 
     /**
-     * Hàm thực hiện sửa thông tin category theo id
+     * Hàm thực hiện gọi API sửa thông tin category theo id
      * @author LQHUY(13/04/2024)
      */
     async editCategory() {
@@ -238,7 +238,7 @@ export default {
     },
 
     /**
-     * Hàm thực hiện lấy ra thông tin chi tiết category theo id
+     * Hàm thực hiện gọi API lấy ra thông tin chi tiết category theo id
      * @author LQHUY(13/04/2024)
      */
     async getCategoryDetail() {
@@ -261,7 +261,7 @@ export default {
     },
 
     /**
-     * Hàm thực hiện lấy ra mã code mới
+     * Hàm thực hiện gọi API lấy ra mã code mới
      * @author LQHUY(13/04/2024)
      */
     async getNewCode() {

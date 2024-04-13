@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // import LayoutUser from "@/components/user/layout/layout-default/LayoutUser.vue";
 import LayoutAdmin from "@/components/admin/layout/layout-default/LayoutAdmin.vue";
-import BookPage from "../pages/admin/book/Index.vue";
-import CategoryPage from "../pages/admin/category/Index.vue";
-import PulisherPage from "../pages/admin/publisher/Index.vue";
+import BookPage from "../pages/admin/book/BookPage.vue";
+import CategoryPage from "../pages/admin/category/CategoryPage.vue";
+import PulisherPage from "../pages/admin/publisher/PublisherPage.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import HomeAdminPage from "../pages/admin/home/Index.vue";
 
