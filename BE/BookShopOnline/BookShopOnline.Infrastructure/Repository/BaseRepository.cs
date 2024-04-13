@@ -95,5 +95,11 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.CheckEntityNameUpdateAsync<TEntity>(entityName, id);
             return res;
         }
+
+        public async Task<TEntity> GetBySlugAsync(string slug)
+        {
+            var res = await _dbContext.GetBySlugAsync<TEntity>(slug);
+            return res;
+        }
     }
 }

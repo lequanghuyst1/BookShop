@@ -66,5 +66,12 @@ namespace BookShopOnline.Core.Services.Base
             var entitiesDto = res.Select(item => MapEntityToDto(item));
             return entitiesDto;
         }
+
+        public async Task<TDto> GetBySlugAsync(string slug)
+        {
+            var entity = await _baseRepository.GetBySlugAsync(slug);
+            var res = MapEntityToDto(entity);
+            return res;
+        }
     }
 }

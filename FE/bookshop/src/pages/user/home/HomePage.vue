@@ -18,11 +18,12 @@
             v-for="item in booksOutStanding"
             :key="item.BookId"
             class="col-lg-5ths"
+            :title="item.BookName"
           >
             <div class="product-item">
               <div class="product-image d-block text-center">
                 <div class="product-sale">-10%</div>
-                <a :href="'product/' + item.BookId" class="d-block">
+                <a :href="'product/' + item.BookSlug" class="d-block">
                   <img
                     :src="
                       item.ImagePath
@@ -34,19 +35,13 @@
                 </a>
                 <div class="group-button">
                   <button class="btn-action button-add-like">
-                    <a href="/heart">
                       <i class="fa-solid fa-heart"></i>
-                    </a>
                   </button>
-                  <button class="btn-action button-add-cart">
-                    <a @click="handleOnAdd(item)">
+                  <button @click="handleOnAdd(item)" class="btn-action button-add-cart">
                       <i class="fa-solid fa-cart-plus"></i>
-                    </a>
                   </button>
                   <button class="btn-action button-detail">
-                    <a href="/detail">
                       <i class="fa-solid fa-eye"></i>
-                    </a>
                   </button>
                 </div>
               </div>
@@ -56,7 +51,7 @@
                     {{ item.BookName }}
                   </a>
                 </h3>
-                <div class="product-price d-flex flex-wrap">
+                <div class="product-price">
                   <div class="product-pirce--discount me-2">
                     {{ this.$helper.formatMoney(item.Price) }}đ
                   </div>
@@ -65,6 +60,10 @@
                   >
                     79,000đ
                   </div>
+                </div>
+                <div class="product-quantity-sold">
+                  <p>Đã bán:</p>
+                  <p>{{ item.QuantitySold }}</p>
                 </div>
               </div>
             </div>
@@ -110,7 +109,7 @@ export default {
     },
 
     /**
-     * Thực hiện thêm vào giỏ hàng khi clcik btn Thêm vào giỏ hàng
+     * Thực hiện thêm vào giỏ hàng khi click btn Thêm vào giỏ hàng
      * @author LQHUY(09/04/2024)
      */
     async handleOnAdd(item) {

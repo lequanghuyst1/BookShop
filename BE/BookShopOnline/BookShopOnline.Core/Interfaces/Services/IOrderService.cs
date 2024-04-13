@@ -28,5 +28,15 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(12/02/2024)
         Task<IEnumerable<OrderDto>> GetByUserId(Guid userId);
+
+        /// <summary>
+        /// Hàm hủy đơn hàng
+        /// </summary>
+        /// <param name="order">thông tin đơn hàng</param>
+        /// <returns>
+        /// 1 - hủy thành công
+        /// </returns>
+        /// Created By: LQHUY(13/02/2024)
+        Task<int> CancelOrderAsync(Order order);
     }
 }

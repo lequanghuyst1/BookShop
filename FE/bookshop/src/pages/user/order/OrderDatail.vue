@@ -5,6 +5,14 @@
 
       <div>
         <div
+          v-if="order.Status === 'Đã hủy'"
+          class="order-view-status"
+          style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
+        >
+          {{ "Đơn hàng đã bị hủy" }}
+        </div>
+        <div
+          v-else
           class="order-view-status"
           style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
         >
@@ -52,6 +60,13 @@
             class="link-reorder order-view-buy-again-btn"
             >Đặt hàng lại</a
           >
+        </div>
+        <div
+          @click="handleCancelOrder"
+          v-show="order.Status === 'Chờ xác nhận'"
+          class="button-cancel-order order-view-buttons-color-child"
+        >
+          <a class="link-reorder order-view-buy-again-btn">Hủy đơn hàng</a>
         </div>
       </div>
       <div id="cancel-order-cover"></div>
@@ -546,7 +561,15 @@
               <span>Đơn hàng:</span><span>{{ order.OrderCode }}</span>
             </div>
             <div
-              class="subOder-progress-bar"
+              v-if="order.Status === 'Đã hủy'"
+              class="order-view-status"
+              style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
+            >
+              {{ "Đơn hàng đã bị hủy" }}
+            </div>
+            <div
+              v-else
+              class="order-view-status"
               style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
             >
               {{ order.Status }}
@@ -592,11 +615,14 @@
               :key="orderDetail.OrderDetailId"
               class="table-subOrder-row"
             >
-              <div style="width: 120px; text-align: left;" class="table-subOrder-cell table-subOrder-img-web">
+              <div
+                style="width: 120px; text-align: left"
+                class="table-subOrder-cell table-subOrder-img-web"
+              >
                 <img :src="orderDetail.ImagePath" />
               </div>
               <div class="table-subOrder-cell table-subOrder-name-product">
-                <div  class="table-subOrder-name-tag-a">
+                <div class="table-subOrder-name-tag-a">
                   <a
                     href="https://www.fahasa.com/montessori-phuong-phap-giao-duc-toan-dien-cho-tre-0-6-tuoi.html"
                     style="height: auto"
@@ -636,7 +662,10 @@
                 <span class="table-subOrder-hidden-desktop"
                   >{{ orderDetail.Quantity }}:&nbsp;</span
                 >
-                <span> <strong>1</strong><br /> </span>
+                <span>
+                  <strong>{{ orderDetail.Quantity }}</strong
+                  ><br />
+                </span>
               </div>
               <div class="table-subOrder-cell">
                 <span class="table-subOrder-hidden-desktop"
@@ -664,7 +693,9 @@
           <div>
             <span>Thành tiền: </span>
             <span class="order-totals-price"
-              ><span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span
+              ><span class="price">{{
+                this.$helper.formatMoney(order.TotalAmount)
+              }}</span
               >&nbsp;<span class="sym-totals">đ</span></span
             >
           </div>
@@ -696,9 +727,10 @@
           </div>
           <div>
             <p class="order-totals-price">
-              <span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span>&nbsp;<span class="sym-totals"
-                >đ</span
-              >
+              <span class="price">{{
+                this.$helper.formatMoney(order.TotalAmount)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span>
             </p>
 
             <p class="order-totals-price">
@@ -707,9 +739,10 @@
               >
             </p>
             <p class="order-totals-price">
-              <span class="price">{{ this.$helper.formatMoney(order.TotalAmount) }}</span>&nbsp;<span class="sym-totals"
-                >đ</span
-              >
+              <span class="price">{{
+                this.$helper.formatMoney(order.TotalAmount)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span>
             </p>
           </div>
         </div>
@@ -727,9 +760,13 @@ export default {
   },
   data() {
     return {
+      //Lưu danh sách chi tiết từng đơn hàng
       orderDetails: [],
+      //Lưu thông tin chi tiết đơn hàng
       order: [],
+      //Lưu tổng số lượng của đơn hàng
       totalQuantity: 0,
+
     };
   },
   methods: {
@@ -744,6 +781,7 @@ export default {
         );
         if (res.status === 200) {
           this.orderDetails = res.data;
+          console.log(this.orderDetails);
           this.totalQuantity = this.orderDetails.reduce(
             (previousValue, item) => previousValue + item.Quantity,
             0
@@ -759,8 +797,32 @@ export default {
         const res = await orderService.getById(this.$route.params.id);
         if (res.status === 200) {
           this.order = res.data;
+          this.orderReplica = res.data;
         }
       } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * Thực hiện hủy đơn hàng khi click btn hủy đơn hàng
+     * @author LQHUY(13/04/2024)
+     */
+    async handleCancelOrder() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        const res = await orderService.CancelOrder(this.order);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Đơn hàng đã được hủy.",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+        }
+      } catch (error) {
+        this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
     },

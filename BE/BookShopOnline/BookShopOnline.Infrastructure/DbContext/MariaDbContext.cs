@@ -211,5 +211,13 @@ namespace BookShopOnline.Infrastructure.DbContext
             }
             return false;
         }
+
+        public async Task<TEntity> GetBySlugAsync<TEntity>(string slug)
+        {
+            var tableName = typeof(TEntity).Name;
+            var sqlCommand = $"Select * From view_{tableName} where {tableName}Slug = @Slug";
+            var res = await Connection.QueryFirstOrDefaultAsync<TEntity>(sqlCommand, new { Slug = slug }, Transaction);
+            return res;
+        }
     }
 }

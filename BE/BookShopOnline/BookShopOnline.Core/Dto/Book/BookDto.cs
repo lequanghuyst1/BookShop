@@ -10,7 +10,6 @@ namespace BookShopOnline.Core.Dto.Book
 {
     public class BookDto : BaseEntity
     {
-
         public Guid BookId { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
@@ -29,6 +28,10 @@ namespace BookShopOnline.Core.Dto.Book
         public string? PublisherName { get; set; }
         public int QuantityInStock { get; set; }
         public int? QuantitySold { get; set; }
+        public string? BookSlug { get; set; }
+        public string CategorySlug { get; set; }
+        public string PublisherSlug { get; set; }
+
 
     }
 }

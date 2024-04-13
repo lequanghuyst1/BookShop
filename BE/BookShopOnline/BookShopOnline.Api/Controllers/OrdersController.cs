@@ -36,5 +36,13 @@ namespace BookShopOnline.Api.Controllers
             var res = await _orderService.GetByUserId(id);
             return StatusCode(200, res);
         }
+
+        [HttpPut("CancelOrder")]
+        public async Task<IActionResult> CancelOrderAsync(Order order)
+        {
+            var res = await _orderService.CancelOrderAsync(order);
+            return Ok(res);
+        }
     }
+
 }

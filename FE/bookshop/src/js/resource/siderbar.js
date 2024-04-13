@@ -1,7 +1,7 @@
 const menu = [
     {
         title: "Tổng quan",
-        icon: "",
+        icon: "fa-solid fa-house",
         path: "home"
     },
     {
@@ -11,12 +11,12 @@ const menu = [
     },
     {
         title: "Quản lý danh mục",
-        icon: "",
+        icon: "fa-solid fa-list",
         path: "category-management",
     },
     {
         title: "Quản lý nhà xuất bản",
-        icon: "",
+        icon: "fa-solid fa-industry",
         path: "publisher-management",
     },
 ]

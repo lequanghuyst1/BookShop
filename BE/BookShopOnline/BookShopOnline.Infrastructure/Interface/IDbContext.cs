@@ -68,6 +68,16 @@ namespace BookShopOnline.Infrastructure.Interface
         /// </returns>
         Task<bool> CheckEntityNameUpdateAsync<TEntity>(string entityName, Guid id);
 
+        /// <summary>
+        /// Hàm lấy ra bản ghi theo slug
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="slug"></param>
+        /// <returns>thông tin bản ghi</returns>
+        /// Created By: LQHUY(13/04/2024)
+        Task<TEntity> GetBySlugAsync<TEntity>(string slug);
+
+
 
     }
 }

@@ -9,7 +9,7 @@ import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import HomeAdminPage from "../pages/admin/home/Index.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
-import HomeUserPage from "../pages/user/home/Index.vue";
+import HomeUserPage from "../pages/user/home/HomePage.vue";
 import CartPage from "../pages/user/cart/Index.vue";
 import CategoryUserPage from "../pages/user/category/Index.vue";
 import ProductPage from "../pages/user/product/Index.vue";
@@ -41,7 +41,7 @@ const routes = [
         },
       },
       {
-        path: "collections/:id",
+        path: "collections/:slug",
         name: "category",
         components: {
           ViewRouterContainer: CategoryUserPage,
@@ -49,7 +49,7 @@ const routes = [
         props: true,
       },
       {
-        path: "product/:id",
+        path: "product/:slug",
         name: "product",
         components: {
           ViewRouterContainer: ProductPage,

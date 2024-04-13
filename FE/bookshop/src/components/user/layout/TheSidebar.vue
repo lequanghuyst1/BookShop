@@ -20,7 +20,7 @@
               :to="{
                 name: 'category',
                 path: 'collecttion',
-                params: { id: item.CategoryId },
+                params: { slug: item.CategorySlug },
               }"
               >{{ item.CategoryName }}</router-link
             >

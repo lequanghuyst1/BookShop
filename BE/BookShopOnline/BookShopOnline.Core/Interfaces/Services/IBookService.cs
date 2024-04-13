@@ -11,6 +11,6 @@ namespace BookShopOnline.Core.Interfaces.Services
 {
     public interface IBookService : IBaseService<Book, BookDto>
     {
-        
+        Task<IEnumerable<BookDto>> GetByCategorySlugAsync(string categorySlug);
     }
 }

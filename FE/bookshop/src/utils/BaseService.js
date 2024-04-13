@@ -15,6 +15,10 @@ class BaseService {
     const res = await this.baseAxios.get(`${this.baseUrl}/${id}`);
     return res;
   }
+  async getBySlug(slug) {
+    const res = await this.baseAxios.get(`${this.baseUrl}/GetBySlug/${slug}`);
+    return res;
+  }
   async getByIds(ids) {
     const res = await this.baseAxios.post(`${this.baseUrl}/GetByIds`, ids);
     return res;

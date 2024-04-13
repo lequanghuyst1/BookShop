@@ -12,5 +12,6 @@ namespace BookShopOnline.Core.Entitites
         public string CategoryCode { get; set; }
         public string CategoryName { get; set; }
         public string? Description { get; set; }
+        public string? CategorySlug { get; set; }
     }
 }

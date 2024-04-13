@@ -10,6 +10,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
+using System.Transactions;
 
 namespace BookShopOnline.Infrastructure.Repository
 {
@@ -22,6 +24,13 @@ namespace BookShopOnline.Infrastructure.Repository
         public Task<IEnumerable<Book>> GetByCategoryIdAsync(string id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Book>> GetByCategorySlugAsync(string categorySlug)
+        {
+            var sqlCommand = $"Select * From view_Book where CategorySlug = @Slug";
+            var res = await _dbContext.Connection.QueryAsync<Book>(sqlCommand, new { Slug = categorySlug });
+            return res;
         }
     }
 }

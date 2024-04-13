@@ -12,6 +12,13 @@ const Enum = {
     FormAccount: {
         Login: 0,
         Register: 1,
+    },
+    ORDER_STATUS: {
+        WAIT_FOR_CONFIRMATION: 0,
+        CONFIRMED: 1,
+        SHIPPING: 2,
+        DELIVERYED: 3,
+        CANCELLED: 4,
     }
 };
 

@@ -362,8 +362,9 @@
   display: flex;
   flex-direction: column;
 }
+
 .order-view-buy-again-btn {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   border-radius: 8px;
   background: #c92127;
@@ -371,6 +372,15 @@
   color: white !important;
 }
 
+.button-cancel-order .order-view-buy-again-btn{
+  background-color: #fff !important;
+  border: 1px solid #c92127;
+  color: #c92127 !important;
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 8px;
+}
 /* Form lý lo hủy đơn hàng */
 #cancel-order-cover {
   display: none;

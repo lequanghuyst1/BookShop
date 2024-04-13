@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Services.Base
@@ -68,8 +69,8 @@ namespace BookShopOnline.Core.Services.Base
             var entity = JsonConvert.DeserializeObject<TEntity>(dataJson);
             var tableName = typeof(TEntity).Name;
             await ValidateBeforeUpdate(entity);
-            entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, id);
 
+            entity?.GetType()?.GetProperty($"{tableName}Id")?.SetValue(entity, id);
             if (imageFile != null && imageFile.Length > 0)
             {
                 var res = await _baseRepository.UpdateAsync(id, entity);
@@ -93,6 +94,21 @@ namespace BookShopOnline.Core.Services.Base
         public virtual async Task ValidateBeforeUpdate(TEntity entity)
         {
             await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Hàm chuyển entityName thành slug
+        /// </summary>
+        /// <param name="entityName">entity Name</param>
+        /// <returns>chuỗi slug</returns>
+        /// Created By: LQHUY(13/04/2024)
+        static string GenerateSlugFromEntityName(string entityName)
+        {
+            // Loại bỏ ký tự đặc biệt, chuyển đổi chữ thường và thay thế dấu cách bằng dấu gạch ngang
+            string slug = Regex.Replace(entityName.ToLower(), @"[^a-z0-9\s-]", ""); // Loại bỏ ký tự đặc biệt
+            slug = Regex.Replace(slug, @"\s+", " ").Trim(); // Loại bỏ khoảng trắng dư thừa
+            slug = slug.Replace(" ", "-"); // Thay thế dấu cách bằng dấu gạch ngang
+            return slug;
         }
     }
 }

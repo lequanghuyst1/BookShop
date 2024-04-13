@@ -24,6 +24,13 @@ namespace BookShopOnline.Core.Services
             _bookRepository = bookRepository;
         }
 
+        public async Task<IEnumerable<BookDto>> GetByCategorySlugAsync(string categorySlug)
+        {
+            var books = await _bookRepository.GetByCategoryIdAsync(categorySlug);
+            var booksDto = books.Select(item => base.MapEntityToDto(item));
+            return booksDto;
+        }
+
         public override async Task ValidateBeforeInsert(Book book)
         {
            

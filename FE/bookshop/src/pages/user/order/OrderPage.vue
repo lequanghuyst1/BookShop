@@ -25,7 +25,7 @@
               style="width: 150px"
             >
               <div class="tab-history-item-number">0</div>
-              <div class="tab-history-item-text">Chờ thanh toán</div>
+              <div class="tab-history-item-text">Chờ xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
@@ -34,7 +34,7 @@
               style="width: 150px"
             >
               <div class="tab-history-item-number">0</div>
-              <div class="tab-history-item-text">Chờ xác nhận</div>
+              <div class="tab-history-item-text">Đã xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
@@ -43,7 +43,7 @@
               style="width: 150px"
             >
               <div class="tab-history-item-number">0</div>
-              <div class="tab-history-item-text">Đang xử lý</div>
+              <div class="tab-history-item-text">Đang vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
@@ -52,7 +52,7 @@
               style="width: 150px"
             >
               <div class="tab-history-item-number">0</div>
-              <div class="tab-history-item-text">Hoàn tất</div>
+              <div class="tab-history-item-text">Đã vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
@@ -81,7 +81,7 @@
         >
           <i class="fa fa-chevron-left"></i>
         </div>
-        <div
+        <!-- <div
           class="order-history-swiper-button-next"
           tabindex="0"
           role="button"
@@ -89,7 +89,7 @@
           aria-disabled="false"
         >
           <i class="fa fa-chevron-right"></i>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -170,7 +170,12 @@ export default {
   },
   data() {
     return {
+      //Lưu danh sách các đơn hàng đã đặt
       orders: [],
+      //Lưu giá trị tổng số đơn hàng bị hủy
+      quantityOrderCancelled: 0,
+      ordersCancelled: [],
+      orderStatus: null,
     };
   },
   computed: {
@@ -187,7 +192,16 @@ export default {
       try {
         const res = await orderService.GetByUserId(this.userInfo.UserId);
         if (res.status === 200) {
-          this.orders = res.data;
+          switch (this.orderStatus) {
+            case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
+              this.orders = res.data.filter(
+                (item) => item.Status === "Chờ xác nhận"
+              );
+              break;
+            default:
+              this.orders = res.data;
+              break;
+          }
         }
       } catch (error) {
         console.log(error);

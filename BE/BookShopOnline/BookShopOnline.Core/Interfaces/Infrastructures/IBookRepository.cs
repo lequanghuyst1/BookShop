@@ -10,5 +10,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
     public interface IBookRepository : IBaseRepository<Book>
     {
         Task<IEnumerable<Book>> GetByCategoryIdAsync(string id);
+        Task<IEnumerable<Book>> GetByCategorySlugAsync(string categorySlug);
+
     }
 }

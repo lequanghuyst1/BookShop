@@ -507,7 +507,7 @@ export default {
     async loadDataProduct() {
       try {
         //gọi API lấy chi tiết sản phẩm
-        const res = await bookService.getById(this.$route.params.id);
+        const res = await bookService.getBySlug(this.$route.params.slug);
         if (res.status === 200) {
           this.productInfo = res.data;
           this.cartItem = res.data;

@@ -18,6 +18,7 @@ namespace BookShopOnline.Core.Dto.Order
         public double TotalAmount { get; set; }
         public string Status { get; set; }
         public DateTime OrderDate { get; set; }
+        public DateTime? CancellationDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string Note { get; set; }
     }

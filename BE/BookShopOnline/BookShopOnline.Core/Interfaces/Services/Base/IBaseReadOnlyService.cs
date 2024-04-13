@@ -20,5 +20,14 @@ namespace BookShopOnline.Core.Interfaces.Services.Base
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(11/04/2024)
         Task<IEnumerable<TDto>> GetByIdsAsync(List<Guid> ids);
+        /// <summary>
+        /// Hàm lấy ra bản ghi theo slug
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="slug"></param>
+        /// <returns>thông tin bản ghi</returns>
+        /// Created By: LQHUY(13/04/2024)
+        Task<TDto> GetBySlugAsync(string slug);
+
     }
 }

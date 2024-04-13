@@ -35,6 +35,7 @@ namespace BookShopOnline.Core.Entitites
         public string? Size { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Tổng số trang nhập vào phải là số.")]
         public int? NumberOfPage { get; set; }
+        public string ImagePath { get; set; }
         public double? Heavy { get; set; }
         public string? Image { get; set; }
         public Guid CategoryId { get; set; }
@@ -43,5 +44,10 @@ namespace BookShopOnline.Core.Entitites
         public string? PublisherName { get; set; }
         public int? QuantityInStock { get; set; }
         public int? QuantitySold { get; set; }
+        public string? Slug { get; set; }
+        public string? BookSlug { get; set; }
+        public string? CategorySlug { get; set; }
+        public string? PublisherSlug { get; set; }
+
     }
 }

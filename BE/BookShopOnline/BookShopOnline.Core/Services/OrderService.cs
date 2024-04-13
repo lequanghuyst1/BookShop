@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.UnitOfWork;
@@ -73,6 +74,25 @@ namespace BookShopOnline.Core.Services
             var orders = await _unitOfWork.Order.GetByUserId(userId);
             var ordersDto = orders.Select(item => base.MapEntityToDto(item));
             return ordersDto;
+        }
+
+        public async Task<int> CancelOrderAsync(Order order)
+        {
+            order.Status = "Đã hủy";
+            order.CancellationDate = DateTime.Now;
+            _unitOfWork.BeginTransaction();
+            var res = await _unitOfWork.Order.UpdateAsync(order.OrderId, order);
+            if(res > 0)
+            {
+                _unitOfWork.Commit();
+                return res;
+            }
+            else
+            {
+                errors.Add("Order", new string[] { "Hủy đơn hàng không thành công" });
+                throw new ValidateException(Resources.ResourceVN.Exception_Validate_Default, errors);
+            }
+            
         }
 
         private async Task<string> GetOrderCode()

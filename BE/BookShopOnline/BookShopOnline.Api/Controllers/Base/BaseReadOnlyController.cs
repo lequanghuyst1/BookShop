@@ -47,5 +47,18 @@ namespace BookShopOnline.Api.Controllers.Base
             var res = await _baseService.GetFilterPagingAsync(searchString, pageSize, pageNumber);
             return Ok(res);
         }
+
+        /// <summary>
+        /// Api lấy 1 bản ghi theo slug của nó
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        /// Created By: LQHUY(13/04/2024)
+        [HttpGet("GetBySlug/{slug}")]
+        public async Task<IActionResult> GetBySlugAsync(string slug)
+        {
+            var res = await _baseService.GetBySlugAsync(slug);
+            return Ok(res);
+        }
     }
 }
