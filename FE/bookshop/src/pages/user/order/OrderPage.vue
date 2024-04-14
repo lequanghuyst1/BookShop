@@ -161,7 +161,7 @@
             </div>
           </div>
           <div class="table-order-cell hidden-max-width-992">
-            {{ orderStatusString(order.Status) }}
+            {{ orderStatusString(order.OrderStatus) }}
           </div>
           <div
             class="table-order-cell table-order-link-more hidden-max-width-992"
@@ -235,27 +235,28 @@ export default {
             case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
               this.orders = res.data.filter(
                 (item) =>
-                  item.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                  item.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
               );
               break;
             case this.$Enum.ORDER_STATUS.CONFIRMED:
               this.orders = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.CONFIRMED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED
               );
               break;
             case this.$Enum.ORDER_STATUS.SHIPPING:
               this.orders = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.SHIPPING
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.SHIPPING
               );
               break;
             case this.$Enum.ORDER_STATUS.DELIVERED:
               this.orders = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.DELIVERED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.DELIVERED
               );
               break;
             case this.$Enum.ORDER_STATUS.CANCELLED:
               this.orders = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
               );
               break;
             default:
@@ -263,19 +264,20 @@ export default {
               this.quantityOrder = this.orders.length;
               this.quantityOrderWatting = res.data.filter(
                 (item) =>
-                  item.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                  item.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
               ).length;
               this.quantityOrderConfirmed = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.CONFIRMED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED
               ).length;
               this.quantityOrderShipping = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.SHIPPING
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.SHIPPING
               ).length;
               this.quantityOrderDelivered = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
               ).length;
               this.quantityOrderCancelled = res.data.filter(
-                (item) => item.Status === this.$Enum.ORDER_STATUS.CANCELLED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
               ).length;
               break;
           }

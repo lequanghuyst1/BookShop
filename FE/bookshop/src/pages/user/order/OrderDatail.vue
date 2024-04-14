@@ -8,7 +8,7 @@
           class="order-view-status"
           style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
         >
-          {{ "Đơn hàng " + orderStatusString(order.Status) }}
+          {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
         </div>
 
         <div class="order-view-id">
@@ -53,7 +53,7 @@
         <div
           @click="handleCancelOrder"
           v-show="
-            order.Status === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+            order.OrderStatus === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
           "
           class="button-cancel-order order-view-buttons-color-child"
         >
@@ -533,7 +533,7 @@
               ></div>
             </div>
             <div class="order-view-icon-content">
-              <p>{{ orderStatusString(order.Status) }}</p>
+              <p>{{ orderStatusString(order.OrderStatus) }}</p>
               <p>10/04/2024 - 13:26</p>
             </div>
           </div>
@@ -556,7 +556,7 @@
               class="order-view-status"
               style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
             >
-              {{ "Đơn hàng " + orderStatusString(order.Status) }}
+              {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
             </div>
             <div>
               <span>Tổng tiền:</span

@@ -17,7 +17,11 @@ namespace BookShopOnline.Core.Dto.Order
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public double TotalAmount { get; set; }
-        public OrderStatus Status { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+        public DeliveryStatus DeliveryStatus { get; set; }
+        public DeliveryMethod DeliveryMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime? CancellationDate { get; set; }
         public DateTime DeliveryDate { get; set; }

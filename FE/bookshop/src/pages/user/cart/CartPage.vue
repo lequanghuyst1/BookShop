@@ -219,15 +219,13 @@ export default {
     //Gán dữ liệu cho cart lấy từ localStorage
     this.cartData = cartLocalStorageService.getCartFromLocalStorage();
     this.getQuantityOfCart();
-
   },
   mounted() {
     this.lstIdItemSelected = localStorageService.getItemFromLocalStorage(
       "itemSelected"
     )
-    ? localStorageService.getItemFromLocalStorage("itemSelected")
-    : [];
-    console.log(this.lstIdItemSelected);
+      ? localStorageService.getItemFromLocalStorage("itemSelected")
+      : [];
   },
   data() {
     return {
@@ -379,9 +377,7 @@ export default {
           //gọi hàm update lại tổng số lượng sản phẩm trong cart
           this.$emitter.emit("getQuantityOfCart");
           this.getQuantityOfCart();
-          setTimeout(() => {
-            this.$emitter.emit("toggleShowLoading", false);
-          }, 300);
+          this.$emitter.emit("toggleShowLoading", false, 200);
         }
       } catch (error) {
         console.log(error);

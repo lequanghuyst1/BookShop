@@ -214,7 +214,12 @@
             </div>
             <div class="d-flex gap-3 mt-2 mb-2">
               <label class="warrap__input-radio">
-                <input type="radio" name="delivery" checked />
+                <input
+                  type="radio"
+                  name="delivery"
+                  :value="this.$Enum.DELIVERY_METHOD.OCD"
+                  v-model="order.DeliveryMethod"
+                />
                 <span class="checkmark"></span>
               </label>
               <p style="flex: 1; font-weight: bold; font-size: 14px">
@@ -238,7 +243,8 @@
                 <div class="method-pay">
                   <label class="warrap__input-radio">
                     <input
-                      :checked="item.paymentName === 'Thanh toán bằng tiền mặt'"
+                      :value="item.value"
+                      v-model="order.PaymentMethod"
                       type="radio"
                       name="payment"
                     />
@@ -384,7 +390,7 @@
             </div>
             <div class="total-line mt-3 total-sub-total">
               <p class="total-name">Thành tiền</p>
-              <p class="total-price">800.000đ</p>
+              <p class="total-price">{{ totalAmountCart }}</p>
             </div>
             <div class="total-line total-delivery">
               <p class="total-name">Phí vận chuyển</p>
@@ -452,7 +458,13 @@ export default {
       isShowFormAddress: false,
       orderDetailData: [],
       totalAmountCart: 0,
-      order: {},
+      order: {
+        OrderStatus: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
+        DeliveryMethod: this.$Enum.DELIVERY_METHOD.OCD,
+        DeliveryStatus: this.$Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY,
+        PaymentMethod: this.$Enum.PAYMENT_METHOD.CASH_PAYMENT,
+        PaymentStatus: this.$Enum.PAYMENT_STATUS.UNPAID,
+      },
     };
   },
   computed: {
@@ -469,6 +481,9 @@ export default {
     },
     orderDetailIds: function () {
       return localStorageService.getItemFromLocalStorage("itemSelected");
+    },
+    resource: function () {
+      return this.$Resource[this.$languageCode];
     },
   },
   watch: {
@@ -522,7 +537,6 @@ export default {
         this.order.TotalAmount = this.$helper.formatMoneySendApi(
           this.totalAmountCart
         );
-        this.order.Status = this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION;
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
 

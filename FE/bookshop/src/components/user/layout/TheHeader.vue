@@ -315,7 +315,7 @@
                 ></a>
               </div>
               <div style="border-top: 1px solid #f2f4f5">
-                <a class="fhs_center_left" href="/sales/order/history/"
+                <a class="fhs_center_left" href="http://localhost:8080/customer/order"
                   ><span class="icon_bill_gray" style="margin-right: 8px"></span
                   ><span>Đơn hàng của tôi</span></a
                 >

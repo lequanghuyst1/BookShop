@@ -30,13 +30,13 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task<int> InsertAsync(TEntity entity)
+        public virtual async Task<int> InsertAsync(TEntity entity)
         {
             var res = await _dbContext.InsertAsync<TEntity>(entity);
             return res;
         }
 
-        public async Task<int> UpdateAsync(Guid id, TEntity entity)
+        public virtual async Task<int> UpdateAsync(Guid id, TEntity entity)
         {
             var res = await _dbContext.UpdateAsync<TEntity>(id, entity);
             return res;

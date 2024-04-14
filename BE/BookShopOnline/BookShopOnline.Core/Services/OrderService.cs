@@ -29,10 +29,16 @@ namespace BookShopOnline.Core.Services
             var order = orderData.Order;
             var ordersDetail = orderData.OrderDetails;
             var cartItemIds = orderData.CartItemIds;
+
             var orderId = Guid.NewGuid();
             order.OrderId = orderId;
             order.OrderCode = await GetOrderCode();
-            order.Status = (OrderStatus)order.Status;
+            order.OrderStatus = (OrderStatus)order.OrderStatus;
+            order.DeliveryStatus = (DeliveryStatus)order.DeliveryStatus;
+            order.DeliveryMethod = (DeliveryMethod)order.DeliveryMethod;
+            order.PaymentMethod = (PaymentMethod)order.PaymentMethod;
+            order.PaymentStatus = (PaymentStatus)order.PaymentStatus;
+
             var res = await _unitOfWork.Order.InsertAsync(order);
             var count = 0;
             if (res > 0)
@@ -80,7 +86,7 @@ namespace BookShopOnline.Core.Services
 
         public async Task<int> CancelOrderAsync(Order order)
         {
-            order.Status = OrderStatus.CANCELLED;
+            order.OrderStatus = OrderStatus.CANCELLED;
             order.CancellationDate = DateTime.Now;
             _unitOfWork.BeginTransaction();
             var res = await _unitOfWork.Order.UpdateAsync(order.OrderId, order);
