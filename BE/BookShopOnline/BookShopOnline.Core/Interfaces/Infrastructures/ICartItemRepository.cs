@@ -18,7 +18,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// <param name="cartId">mã định danh giỏ hàng</param>
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(11/04/2024)
-        Task<IEnumerable<CartItem>> GetByCartIdAsync(string cartId);
+        Task<IEnumerable<CartItem>> GetByCartIdAsync(Guid cartId);
 
     }
 }

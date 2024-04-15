@@ -23,7 +23,7 @@ namespace BookShopOnline.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<CartItemDto>> GetByCartIdServiceAsync(string cartId)
+        public async Task<IEnumerable<CartItemDto>> GetByCartIdServiceAsync(Guid cartId)
         {
             _unitOfWork.BeginTransaction();
             var cartsItem = await _unitOfWork.CartItems.GetByCartIdAsync(cartId);
@@ -47,8 +47,12 @@ namespace BookShopOnline.Core.Services
         {
             _unitOfWork.BeginTransaction();
             var cartItem = JsonConvert.DeserializeObject<CartItem>(dataJson);
-            var cartItemExit = await _unitOfWork.CartItems.CheckBookExistInCartItemAsync(cartItem.BookId);
-            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng hay chưa
+
+            //lấy ra giỏ hàng của người dùng theo cartId
+            var cartItems = await _unitOfWork.CartItems.GetByCartIdAsync(cartItem.CartId);
+
+            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của người dùng hay chưa
+            var cartItemExit = cartItems.FirstOrDefault(item => item.BookId == cartItem.BookId);
 
             //Nếu có thì cập nhật lại số lượng
             if (cartItemExit != null)

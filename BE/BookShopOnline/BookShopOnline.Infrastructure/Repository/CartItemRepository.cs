@@ -26,7 +26,7 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task<IEnumerable<CartItem>> GetByCartIdAsync(string cartId)
+        public async Task<IEnumerable<CartItem>> GetByCartIdAsync(Guid cartId)
         {
             var procName = "Proc_CartItem_GetByCartId";
             var res = await _dbContext.Connection.QueryAsync<CartItem>(procName, new { CartId = cartId }, _dbContext.Transaction);

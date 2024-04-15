@@ -17,7 +17,7 @@ namespace BookShopOnline.Api.Controllers
             _cartItemService = cartItemService;
         }
         [HttpGet("GetByCartId/{cartId}")]
-        public async Task<IActionResult> GetByCartIdAsync(string cartId)
+        public async Task<IActionResult> GetByCartIdAsync(Guid cartId)
         {
             var res = await _cartItemService.GetByCartIdServiceAsync(cartId);
             return Ok(res);

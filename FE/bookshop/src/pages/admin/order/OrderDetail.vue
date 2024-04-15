@@ -195,9 +195,9 @@
             </div>
             <div
               v-if="
-                this.order.DeliveryStatus ===
+                order.DeliveryStatus ===
                   this.$Enum.DELIVERY_STATUS.NOT_DELIVERY &&
-                this.order.OrderStaus === this.$Enum.ORDER_STATUS.CANCELLED
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
               "
               class="btn-ship"
             >
