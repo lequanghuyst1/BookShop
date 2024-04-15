@@ -38,14 +38,15 @@ namespace BookShopOnline.Core.Enums
     /// </summary>
     public enum DeliveryStatus
     {
+        NOT_DELIVERY = 0,
         /// <summary>
         /// Chờ lấy hàng
         /// </summary>
-        WAITTING_FOR_DELIVERY = 0,
+        WAITTING_FOR_DELIVERY = 1,
         /// <summary>
         /// Đã lấy hàng
         /// </summary>
-        RECEIVED_THE_GOODS = 1,
+        RECEIVED_THE_GOODS = 2,
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ namespace BookShopOnline.Core.Enums
     /// </summary>
     public enum PaymentMethod
     {
-        CASH_PAYMENT =  0,
+        CASH_PAYMENT = 0,
         ZALOPAY_WALLTET = 1,
         VNPAY = 2,
         MONO_WALLET = 3,

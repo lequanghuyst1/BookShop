@@ -8,5 +8,4 @@ export default{
     name: "HomeAdminPage",
 }</script>
 <style scoped>
-
 </style>

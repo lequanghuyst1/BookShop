@@ -6,11 +6,11 @@
       </div>
       <div class="tab-container-order-history-container">
         <div
-          class="tab-container-order-history swiper-container swiper-container-horizontal"
+          class="tab-container-order-history  swiper-container swiper-container-horizontal"
         >
           <div class="swiper-wrapper">
             <div
-              class="tab-history-item swiper-slide tab-history-item-active swiper-slide-active"
+              class="tab-history-item tab-history-item-active swiper-slide swiper-slide-active"
               @click="getOrdersData()"
               style="width: 150px"
             >
@@ -60,7 +60,7 @@
               style="width: 150px"
             >
               <div class="tab-history-item-number">
-                {{ quantityOrderShipping }}
+                {{ quantityOrderDelivered }}
               </div>
               <div class="tab-history-item-text">Đã vận chuyển</div>
               <div class="tab-history-item-border"></div>
@@ -215,7 +215,7 @@ export default {
   },
   computed: {
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+      return localStorageService.getItemFromLocalStorage("userInfo");
     },
     resource: function () {
       return this.$Resource[this.$languageCode];
@@ -274,7 +274,7 @@ export default {
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.SHIPPING
               ).length;
               this.quantityOrderDelivered = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.DELIVERED
               ).length;
               this.quantityOrderCancelled = res.data.filter(
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
@@ -296,15 +296,15 @@ export default {
     orderStatusString(orderStatus) {
       switch (orderStatus) {
         case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
-          return this.resource.ORDER_STATUS.waitForConfirmation;
+          return this.resource.ENUM_ORDER_STATUS.waitForConfirmation;
         case this.$Enum.ORDER_STATUS.CONFIRMED:
-          return this.resource.ORDER_STATUS.confirmed;
+          return this.resource.ENUM_ORDER_STATUS.confirmed;
         case this.$Enum.ORDER_STATUS.SHIPPING:
-          return this.resource.ORDER_STATUS.shipping;
+          return this.resource.ENUM_ORDER_STATUS.shipping;
         case this.$Enum.ORDER_STATUS.DELIVERED:
-          return this.resource.ORDER_STATUS.delivered;
+          return this.resource.ENUM_ORDER_STATUS.delivered;
         case this.$Enum.ORDER_STATUS.CANCELLED:
-          return this.resource.ORDER_STATUS.cancelled;
+          return this.resource.ENUM_ORDER_STATUS.cancelled;
         default:
           return "";
       }

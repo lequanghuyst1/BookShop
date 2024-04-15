@@ -1,0 +1,225 @@
+#order {
+  background-color: #fff;
+  overflow-y: scroll;
+}
+#order td{
+  overflow: visible;
+}
+.tool-edit-table {
+  width: 40px;
+  height: 20px;
+  background-color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.edit-row--content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  z-index: 2;
+  list-style: none;
+  padding: 0 !important;
+  box-shadow: 0 2px 5px #bbb9b9;
+
+}
+.edit-row--content li{
+  text-align: left;
+  font-size: 13px !important;
+}
+.order-detail__header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.order-detail__info{
+  margin: 8px 0;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+.order__info-title{
+  font-size: 14px;
+  color: #A3A8B6;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.order-code{
+  padding-right: 12px;
+
+}
+.order-code p{
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: -4px !important;
+}
+.order-status,
+.order-date,
+.payment-status,
+.delivery-status{
+  padding: 0 12px;
+  border-left: 1px solid #ccc;
+}
+.delivery-status p{
+  padding: 0px 8px !important;
+  background-color: #FDFDE8;
+  color: #DEB85B;
+  border: 1px solid #DEB85B;
+  text-align: center;
+  border-radius: 4px;
+  display: inline-block;
+}
+.order-status p {
+  padding: 0px 8px !important;
+  border: 1px solid ;
+  text-align: center;
+  border-radius: 4px;
+  display: inline-block;
+}
+.check-order-delivered{
+  width: 100%;
+  background-color: #fff;
+  padding: 12px;
+
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.check-order-delivered p{
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid ;
+
+  display: inline-block;
+  padding: 2px 8px !important;
+
+}
+.order-date{
+  font-size: 14px;
+  color: #333;
+}
+
+.procees-order{
+  background-color: #fff;
+  border-radius: 8px;
+  padding-bottom: 16px;
+  padding: 16px;
+  
+}
+.payment-status p{
+  color: #437ff7;
+  border: 1px solid #437ff7;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 0px 8px !important;
+}
+.button-print-invoice{
+  background-color: #0051c8;
+  border-radius: 8px;
+  height: fit-content;
+}
+.product-item-image{
+}
+.header-product-list{
+  border-bottom: 1px solid #ccc;
+  padding: 8px 0;
+
+}
+.produt-item{
+  padding-top: 16px;
+}
+.product-item-desc{
+  flex-basis: 50%;
+}
+.product-item-desc .product-item-name{
+  font-size: 15px;
+  font-weight: bold;
+  color: #0051c8;
+}
+.product-item-quantiy{
+  flex-basis:10%;
+  text-align: center;
+  font-size: 14px;
+  padding-left: 20px;
+}
+.product-item-price{
+  flex-basis: 16%;
+  text-align: center;
+  font-size: 14px;
+}
+.product-item-into-money{
+  font-size: 14px;
+  flex-basis: 15%;
+  text-align: center;
+
+}
+.product-item-image img{
+  max-height: 119px;
+}
+.total-amount-order{
+  border-top: 1px solid #ccc;
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+}
+.total-amount-order p:nth-child(2){
+  padding-right: 40px !important;
+}
+.btn-ship{
+  border-top: 1px solid #ccc;
+  margin-top: 16px;
+  padding-top: 16px;
+  text-align: right;
+}
+.confirm-order{
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.confirm-order .confirm-order-title{
+  margin:0 16px !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+  color: #0051c8;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.confirm-order .confirm-order-text{
+  padding: 8px 0 !important;
+}
+.confirm-group{
+  padding: 8px 16px;
+}
+.profile-customer{
+  margin-top: 32px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.profile-customer .profile-customer-header{
+  color: #0051c8;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 6px !important;
+} 
+.profile-customer .user-achivement{
+  display: flex;
+  justify-content: space-between;
+}
+.info-border{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+}

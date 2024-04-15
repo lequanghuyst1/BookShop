@@ -314,7 +314,7 @@ export default {
             );
             //lấy ra thông tin người dùng
             var user =
-              localStorageService.getItemEncodeFromLocalStorage("userInfo");
+              localStorageService.getItemFromLocalStorage("userInfo");
               console.log(user)
             //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
             var result = await cartItemService.getByCartId(user.CartId);

@@ -6,7 +6,32 @@
       <div>
         <div
           class="order-view-status"
-          style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
+          :style="{
+            color:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#DEB85B'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#a90000'
+                : '#a0dbb3',
+            borderColor:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#DEB85B'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#a90000'
+                : '#a0dbb3',
+            backgroundColor:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#fdfde8'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#f3b4af'
+                : '#f1fcf5',
+          }"
         >
           {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
         </div>
@@ -47,10 +72,15 @@
         <!--<input type="button" class="order-view-buy-again" value="Mua Lai">-->
         <!--<span class="back-link"><a href=""><small>&laquo; </small></a></span>-->
         <!--<a href="" class="link-rss f-none"></a>-->
-        <div @click="handleReOder" class="order-view-buttons-color-child">
+        <div
+          style="cursor: pointer"
+          @click="handleReOder"
+          class="order-view-buttons-color-child"
+        >
           <a class="link-reorder order-view-buy-again-btn">Đặt hàng lại</a>
         </div>
         <div
+          style="cursor: pointer"
           @click="handleCancelOrder"
           v-show="
             order.OrderStatus === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
@@ -490,7 +520,7 @@
             </div>
             <div class="order-view-icon-content">
               <p>Đơn hàng mới</p>
-              <p>10/04/2024 - 13:25</p>
+              <p>{{ this.$helper.formatOrderDate(order.OrderDate) }}</p>
             </div>
           </div>
           <div
@@ -554,8 +584,33 @@
 
             <div
               class="order-view-status"
-              style="background: #f3b4af; color: #a90000; border-color: #f3b4af"
-            >
+              :style="{
+            color:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#DEB85B'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#a90000'
+                : '#a0dbb3',
+            borderColor:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#DEB85B'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#a90000'
+                : '#a0dbb3',
+            backgroundColor:
+              this.order.OrderStatus ===
+              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                ? '#fdfde8'
+                : this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.CANCELLED
+                ? '#f3b4af'
+                : '#f1fcf5',
+          }"
+        >
               {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
             </div>
             <div>
@@ -750,7 +805,7 @@ export default {
       return this.$Resource[this.$languageCode];
     },
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+      return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
   data() {
@@ -825,20 +880,20 @@ export default {
     orderStatusString(orderStatus) {
       switch (orderStatus) {
         case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
-          return this.resource.ORDER_STATUS.waitForConfirmation;
+          return this.resource.ENUM_ORDER_STATUS.waitForConfirmation;
         case this.$Enum.ORDER_STATUS.CONFIRMED:
-          return this.resource.ORDER_STATUS.confirmed;
+          return this.resource.ENUM_ORDER_STATUS.confirmed;
         case this.$Enum.ORDER_STATUS.SHIPPING:
-          return this.resource.ORDER_STATUS.shipping;
+          return this.resource.ENUM_ORDER_STATUS.shipping;
         case this.$Enum.ORDER_STATUS.DELIVERED:
-          return this.resource.ORDER_STATUS.delivered;
+          return this.resource.ENUM_ORDER_STATUS.delivered;
         case this.$Enum.ORDER_STATUS.CANCELLED:
-          return this.resource.ORDER_STATUS.cancelled;
+          return this.resource.ENUM_ORDER_STATUS.cancelled;
         default:
           return "";
       }
     },
-    
+
     /**
      * Thực hiện đặt lại hàng khi nhấn btn đặt lại hàng
      * @author LQHUY(14/04/2024)

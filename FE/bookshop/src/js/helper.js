@@ -1,4 +1,8 @@
-import app from "@/main.js";
+import Enum from "./resource/enum";
+import Resource from "./resource/resource";
+const resource = () => {
+  return Resource["VN"];
+};
 const helper = {
   /**
    * Hàm định dạng ngày tháng
@@ -38,16 +42,15 @@ const helper = {
    * Author: LQHUY
    */
   formatGender(gender) {
-    const appConfig = app.config.globalProperties;
     try {
       if (gender !== null || gender !== undefined) {
         switch (gender) {
-          case appConfig.$Enum.Gender.Male:
-            return appConfig.$Resource[appConfig.$languageCode].Gender.Male;
-          case appConfig.$Enum.Gender.Female:
-            return appConfig.$Resource[appConfig.$languageCode].Gender.Female;
-          case appConfig.$Enum.Gender.Other:
-            return appConfig.$Resource[appConfig.$languageCode].Gender.Other;
+          case Enum.Gender.Male:
+            return resource().Gender.Male;
+          case Enum.Gender.Female:
+            return resource().Gender.Female;
+          case Enum.Gender.Other:
+            return resource().Gender.Other;
           default:
             return "";
         }
@@ -68,7 +71,9 @@ const helper = {
         money = new Intl.NumberFormat("vi-VN", {
           style: "currency",
           currency: "VND",
-        }).format(money).replace("₫", "");
+        })
+          .format(money)
+          .replace("₫", "");
         return money;
       } else {
         return "";
@@ -113,6 +118,72 @@ const helper = {
     str = str.replace(/[ýỳỷỹỵ]/g, "y");
     str = str.replace(/đ/g, "d");
     return str;
+  },
+
+  hanldeValueTypeEnum(typeEnum, value) {
+    switch (typeEnum) {
+      case "ORDER_STATUS":
+        if (value === Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION) {
+          return resource().ENUM_ORDER_STATUS.waitForConfirmation;
+        } else if (value === Enum.ORDER_STATUS.CONFIRMED) {
+          return resource().ENUM_ORDER_STATUS.confirmed;
+        } else if (value === Enum.ORDER_STATUS.SHIPPING) {
+          return resource().ENUM_ORDER_STATUS.shipping;
+        } else if (value === Enum.ORDER_STATUS.DELIVERED) {
+          return resource().ENUM_ORDER_STATUS.delivered;
+        } else if (value === Enum.ORDER_STATUS.CANCELLED) {
+          return resource().ENUM_ORDER_STATUS.cancelled;
+        }
+        break;
+      case "DELIVERY_STATUS":
+        if (value === Enum.DELIVERY_STATUS.NOT_DELIVERY) {
+          return resource().ENUM_DELIVERY_STATUS.notDelivery;
+        }
+        else if (value === Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY) {
+          return resource().ENUM_DELIVERY_STATUS.wattingForDelivery;
+        } else if (value === Enum.DELIVERY_STATUS.RECEIVED_THE_GOODS) {
+          return resource().ENUM_DELIVERY_STATUS.receviedTheGoods;
+        }
+        break;
+      case "PAYMENT_STATUS":
+        if (value === Enum.PAYMENT_STATUS.UNPAID) {
+          return resource().ENUM_PAYMENT_STATUS.unpaid;
+        } else if (value === Enum.PAYMENT_STATUS.PAID) {
+          return this.resource.ENUM_PAYMENT_STATUS.paid;
+        }
+        break;
+      default:
+        return "";
+    }
+  },
+  formatOrderDate(value) {
+    var date = new Date(value);
+    // Chuẩn hóa giờ để hiển thị đúng định dạng 12 giờ
+    var hour = date.getHours() % 12 || 12; // Nếu giờ là 0 thì chuyển thành 12
+    var minute = date.getMinutes();
+
+    // Thêm số 0 đằng trước nếu cần
+    hour = hour < 10 ? "0" + hour : hour;
+    minute = minute < 10 ? "0" + minute : minute;
+
+    // Xác định AM hoặc PM
+    var ampm = date.getHours() >= 12 ? "SA" : "CH";
+
+    // Tạo chuỗi định dạng mong muốn
+    var formattedDate =
+      date.getDate() +
+      "/" +
+      (date.getMonth() + 1) +
+      "/" +
+      date.getFullYear() +
+      " " +
+      hour +
+      ":" +
+      minute +
+      " " +
+      ampm;
+
+    return formattedDate;
   },
 };
 

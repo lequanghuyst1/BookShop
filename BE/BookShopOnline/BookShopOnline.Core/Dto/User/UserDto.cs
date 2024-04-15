@@ -9,7 +9,6 @@ namespace BookShopOnline.Core.Dto.User
     public class UserDto
     {
         public Guid UserId { get; set; }
-        public Guid RoleId { get; set; }
         public Guid? CartId { get; set; }
 
         public string RoleName { get; set; }
@@ -20,7 +19,6 @@ namespace BookShopOnline.Core.Dto.User
         public int? Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public double? QuantityAmountPurched { get; set; }
-        public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }

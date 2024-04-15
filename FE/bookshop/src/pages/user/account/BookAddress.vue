@@ -294,8 +294,8 @@ export default {
   },
   computed: {
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo")
-        ? localStorageService.getItemEncodeFromLocalStorage("userInfo")
+      return localStorageService.getItemFromLocalStorage("userInfo")
+        ? localStorageService.getItemFromLocalStorage("userInfo")
         : {};
     },
     textFields: function () {

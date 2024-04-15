@@ -288,7 +288,7 @@ export default {
       },
     },
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+      return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
   methods: {

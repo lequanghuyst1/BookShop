@@ -132,8 +132,8 @@ export default {
   },
   mounted() {
     this.$refs[this.textFields.fullname.ref].focusInput();
-    this.user = localStorageService.getItemEncodeFromLocalStorage("userInfo")
-      ? localStorageService.getItemEncodeFromLocalStorage("userInfo")
+    this.user = localStorageService.getItemFromLocalStorage("userInfo")
+      ? localStorageService.getItemFromLocalStorage("userInfo")
       : {};
   },
   watch: {

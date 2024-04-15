@@ -7,6 +7,8 @@ import CategoryPage from "../pages/admin/category/CategoryPage.vue";
 import PulisherPage from "../pages/admin/publisher/PublisherPage.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import HomeAdminPage from "../pages/admin/home/Index.vue";
+import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
+import OrderDetailAdminPage from "@/pages/admin/order/OrderDetail.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
@@ -137,6 +139,19 @@ const routes = [
         path: "home",
         components: {
           ContentRouterView: HomeAdminPage,
+        },
+      },
+      {
+        path: "order-manegement",
+        components: {
+          ContentRouterView: OrderManegementPage,
+        },
+        children: [],
+      },
+      {
+        path: "order-manegement/:id",
+        components: {
+          ContentRouterView: OrderDetailAdminPage,
         },
       },
     ],

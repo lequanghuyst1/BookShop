@@ -55,13 +55,21 @@ const Resource = {
       },
     },
 
-    ORDER_STATUS: {
+    ENUM_ORDER_STATUS: {
       waitForConfirmation: "Chờ xác nhận",
       confirmed: "Đã xác nhận",
       shipping: "Đang giao hàng",
       delivered: "Đã giao hàng",
       cancelled: "Bị hủy",
-      
+    },
+    ENUM_DELIVERY_STATUS: {
+      notDelivery: "Chưa giao hàng",
+      wattingForDelivery: "Chờ lấy hàng",
+      receviedTheGoods: "Đã nhận hàng",
+    },
+    ENUM_PAYMENT_STATUS: {
+      unpaid: "Chưa thanh toán",
+      paid: "Đã thanh toán",
     },
   },
 };

@@ -496,7 +496,7 @@ export default {
   },
   computed: {
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+      return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
   methods: {

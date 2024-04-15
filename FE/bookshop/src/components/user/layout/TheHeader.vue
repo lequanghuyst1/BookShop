@@ -1,7 +1,10 @@
 <template>
-  <div class="topbar">
+  <div class="topbar" >
     <div class="container">
-      <div class="topbar-wrap d-lg-flex justify-content-between">
+      <div
+        v-if="this.isHeaderFixed === false"
+        class="topbar-wrap d-lg-flex justify-content-between"
+      >
         <!-- <div class="header__contact d-flex align-items-center">
           <div class="header-contact d-lg-flex flex-grow-1">
             <div class="item d-flex align-items-center">
@@ -48,8 +51,7 @@
     </div>
   </div>
 
-  <div class="layout-account"></div>
-  <div class="header">
+  <div class="header" :class="{ fixed: isHeaderFixed }">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center">
         <div class="header__logo me-5">
@@ -315,7 +317,9 @@
                 ></a>
               </div>
               <div style="border-top: 1px solid #f2f4f5">
-                <a class="fhs_center_left" href="http://localhost:8080/customer/order"
+                <a
+                  class="fhs_center_left"
+                  href="http://localhost:8080/customer/order"
                   ><span class="icon_bill_gray" style="margin-right: 8px"></span
                   ><span>Đơn hàng của tôi</span></a
                 >
@@ -450,6 +454,16 @@ export default {
         this.isShowDropDownAccount = false;
       }
     });
+    document.addEventListener("scroll", () => {
+      var scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollPosition > 60) {
+        // Khi cuộn dính sát top
+        this.isHeaderFixed = true;
+      } else {
+        this.isHeaderFixed = false;
+      }
+    });
   },
   beforeUnmount() {
     this.$emitter.off("getQuantityOfCart", this.getQuantityOfCart);
@@ -459,7 +473,7 @@ export default {
       return checkInfoTokensInStorage();
     },
     userInfo: () => {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo");
+      return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
   watch: {},
@@ -541,6 +555,7 @@ export default {
       isShowDropDownAccount: false,
       isShowWaringLogin: false,
       quantityOfCart: 0,
+      isHeaderFixed: false,
     };
   },
 };
@@ -652,6 +667,14 @@ export default {
   align-items: center;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 2px 5px #ebebeb;
+  position: relative;
+}
+.fixed {
+  position: fixed;
+  top: 0; /* Khoảng cách header cố định cách top */
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+  z-index: 5;
 }
 .header__logo img {
   width: 80%;

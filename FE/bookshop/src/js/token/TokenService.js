@@ -30,7 +30,7 @@ export const setInfoTokensToStorage = (accessToken, refreshToken, userInfo) => {
   try {
     localStorageService.setItemToLocalStorage("jwtToken", accessToken);
     localStorageService.setItemToLocalStorage("refreshToken", refreshToken);
-    localStorageService.setItemEncodeToLocalStorage("userInfo", userInfo);
+    localStorageService.setItemToLocalStorage("userInfo", userInfo);
   } catch (error) {
     console.log(error);
   }

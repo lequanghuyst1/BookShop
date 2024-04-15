@@ -19,5 +19,10 @@ const menu = [
         icon: "fa-solid fa-industry",
         path: "publisher-management",
     },
+    {
+        title: "Quản lý đơn hàng",
+        icon: "fa-solid fa-file-invoice",
+        path: "order-manegement",
+    },
 ]
 export default menu;

@@ -461,7 +461,7 @@ export default {
       order: {
         OrderStatus: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
         DeliveryMethod: this.$Enum.DELIVERY_METHOD.OCD,
-        DeliveryStatus: this.$Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY,
+        DeliveryStatus: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
         PaymentMethod: this.$Enum.PAYMENT_METHOD.CASH_PAYMENT,
         PaymentStatus: this.$Enum.PAYMENT_STATUS.UNPAID,
       },
@@ -469,8 +469,8 @@ export default {
   },
   computed: {
     userInfo: function () {
-      return localStorageService.getItemEncodeFromLocalStorage("userInfo")
-        ? localStorageService.getItemEncodeFromLocalStorage("userInfo")
+      return localStorageService.getItemFromLocalStorage("userInfo")
+        ? localStorageService.getItemFromLocalStorage("userInfo")
         : {};
     },
     textFields: function () {
@@ -537,6 +537,7 @@ export default {
         this.order.TotalAmount = this.$helper.formatMoneySendApi(
           this.totalAmountCart
         );
+        
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
 

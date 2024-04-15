@@ -23,14 +23,15 @@ const Enum = {
   },
   /**Tình trạng giao hàng */
   DELIVERY_STATUS: {
-    WAITTING_FOR_DELIVERY: 0,
-    RECEIVED_THE_GOODS: 1,
+    NOT_DELIVERY: 0,
+    WAITTING_FOR_DELIVERY: 1,
+    RECEIVED_THE_GOODS: 2,
   },
   /**Hình thức giao hàng */
   DELIVERY_METHOD: {
     OCD: 0,
   },
-  
+
   /**Tình trạng thanh toán */
   PAYMENT_STATUS: {
     UNPAID: 0,
