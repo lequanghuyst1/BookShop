@@ -24,9 +24,22 @@ namespace BookShopOnline.Core.Services
             _bookRepository = bookRepository;
         }
 
+        public async Task<PagingEntity<BookDto>> FilterAsync(int pageSize, int pageNumber, int sortType)
+        {
+            var res = await _bookRepository.FilterAsync(pageSize, pageNumber, sortType);
+            var pagingEntityDto = new PagingEntity<BookDto>
+            {
+                TotalPage = res.TotalPage,
+                TotalRecord = res.TotalRecord,
+                Data = res.Data.Select(item => base.MapEntityToDto(item))
+            };
+            return pagingEntityDto;
+
+        }
+
         public async Task<IEnumerable<BookDto>> GetByCategorySlugAsync(string categorySlug)
         {
-            var books = await _bookRepository.GetByCategoryIdAsync(categorySlug);
+            var books = await _bookRepository.GetByCategorySlugAsync(categorySlug);
             var booksDto = books.Select(item => base.MapEntityToDto(item));
             return booksDto;
         }

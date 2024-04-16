@@ -689,7 +689,9 @@
                       </div>
                       <div>
                         <span class="orderHs-price-old"
-                          ><span class="price">119.000</span> đ</span
+                          ><span class="price">{{
+                          this.$helper.formatMoney(orderDetail.OriginalPrice)
+                        }}</span> đ</span
                         >
                       </div>
                     </div>

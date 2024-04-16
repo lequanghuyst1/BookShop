@@ -34,14 +34,26 @@ const TEXT_FIELD = {
           rule: [],
         },
       },
-      price: {
-        name: "Price",
-        label: "Giá",
-        ref: "refPrice",
+
+      originalPrice: {
+        name: "OriginalPrice",
+        label: "Giá gốc",
+        ref: "refOriginalPrice",
         placeholder: "",
         rules: {
           lengthMax: 20,
-          required: true,
+          required: false,
+          rule: ["number"],
+        },
+      },
+      discount: {
+        name: "Discount",
+        label: "Giảm giá(%)",
+        ref: "refDiscount",
+        placeholder: "",
+        rules: {
+          lengthMax: 20,
+          required: false,
           rule: ["number"],
         },
       },
@@ -52,7 +64,7 @@ const TEXT_FIELD = {
         placeholder: "",
         rules: {
           lengthMax: 20,
-          required: true,
+          required: false,
           rule: ["number"],
         },
       },
@@ -85,8 +97,8 @@ const TEXT_FIELD = {
         placeholder: "",
         rules: {
           lengthMax: 50,
-          required: true,
-          rule: ['number'],
+          required: false,
+          rule: ["number"],
         },
       },
     },
@@ -147,7 +159,6 @@ const TEXT_FIELD = {
           required: true,
           rule: [],
         },
-        
       },
       phoneNumber: {
         name: "PhoneNumber",

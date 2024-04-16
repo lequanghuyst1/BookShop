@@ -20,16 +20,22 @@ namespace BookShopOnline.Core.Entitites
         [Required(ErrorMessage = "Tên sách không được để trống.")]
         public string BookName { get; set; }
 
-        [Required(ErrorMessage = "Giá sách không được để trống")]
+      
         [Range(0, int.MaxValue, ErrorMessage = "Giá sách nhập vào phải là số.")]
-        public double Price { get; set; }
+        public double? Price { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Giá sách nhập vào phải là số.")]
+
+        public double? OriginalPrice { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Giá sách nhập vào phải là số.")]
+
+        public int? Discount { get; set; }
 
         [Required(ErrorMessage = "Tác giả không được để trống")]
         public string Author { get; set; }
 
         [Required(ErrorMessage = "Số lượng nhập không được để trống")]
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng nhập vào phải là số.")]
-        public int QuantityImported { get; set; }
+        public int? QuantityImported { get; set; }
         public string? Description { get; set; }
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
@@ -37,7 +43,6 @@ namespace BookShopOnline.Core.Entitites
         public int? NumberOfPage { get; set; }
         public string ImagePath { get; set; }
         public double? Heavy { get; set; }
-        public string? Image { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
         public string? CategoryName { get; set; }

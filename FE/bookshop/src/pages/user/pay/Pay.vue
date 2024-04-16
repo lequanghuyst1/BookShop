@@ -332,7 +332,10 @@
                       {{ this.$helper.formatMoney(item.Price) }}đ
                     </p>
                     <p class="product__price--through">
-                      {{ this.$helper.formatMoney(item.Price) }}đ
+                      {{
+                        this.$helper.formatMoney(item.OriginalPrice)
+                      }}
+                      đ
                     </p>
                   </div>
                   <div class="product__quantity">
@@ -537,7 +540,7 @@ export default {
         this.order.TotalAmount = this.$helper.formatMoneySendApi(
           this.totalAmountCart
         );
-        
+
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
 

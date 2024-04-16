@@ -41,7 +41,7 @@
               <span
                 itemprop="item"
                 content="https://www.vinabook.com/collections/sach-van-hoc-nuoc-ngoai"
-                ><span itemprop="name">Sách Văn Học Nước Ngoài</span></span
+                ><span itemprop="name">{{ productInfo.Category }}</span></span
               >
               <meta itemprop="position" content="3" />
             </li>
@@ -94,9 +94,13 @@
                       {{ this.$helper.formatMoney(productInfo.Price) }}đ</span
                     >
                     <span class="product-price-cover">
-                      {{ productInfo.Price }}</span
+                      {{
+                        this.$helper.formatMoney(productInfo.OriginalPrice)
+                      }}đ</span
                     >
-                    <span class="product-discount">-10%</span>
+                    <span v-show="productInfo.Discount" class="product-discount"
+                      >-{{ productInfo.Discount }}%</span
+                    >
                   </div>
                   <div class="policy-return d-flex">
                     <p>Chính sách đổi trả</p>
@@ -245,12 +249,12 @@
                 </h3>
                 <div class="product-price d-flex flex-wrap">
                   <div class="product-pirce--discount me-2">
-                    {{ productInfo.Price }}
+                    {{ this.$helper.formatMoney(productInfo.Price) }} đ
                   </div>
                   <div
                     class="product-pirce--original text-decoration-line-through"
                   >
-                    79,000đ
+                    {{ this.$helper.formatMoney(productInfo.OriginalPrice) }}đ
                   </div>
                 </div>
               </div>

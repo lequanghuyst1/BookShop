@@ -22,6 +22,8 @@ namespace BookShopOnline.Core.Dto
         public string BookName { get; set; }
         public string ImagePath { get; set; }
         public double Price { get; set; }
+        public double? OriginalPrice { get; set; }
+        public int? Discount { get; set; }
         public string Author { get; set; }
         public string? Description { get; set; }
         public DateTime? PublicationDate { get; set; }

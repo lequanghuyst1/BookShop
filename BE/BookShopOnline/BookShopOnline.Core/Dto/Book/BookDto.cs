@@ -17,11 +17,12 @@ namespace BookShopOnline.Core.Dto.Book
         public string ImagePath { get; set; }
         public string Author { get; set; }
         public double? Price { get; set; }
+        public double? OriginalPrice { get; set; }
+        public int? Discount { get; set; }
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
         public int? NumberOfPage { get; set; }
         public double? Heavy { get; set; }
-        public string? Image { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
         public string? CategoryName { get; set; }

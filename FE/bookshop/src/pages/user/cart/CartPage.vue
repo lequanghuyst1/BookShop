@@ -89,7 +89,7 @@
                           <div class="fhsItem-price-old">
                             <span class="price"
                               >{{
-                                this.$helper.formatMoney(item.Price)
+                                this.$helper.formatMoney(item.OriginalPrice)
                               }}
                               đ</span
                             >
@@ -340,6 +340,7 @@ export default {
     async handleOnIncreaseQuantity(item) {
       item.Quantity++;
       await this.handleOnEdit(item);
+
     },
 
     /**
@@ -360,7 +361,6 @@ export default {
      * @author LQHUY(11/04/2024)
      */
     async handleOnEdit(item) {
-      this.$emitter.emit("toggleShowLoading", true);
       try {
         //gán 1 số giá trị cho item
         item.CartId = this.userInfo.CartId;
@@ -377,7 +377,7 @@ export default {
           //gọi hàm update lại tổng số lượng sản phẩm trong cart
           this.$emitter.emit("getQuantityOfCart");
           this.getQuantityOfCart();
-          this.$emitter.emit("toggleShowLoading", false, 200);
+          this.calculatorTotalAmountCart();
         }
       } catch (error) {
         console.log(error);

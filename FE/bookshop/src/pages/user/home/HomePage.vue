@@ -22,8 +22,7 @@
           >
             <div class="product-item">
               <div class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <a :href="'product/' + item.BookSlug" class="d-block">
+                <a :href="'http://localhost:8080/' + item.BookSlug" class="d-block">
                   <img
                     :src="
                       item.ImagePath
@@ -35,13 +34,16 @@
                 </a>
                 <div class="group-button">
                   <button class="btn-action button-add-like">
-                      <i class="fa-solid fa-heart"></i>
+                    <i class="fa-solid fa-heart"></i>
                   </button>
-                  <button @click="handleOnAdd(item)" class="btn-action button-add-cart">
-                      <i class="fa-solid fa-cart-plus"></i>
+                  <button
+                    @click="handleOnAdd(item)"
+                    class="btn-action button-add-cart"
+                  >
+                    <i class="fa-solid fa-cart-plus"></i>
                   </button>
                   <button class="btn-action button-detail">
-                      <i class="fa-solid fa-eye"></i>
+                    <i class="fa-solid fa-eye"></i>
                   </button>
                 </div>
               </div>
@@ -52,13 +54,18 @@
                   </a>
                 </h3>
                 <div class="product-price">
-                  <div class="product-pirce--discount me-2">
-                    {{ this.$helper.formatMoney(item.Price) }}đ
+                  <div class="group-price d-flex align-items-center">
+                    <div class="product-pirce--discount me-2">
+                      {{ this.$helper.formatMoney(item.Price) }}đ
+                    </div>
+                    <div v-if="item.Discount" class="discount-percent">
+                      - {{ item.Discount }}%
+                    </div>
                   </div>
                   <div
                     class="product-pirce--original text-decoration-line-through"
                   >
-                    79,000đ
+                    {{ this.$helper.formatMoney(item.OriginalPrice) }}đ
                   </div>
                 </div>
                 <div class="product-quantity-sold">
@@ -162,6 +169,5 @@ export default {
   color: #ec8000;
 }
 .tab-content {
-  
 }
 </style>

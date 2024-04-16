@@ -106,13 +106,13 @@
                   ></MInput>
                 </div>
                 <div class="col l-3">
-                  <MInput
-                    :ref="textFields.price.ref"
-                    :label="textFields.price.label"
-                    :rules="textFields.price.rules"
-                    v-model="book.Price"
-                  ></MInput>
-                </div>
+              <MInput
+                :ref="textFields.quantityImported.ref"
+                :label="textFields.quantityImported.label"
+                :rules="textFields.quantityImported.rules"
+                v-model="book.QuantityImported"
+              ></MInput>
+            </div>
                 <div class="col l-3">
                   <MInput
                     ref="Size"
@@ -133,10 +133,18 @@
           <div class="row">
             <div class="col l-3">
               <MInput
-                :ref="textFields.quantityImported.ref"
-                :label="textFields.quantityImported.label"
-                :rules="textFields.quantityImported.rules"
-                v-model="book.QuantityImported"
+                :ref="textFields.originalPrice.ref"
+                :label="textFields.originalPrice.label"
+                :rules="textFields.originalPrice.rules"
+                v-model="book.OriginalPrice"
+              ></MInput>
+            </div>
+            <div class="col l-3">
+              <MInput
+                :ref="textFields.discount.ref"
+                :label="textFields.discount.label"
+                :rules="textFields.discount.rules"
+                v-model="book.Discount"
               ></MInput>
             </div>
             <div class="col l-3">

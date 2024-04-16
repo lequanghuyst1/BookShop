@@ -51,7 +51,7 @@ namespace BookShopOnline.Core.Services
             //lấy ra giỏ hàng của người dùng theo cartId
             var cartItems = await _unitOfWork.CartItems.GetByCartIdAsync(cartItem.CartId);
 
-            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của người dùng hay chưa
+            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của tài khoản đó hay chưa
             var cartItemExit = cartItems.FirstOrDefault(item => item.BookId == cartItem.BookId);
 
             //Nếu có thì cập nhật lại số lượng
@@ -67,8 +67,8 @@ namespace BookShopOnline.Core.Services
                 _unitOfWork.Rollback();
                 return 0;
             }
-            cartItem.CartItemId = Guid.NewGuid();
             //Chưa có thì thêm mới
+            cartItem.CartItemId = Guid.NewGuid();
             var res = await _unitOfWork.CartItems.InsertAsync(cartItem);
             if (res > 0)
             {
@@ -84,8 +84,11 @@ namespace BookShopOnline.Core.Services
         {
             _unitOfWork.BeginTransaction();
             var cartItem = JsonConvert.DeserializeObject<CartItem>(dataJson);
-            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng hay chưa
-            var cartItemExit = await _unitOfWork.CartItems.CheckBookExistInCartItemAsync(cartItem.BookId);
+            //lấy ra giỏ hàng của người dùng theo cartId
+            var cartItems = await _unitOfWork.CartItems.GetByCartIdAsync(cartItem.CartId);
+
+            //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của tài khoản đó hay chưa
+            var cartItemExit = cartItems.FirstOrDefault(item => item.BookId == cartItem.BookId);
 
             //Nếu có thì cập nhật
             if (cartItemExit != null)

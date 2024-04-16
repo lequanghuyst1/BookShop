@@ -1,7 +1,7 @@
 .m-toast-box{
     position: fixed;
     right: 16px;
-    top: 16px;
+    top: 32px;
     z-index: 15;
 }
 .m-toast + .m-toast{

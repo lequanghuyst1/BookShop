@@ -21,8 +21,32 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<PagingEntity<Book>> FilterAsync(int pageSize, int pageNumber, int sortType)
+        {
+            var sql = $"Proc_Book_Filter";
+
+            PagingEntity<Book> pagingEntity = new PagingEntity<Book>();
+            DynamicParameters parameters = new DynamicParameters();
+
+            parameters.Add("@pageSize", pageSize);
+            parameters.Add("@pageNumber", pageNumber);
+            parameters.Add("@sortType", sortType);
+
+            parameters.Add("@totalRecord", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+            parameters.Add("@totalPage", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+            var res = await _dbContext.Connection.QueryAsync<Book>(sql, parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            pagingEntity.Data = res;
+            pagingEntity.TotalRecord = parameters.Get<int>("@totalRecord");
+            pagingEntity.TotalPage = parameters.Get<int>("@totalPage");
+
+            return pagingEntity;
+        }
+
         public Task<IEnumerable<Book>> GetByCategoryIdAsync(string id)
         {
+            
             throw new NotImplementedException();
         }
 
