@@ -20,7 +20,7 @@
 }
 
 .m-textfield {
-  height: 36px;
+  height: 36px !important;
   border: 1px solid #e0e0e0;
   background-color: #ffffff;
   width: 100%;

@@ -145,7 +145,6 @@ namespace BookShopOnline.Infrastructure.Repository
 
         public Task<IEnumerable<Book>> GetByCategoryIdAsync(string id)
         {
-
             throw new NotImplementedException();
         }
 
