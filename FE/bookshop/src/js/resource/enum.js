@@ -46,6 +46,11 @@ const Enum = {
     MONO_WALLET: 3,
     SHOPPEPAY_WALLET: 4,
   },
+  SORT_TYPE: {
+    NULL: 0,
+    ASC: 1, 
+    DESC: 2,
+  }
 };
 
 export default Enum;

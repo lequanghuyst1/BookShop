@@ -30,7 +30,6 @@ namespace BookShopOnline.Core.Entitites
         public string? Size { get; set; }
         public int? NumberOfPage { get; set; }
         public double? Heavy { get; set; }
-        public string? Image { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
         public string? CategoryName { get; set; }

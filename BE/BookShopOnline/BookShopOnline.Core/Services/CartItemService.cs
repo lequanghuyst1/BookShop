@@ -58,7 +58,7 @@ namespace BookShopOnline.Core.Services
             if (cartItemExit != null)
             {
                 cartItem.Quantity = cartItem.Quantity + cartItemExit.Quantity;
-                var result = await _unitOfWork.CartItems.UpdateAsync(cartItem.CartId, cartItem);
+                var result = await _unitOfWork.CartItems.UpdateAsync(cartItemExit.CartItemId, cartItem);
                 if (result > 0)
                 {
                     _unitOfWork.Commit();
@@ -67,6 +67,7 @@ namespace BookShopOnline.Core.Services
                 _unitOfWork.Rollback();
                 return 0;
             }
+
             //Chưa có thì thêm mới
             cartItem.CartItemId = Guid.NewGuid();
             var res = await _unitOfWork.CartItems.InsertAsync(cartItem);

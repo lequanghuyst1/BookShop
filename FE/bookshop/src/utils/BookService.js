@@ -10,7 +10,15 @@ class BookService extends BaseService {
     return res;
   }
   async getFilter(data) {
-    const res = await this.baseAxios.get(`${this.baseUrl}/Filter`,  data);
+    const res = await this.baseAxios.post(`${this.baseUrl}/Filter`, data);
+    return res;
+  }
+  async getAuthor(data) {
+    const res = await this.baseAxios.get(`${this.baseUrl}/GetAuthor`, data);
+    return res;
+  }
+  async getPublisher(data) {
+    const res = await this.baseAxios.get(`${this.baseUrl}/GetPublisher`, data);
     return res;
   }
 }

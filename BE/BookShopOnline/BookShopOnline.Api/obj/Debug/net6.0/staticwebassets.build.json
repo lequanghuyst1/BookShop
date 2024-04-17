@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8tVXlYuy4zeWT+THlY8d4NYWsAbSwAqdFGFEejpBHGA=",
+  "Hash": "Wk6jPGhpDLxc8GOVpdrshf5u9R5lXBtUWlChUrEf2R0=",
   "Source": "BookShopOnline.Api",
   "BasePath": "_content/BookShopOnline.Api",
   "Mode": "Default",
@@ -338,6 +338,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\tbph---_aub_a-tr_c600.jpg"
+    },
+    {
+      "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\tri-nho-minh-man-bia-truoc.jpg",
+      "SourceId": "BookShopOnline.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\",
+      "BasePath": "_content/BookShopOnline.Api",
+      "RelativePath": "images/tri-nho-minh-man-bia-truoc.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\tri-nho-minh-man-bia-truoc.jpg"
     },
     {
       "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\upload-image.png",

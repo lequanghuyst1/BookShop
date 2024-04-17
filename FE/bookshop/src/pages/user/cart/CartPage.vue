@@ -368,7 +368,7 @@ export default {
         const formData = new FormData();
         formData.append("dataJson", JSON.stringify(item));
         //gọi api update
-        const res = await cartItemService.put(item.CartId, formData);
+        const res = await cartItemService.put(item.CartItemId, formData);
         if (res.status === 200) {
           //update số lượng vào local
           cartLocalStorageService.updateQuantityItemToCart(item);

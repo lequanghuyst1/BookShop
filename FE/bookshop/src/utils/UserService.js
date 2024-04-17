@@ -4,7 +4,7 @@ class UserService extends BaseService {
     super("Users");
   }
   /**
-   * Thực hiên đăng ký người dùng
+   * Thực hiện đăng ký người dùng
    * @param {object} data
    *  @returns {Promise} Promise chứa kết quả từ việc gửi yêu cầu POST
    * @throws {Error} Nếu có lỗi xảy ra trong quá trình gửi yêu cầu POST

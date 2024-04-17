@@ -5,6 +5,7 @@ using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
+using BookShopOnline.Core.Model;
 using BookShopOnline.Core.Resources;
 using BookShopOnline.Core.Services.Base;
 using System;
@@ -24,9 +25,9 @@ namespace BookShopOnline.Core.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<PagingEntity<BookDto>> FilterAsync(int pageSize, int pageNumber, int sortType)
+        public async Task<PagingEntity<BookDto>> FilterAsync(Filter filter)
         {
-            var res = await _bookRepository.FilterAsync(pageSize, pageNumber, sortType);
+            var res = await _bookRepository.FilterAsync(filter);
             var pagingEntityDto = new PagingEntity<BookDto>
             {
                 TotalPage = res.TotalPage,

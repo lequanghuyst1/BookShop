@@ -77,4 +77,19 @@ namespace BookShopOnline.Core.Enums
         UNPAID = 0,
         PAID = 1,
     }
+    public enum SortType
+    {
+        /// <summary>
+        /// Sắp xếp tăng dần
+        /// </summary>
+        ASC = 1,
+        /// <summary>
+        /// Sắp xếp giảm dần
+        /// </summary>
+        DESC = 2,
+        /// <summary>
+        /// Không sắp xếp
+        /// </summary>
+        NULL = 0,
+    }
 }

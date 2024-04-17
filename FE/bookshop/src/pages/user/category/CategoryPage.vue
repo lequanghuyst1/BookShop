@@ -14,7 +14,7 @@
               itemtype="http://schema.org/ListItem"
               class="d-flex align-items-center"
             >
-              <i style="color: #417505" class="fa-solid fa-house me-1"></i>
+              <i style="color: #ff5653" class="fa-solid fa-house me-1"></i>
               <a href="/" target="_self" itemprop="item"
                 ><span itemprop="name">Trang chủ</span></a
               >
@@ -41,7 +41,7 @@
               <span
                 itemprop="item"
                 content="https://www.vinabook.com/collections/sach-van-hoc-nuoc-ngoai"
-                ><span itemprop="name">Sách Văn Học Nước Ngoài</span></span
+                ><span itemprop="name">{{ category.CategoryName }}</span></span
               >
               <meta itemprop="position" content="3" />
             </li>
@@ -60,27 +60,22 @@
                 <div class="group-filter" aria-expanded="false">
                   <div class="layer-subtitle d-flex justify-content-between">
                     <span>Nhà cung cấp</span>
-                    <div class="icon-controll">
-                      <i class="icon-up fa-solid fa-chevron-up"></i>
-                      <i class="icon-down fa-solid fa-chevron-down"></i>
-                    </div>
                   </div>
                   <div class="layer-content">
                     <ul class="check-box-list">
                       <li
-                        @click="(e) => e.stopPropagation()"
                         class="check-box-item"
+                        v-for="(item, index) in publishers"
+                        :key="index"
+                        @change="handleChangePublisher(item, index)"
                       >
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
+                        <input
+                          v-model="publishersChecked[index]"
+                          type="checkbox"
+                          :value="item"
+                          :id="'publisher' + index"
+                        />
+                        <label :for="'publisher' + index">{{ item }}</label>
                       </li>
                     </ul>
                   </div>
@@ -88,29 +83,27 @@
                 <div class="group-filter" aria-expanded="false">
                   <div class="layer-subtitle d-flex justify-content-between">
                     <span>Tác giả</span>
-                    <div class="icon-controll">
-                      <i class="icon-up fa-solid fa-chevron-up"></i>
-                      <i class="icon-down fa-solid fa-chevron-down"></i>
-                    </div>
                   </div>
                   <div class="layer-content">
                     <ul class="check-box-list">
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Nhã Nam</label>
+                      <li
+                        v-for="(item, index) in authors"
+                        :key="item.BookId"
+                        class="check-box-item"
+                      >
+                        <input
+                          :id="'author' + index"
+                          v-model="authorsChecked[index]"
+                          type="checkbox"
+                          @change="hanldeChangeAuthor(item, index)"
+                          :value="item"
+                        />
+                        <label :for="'author' + index">{{ item }}</label>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div class="group-filter" aria-expanded="false">
+                <!-- <div class="group-filter" aria-expanded="false">
                   <div class="layer-subtitle d-flex justify-content-between">
                     <span>Loại sách</span>
                     <div class="icon-controll">
@@ -126,28 +119,26 @@
                       </li>
                     </ul>
                   </div>
-                </div>
-                <div class="group-filter" aria-expanded="false">
+                </div> -->
+                <div class="group-filter">
                   <div class="layer-subtitle d-flex justify-content-between">
                     <span>Giá sản phẩm</span>
-                    <div class="icon-controll">
-                      <i class="icon-up fa-solid fa-chevron-up"></i>
-                      <i class="icon-down fa-solid fa-chevron-down"></i>
-                    </div>
                   </div>
                   <div class="layer-content">
                     <ul class="check-box-list">
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">Dưới 500,000đ</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">500,000đ - 1,000,000đ</label>
-                      </li>
-                      <li class="check-box-item">
-                        <input type="checkbox" value="Nhã Đam" />
-                        <label for="">1,000,000đ - 1,500,000</label>
+                      <li
+                        class="check-box-item"
+                        v-for="(range, index) in priceRanges"
+                        :key="index"
+                      >
+                        <input
+                          type="checkbox"
+                          v-model="range.checked"
+                          @change="handleChangePriceRange(range)"
+                          :value="range"
+                          :id="'range-' + index"
+                        />
+                        <label :for="'range-' + index">{{ range.label }}</label>
                       </li>
                     </ul>
                   </div>
@@ -157,30 +148,87 @@
           </div>
         </div>
         <div class="col-9">
-          <div class="filter-condition">
-            <select v-model="filterData.sortType" name="" id="">
-              <option value="1">Mới nhất</option>
-              <option value="2">Cũ nhất</option>
-              <option value="3">Tên: Z-A</option>
-              <option value="4">Tên: A-Z</option>
-              <option value="5">Giá: Giảm dần</option>
-              <option value="6">Giá: Tăng dần</option>
-              <option value="7">Bán chạy nhất</option>
-              <option value="8">Tồn kho: Giảm dần</option>
-            </select>
-            <select name="" v-model="filterData.pageSize" id="">
-              <option value="12">12 sản phẩm</option>
-              <option value="24">24 sản phẩm</option>
-              <option value="48">24 sản phẩm</option>
-            </select>
-          </div>
-
           <div class="category-tab-product">
             <div class="tab-heading">
               <h4>Sách mới nổi bật</h4>
             </div>
+
             <div class="tab-content">
+              <div
+                v-if="
+                  this.filterData.rangeColumn.length > 0 ||
+                  this.filterData.filterInput.length > 0
+                "
+                class="filter-condition"
+              >
+                <ul>
+                  <p
+                    style="
+                      font-size: 14px;
+                      margin-right: 12px !important;
+                      display: inline-block;
+                    "
+                  >
+                    Lọc theo:
+                  </p>
+                  <li
+                    v-for="(item, index) in this.filterData.rangeColumn"
+                    :key="index"
+                  >
+                    <span>Giá: {{ item.label }}</span>
+                    <div class="icon-close">
+                      <i class="fa-solid fa-xmark"></i>
+                    </div>
+                  </li>
+                  <li
+                    v-for="(item, index) in this.filterData.filterInput"
+                    :key="index"
+                  >
+                    <span
+                      >{{
+                        item.ColumnName === "Author"
+                          ? "Tác giả"
+                          : "Nhà xuất bản"
+                      }}: {{ item.Value }}</span
+                    >
+                    <div class="icon-close">
+                      <i class="fa-solid fa-xmark"></i>
+                    </div>
+                  </li>
+                  <li
+                    @click="handleRemoveAllFilter"
+                    class="delete-all-category"
+                  >
+                    <a><div>Xóa bộ lọc</div></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="filter-wrap">
+                <p class="filter-title">Sắp xếp theo:</p>
+                <select v-model="filterData.sortColumn" name="" id="">
+                  <option
+                    v-for="(option, index) in sortOptions"
+                    :key="index"
+                    :value="option"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+                <select name="" v-model="filterData.pageSize" id="">
+                  <option value="12">12 sản phẩm</option>
+                  <option value="24">24 sản phẩm</option>
+                  <option value="48">48 sản phẩm</option>
+                </select>
+              </div>
               <div class="row">
+                <div v-if="checkDataIsValidConditions" class="col-12 mt-1">
+                  <p class="note-msg" style="">
+                    Không có sản phẩm phù hợp với từ khóa tìm kiếm của bạn.
+                  </p>
+                </div>
+                <div v-if="checkDataIsNotEmpty" class="col-12 mt-1">
+                  <p class="note-msg" style="">Hiện chưa có sản phẩm nào trong danh mục này.</p>
+                </div>
                 <div v-for="item in products" :key="item.BookId" class="col-3">
                   <div class="product-item">
                     <div class="product-image d-block text-center">
@@ -241,7 +289,7 @@
                   </div>
                 </div>
               </div>
-              <div id="pages" class="paging">
+              <div v-if="this.products.length > 0" id="pages" class="paging">
                 <div
                   v-show="this.filterData.pageNumber !== 1"
                   class="paging-button btn-prev"
@@ -270,7 +318,10 @@
                   </li>
                 </ol>
                 <div
-                  v-show="this.filterData.pageNumber !== this.totalPage"
+                  v-show="
+                    this.filterData.pageNumber !== this.totalPage &&
+                    this.products.length > 0
+                  "
                   class="paging-button btn-next"
                   @click="this.filterData.pageNumber++"
                 >
@@ -291,38 +342,150 @@ import categoryService from "@/utils/CategoryService";
 export default {
   name: "CategoryUserPage",
   mounted() {
-    this.isShowValueOfGroupFilter();
     this.getCategoryData();
-    this.getFilterData();
+    this.getAuthorData();
+    this.getPublisherData();
+    this.handleFilterData();
+    // this.getProductsData();
   },
   data() {
     return {
+      //biến lưu trữ thônh tin chi tiết catgory
       category: {},
+      //biến lưu trữ danh sách product
       products: [],
+      //biến lưu trữ tổng số bản ghi
       totalPage: 0,
-      filterData: {
-        pageSize: 2,
-        pageNumber: 1,
-        sortType: 1,
-      },
+      //biến lưu trữ phân trang tối đa được hiện
       maxPages: 4,
+      //biến lưu trữ danh sách các tác giả được chọn
+      authorsChecked: [],
+      //biến lưu trữ danh sách các nhà xuất bản được chọn
+      publishersChecked: [],
+      //biến lưu trữ danh sách các tác giả
+      authors: [],
+      //biến lưu trữ danh sách các nhà xuất bản
+      publishers: [],
+      //param filter dữ liệu
+      filterData: {
+        pageSize: 24,
+        pageNumber: 1,
+        sortColumn: {
+          columnName: "CreatedDate",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Mới nhất",
+        },
+        rangeColumn: [],
+        filterInput: [],
+      },
+      //biến lưu trữ danh sách các điều kiện tăng dần hoặc giảm dần
+      sortOptions: [
+        {
+          columnName: "CreatedDate",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Mới nhất",
+        },
+        {
+          columnName: "CreatedDate",
+          type: this.$Enum.SORT_TYPE.ASC,
+          label: "Cũ nhất",
+        },
+        {
+          columnName: "BookName",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Tên: Z-A",
+        },
+        {
+          columnName: "BookName",
+          type: this.$Enum.SORT_TYPE.ASC,
+          label: "Tên: A-Z",
+        },
+        {
+          columnName: "Price",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Giá: Giảm dần",
+        },
+        {
+          columnName: "Price",
+          type: this.$Enum.SORT_TYPE.ASC,
+          label: "Giá: Tăng dần",
+        },
+        {
+          columnName: "QuantitySold",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Bán chạy nhất",
+        },
+        {
+          columnName: "QuantityInStock",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Tồn kho: Giảm dần",
+        },
+      ],
+      //biến lưu trữ danh sách khoảng giá lọc
+      priceRanges: [
+        {
+          ColumnName: "Price",
+          MinValue: 0,
+          MaxValue: 150000,
+          checked: false,
+          label: "0đ - 150.000đ",
+        },
+        {
+          ColumnName: "Price",
+          MinValue: 150000,
+          MaxValue: 300000,
+          checked: false,
+          label: "150.000đ - 300.000đ",
+        },
+        {
+          ColumnName: "Price",
+          MinValue: 300000,
+          MaxValue: 500000,
+          checked: false,
+          label: "300.000đ - 500.000đ",
+        },
+        {
+          ColumnName: "Price",
+          MinValue: 500000,
+          MaxValue: 700000,
+          checked: false,
+          label: "500.000đ - 700.000đ",
+        },
+        {
+          ColumnName: "Price",
+          MinValue: 700000,
+          checked: false,
+          label: "700.000đ trở lên",
+        },
+      ],
     };
   },
   watch: {
-    "filterData.sortType": function () {
-      this.getFilterData();
+    //theo dõi biến sortColumn
+    "filterData.sortColumn": function () {
+      this.handleFilterData();
     },
+    //theo dõi biến pageSize
     "filterData.pageSize": function () {
-      this.getFilterData();
+      this.handleFilterData();
     },
+    //theo dõi biến pageNumber
     "filterData.pageNumber": function () {
-      this.getFilterData();
+      this.handleFilterData();
+    },
+    //theo dõi biến rangeColumn
+    "filterData.rangeColumn": function () {
+      this.handleFilterData();
+    },
+    //theo dõi biến filterInput
+    "filterData.filterInput": function () {
+      this.handleFilterData();
     },
   },
   computed: {
     /**
      * Xét paging dạng ...
-     * Author : LQHUY
+     * Author : LQHUY(16/04/2024)
      */
     pages() {
       const middle = Math.floor(this.maxPages / 2);
@@ -358,21 +521,27 @@ export default {
 
       return pages;
     },
+    //biến kiểm tra có giá trị nào thỏa mãn kiều kiện lọc không
+    checkDataIsValidConditions: function () {
+      return (
+        (this.filterData.filterInput.length > 0 &&
+          this.products.length === 0) ||
+        (this.filterData.rangeColumn.length > 0 && this.products.length === 0)
+      );
+    },
+    checkDataIsNotEmpty() {
+      return (
+        (this.filterData.filterInput.length === 0 &&
+          this.products.length === 0) ||
+        (this.filterData.rangeColumn.length === 0 && this.products.length === 0)
+      );
+    },
   },
   methods: {
-    isShowValueOfGroupFilter() {
-      const filter = document.querySelectorAll(".group-filter");
-      filter.forEach((item) => {
-        item.onclick = () => {
-          let isOpen = item.getAttribute("aria-expanded");
-          if (isOpen === "false") {
-            item.setAttribute("aria-expanded", "true");
-          } else {
-            item.setAttribute("aria-expanded", "false");
-          }
-        };
-      });
-    },
+    /**
+     * Hàm thực hiện lấy dữ liệu của category theo CategorySlug
+     * @author LQHUY(16/04/2024)
+     */
     async getCategoryData() {
       try {
         const res = await categoryService.getBySlug(this.$route.params.slug);
@@ -383,38 +552,266 @@ export default {
         console.log(error);
       }
     },
-    async getProductsData() {
+
+    /**
+     * Hàm thực hiện lấy danh sách các tác giả của product theo CategorySlug
+     * @author LQHUY(16/04/2024)
+     */
+    async getAuthorData() {
       try {
-        const res = await bookService.getByCategorySlug(
-          this.$route.params.slug
-        );
+        const params = {
+          categorySlug: this.$route.params.slug,
+        };
+        const res = await bookService.getAuthor({ params });
         if (res.status === 200) {
-          this.products = res.data;
+          this.authors = res.data;
         }
       } catch (error) {
         console.log(error);
       }
     },
-    async getFilterData() {
+
+    /**
+     * Hàm thực hiện lấy danh sách các nhà xuất bản của product theo CategorySlug
+     * @author LQHUY(16/04/2024)
+     */
+    async getPublisherData() {
       try {
         const params = {
-          pageSize: this.filterData.pageSize,
-          pageNumber: this.filterData.pageNumber,
-          sortType: this.filterData.sortType,
+          categorySlug: this.$route.params.slug,
         };
-        const res = await bookService.getFilter({ params });
+        const res = await bookService.getPublisher({ params });
         if (res.status === 200) {
-          this.products = res.data.Data;
-          this.totalPage = res.data.TotalPage;
+          this.publishers = res.data;
         }
       } catch (error) {
         console.log(error);
       }
+    },
+    /**
+     * Hàm thực hiện lấy danh sách các product theo CategorySlug
+     * @author LQHUY(16/04/2024)
+     */
+    // async getProductsData() {
+    //   try {
+    //     const res = await bookService.getByCategorySlug(
+    //       this.$route.params.slug
+    //     );
+    //     if (res.status === 200) {
+    //       this.products = res.data;
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
+    /**
+     * Hàm thực hiện filter theo điều kiện và lấy ra các bản ghi
+     * @author LQHUY(16/04/2024)
+     */
+    async handleFilterData() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+
+        const params = {
+          Slug: this.$route.params.slug,
+          PageSize: this.filterData.pageSize,
+          PageNumber: this.filterData.pageNumber,
+          SortColumn: this.filterData.sortColumn,
+          RangeColumn: this.filterData.rangeColumn,
+          FilterInput: this.filterData.filterInput,
+        };
+        const res = await bookService.getFilter(params);
+        if (res.status === 200) {
+          this.products = res.data.Data;
+          this.totalPage = res.data.TotalPage;
+          this.$emitter.emit("toggleShowLoading", false, 300);
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+
+    /**
+     * Hàm thực hiện thêm hoặc xóa bỏ điều liện lọc của publisher
+     * @param {string} item
+     * @param {number} index
+     * @author LQHUY(16/04/2024)
+     */
+    handleChangePublisher(item, index) {
+      if (this.publishersChecked[index]) {
+        // Nếu publisher được chọn, thêm điều kiện lọc vào filterData.filterInput
+        this.filterData.filterInput.push({
+          ColumnName: "PublisherName",
+          Value: item,
+        });
+        this.filterData.filterInput = [...this.filterData.filterInput];
+      } else {
+        // Kiểm tra xem giá trị hủy nằm ở vị trí nào trong mảng
+        const filterInputIndex = this.filterData.filterInput.findIndex(
+          (ele) => {
+            return ele.Value === item && ele.ColumnName === "PublisherName";
+          }
+        );
+        //nếu tổn tại thì loại bỏ điều kiện lọc khớp với tên publisher khỏi filterData.filterInput
+        if (filterInputIndex !== -1) {
+          this.filterData.filterInput.splice(filterInputIndex, 1);
+        }
+        this.filterData.filterInput = [...this.filterData.filterInput];
+      }
+    },
+
+    /**
+     * Hàm thực hiện thêm hoặc xóa bỏ điều liện lọc của author
+     * @param {string} item
+     * @param {number} index
+     * @author LQHUY(16/04/2024)
+     */
+    hanldeChangeAuthor(item, index) {
+      //kiểm tra xem có checkbox có được chọn hay không
+      if (this.authorsChecked[index]) {
+        // Nếu tác giả được chọn, thêm điều kiện lọc vào filterData.filterInput
+        this.filterData.filterInput.push({
+          ColumnName: "Author",
+          Value: item,
+        });
+        this.filterData.filterInput = [...this.filterData.filterInput];
+      } else {
+        // kiểm tra xem giá trị hủy nằm ở vị trí nào trong mảng
+        const filterInputIndex = this.filterData.filterInput.findIndex(
+          (ele) => {
+            return ele.Value === item && ele.ColumnName === "Author";
+          }
+        );
+        //nếu tồn tại loại bỏ điều kiện lọc khớp với tên tác giả khỏi filterData.filterInput
+        if (filterInputIndex !== -1) {
+          this.filterData.filterInput.splice(filterInputIndex, 1);
+        }
+        this.filterData.filterInput = [...this.filterData.filterInput];
+      }
+    },
+
+    /**
+     * Hàm thực hiện thêm hoặc xóa các khoảng giá trị của giá tiền vào rangeColumn
+     * @param {object} range
+     * @author LQHUY(16/04/2024)
+     */
+    handleChangePriceRange(range) {
+      if (range.checked) {
+        this.filterData.rangeColumn.push(range);
+        this.filterData.rangeColumn = [...this.filterData.rangeColumn];
+      } else {
+        const index = this.filterData.rangeColumn.findIndex(
+          (item) =>
+            item.ColumnName === range.ColumnName &&
+            item.MinValue === range.MinValue &&
+            item.MaxValue === range.MaxValue
+        );
+        if (index !== -1) {
+          this.filterData.rangeColumn.splice(index, 1);
+          this.filterData.rangeColumn = [...this.filterData.rangeColumn];
+        }
+      }
+    },
+
+    /**
+     * Hàm thực hiện xóa tất cả bộ lọc khi click btn xóa bộ lọc
+     * @author LQHUY(17/04/2024)
+     */
+    handleRemoveAllFilter() {
+      // if (this.filterData.rangeColumn.length > 0) {
+      //   this.filterData.rangeColumn = [];
+
+      // }
+      // if (this.filterData.filterInput.length > 0) {
+      //   this.filterData.filterInput = [];
+      //   this.authorsChecked = [];
+      //   this.publishersChecked = []
+      // }
+      location.reload();
     },
   },
 };
 </script>
 <style scoped>
+.note-msg,
+.notice-msg {
+  border-color: #fcd344;
+  background-color: #fafaec;
+  color: #3d6611;
+  padding: 15px !important;
+  margin-top: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.delete-all-category {
+  display: flex;
+  cursor: pointer;
+  font-size: 14px;
+  align-items: center;
+  column-gap: 6px;
+  vertical-align: top;
+  text-align: left;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 6px;
+  color: #f7941e;
+  margin-right: 12px;
+  border: 1px solid #f7941e;
+  background: none !important;
+  display: inline-block;
+}
+.filter-wrap {
+  padding: 15px 0 20px 0;
+  border-bottom: 1px solid #ecebeb;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+.filter-title {
+  font-size: 14px;
+  display: inline-block;
+}
+.filter-wrap select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+}
+.filter-condition {
+  padding: 15px 0 10px 0;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.filter-condition ul {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none;
+  flex-wrap: wrap;
+  display: flex;
+  row-gap: 10px;
+  align-items: center;
+}
+.filter-condition ul li {
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  column-gap: 6px;
+  vertical-align: top;
+  text-align: left;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 6px;
+  color: #f7941e;
+  background-color: rgba(247, 148, 30, 0.1);
+  margin-right: 12px;
+}
+.filter-condition ul li .icon-close {
+  font-size: 17px;
+}
 #pages {
   padding: 15px;
   color: black;
@@ -480,7 +877,6 @@ export default {
   cursor: pointer;
 }
 .group-filter .layer-content {
-  display: none;
 }
 .sidebar-block {
   background: #fff;
@@ -518,7 +914,7 @@ export default {
 .check-box-list .check-box-item input[type="checkbox"] {
   -webkit-appearance: none;
   border: 2px solid #cacece;
-  padding: 9px;
+  padding: 7px;
   border-radius: 4px;
   display: inline-block;
   position: relative;
@@ -529,17 +925,17 @@ export default {
   /* background-color: #ffffff;
   border: 1px solid #50b83c;
   color: white; */
-  background-color: #50b83c;
-  border: 2px solid #50b83c;
+  background-color: #f7941e;
+  border: 2px solid #f7941e;
   color: white;
 }
 .check-box-list .check-box-item input[type="checkbox"]:checked::after {
   display: block;
   position: absolute;
   content: "\2714";
-  font-size: 18px;
-  top: calc(-3px / 2);
-  left: calc(4px / 2);
+  font-size: 14px;
+  top: calc(-6px / 2);
+  left: calc(3px / 2);
 }
 
 .check-box-item label {
