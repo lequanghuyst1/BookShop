@@ -51,6 +51,14 @@ namespace BookShopOnline.Api.Controllers
             var res = await _orderService.CancelOrderAsync(order);
             return Ok(res);
         }
+
+        [HttpPut("ConfirmAll")]
+        public async Task<IActionResult> ConfirmAllAsync()
+        {
+            var res = await _orderService.ConfirmAllAsync();
+            return Ok(res);
+        }
+
     }
 
 }

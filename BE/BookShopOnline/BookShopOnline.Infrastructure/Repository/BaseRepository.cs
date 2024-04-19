@@ -66,7 +66,7 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task<PagingEntity<TEntity>> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber)
+        public virtual async Task<PagingEntity<TEntity>> GetFilterPagingAsync(string? searchString, int pageSize, int pageNumber)
         {
             var res = await _dbContext.GetFilterPagingAsync<TEntity>(searchString, pageSize, pageNumber);
             return res;

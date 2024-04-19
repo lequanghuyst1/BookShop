@@ -58,8 +58,9 @@ const Resource = {
     ENUM_ORDER_STATUS: {
       waitForConfirmation: "Chờ xác nhận",
       confirmed: "Đã xác nhận",
-      shipping: "Đang giao hàng",
+      shipping: "Đang vận chuyển",
       delivered: "Đã giao hàng",
+      complete: "Hoàn thành",
       cancelled: "Bị hủy",
     },
     ENUM_DELIVERY_STATUS: {

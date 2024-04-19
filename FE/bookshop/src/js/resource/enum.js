@@ -20,6 +20,7 @@ const Enum = {
     SHIPPING: 2,
     DELIVERED: 3,
     CANCELLED: 4,
+    COMPLETE: 5,
   },
   /**Tình trạng giao hàng */
   DELIVERY_STATUS: {

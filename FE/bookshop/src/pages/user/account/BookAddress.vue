@@ -254,7 +254,7 @@ export default {
   mounted() {
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".button__edit-address")) {
-        this.isShowActionEditAddress = this.lstAddress.map(() => false);
+        this.isShowActionEditAddress = [];
       }
     });
   },

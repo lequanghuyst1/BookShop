@@ -9,19 +9,20 @@ const bookColumns = [
     field: "Image",
     nameField: "Hình ảnh",
     class: "table-align-text",
-    width: "100px",
+    width: "120px",
+    textAlign: "center",
   },
   {
     field: "BookName",
     nameField: "Tên sách",
     class: "table-align-text",
-    width: "182px",
+    width: "352px",
   },
   {
     field: "Author",
     nameField: "Tác giả",
     class: "table-align-text",
-    width: "152px",
+    width: "182px",
   },
   {
     field: "Price",
@@ -39,25 +40,19 @@ const bookColumns = [
     textAlign: "right",
   },
   {
-    field: "PublicationDate",
-    nameField: "Ngày xuất bản",
+    field: "NumberOfPage",
+    nameField: "Tổng số trang",
     class: "table-align-text",
     width: "132px",
-    textAlign: "center",
-    type: "datetime",
   },
+
   {
     field: "Size",
     nameField: "Kích cỡ",
     class: "table-align-text",
     width: "122px",
   },
-  {
-    field: "NumberOfPage",
-    nameField: "Tổng số trang",
-    class: "table-align-text",
-    width: "132px",
-  },
+
   {
     field: "CategoryName",
     nameField: "Tên danh mục",
@@ -69,6 +64,14 @@ const bookColumns = [
     nameField: "Tên NXB",
     class: "table-align-text",
     width: "182px",
+  },
+  {
+    field: "PublicationDate",
+    nameField: "Ngày xuất bản",
+    class: "table-align-text",
+    width: "132px",
+    textAlign: "center",
+    type: "datetime",
   },
 ];
 export default bookColumns;

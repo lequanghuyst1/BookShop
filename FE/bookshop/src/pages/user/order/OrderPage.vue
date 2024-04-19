@@ -6,7 +6,7 @@
       </div>
       <div class="tab-container-order-history-container">
         <div
-          class="tab-container-order-history  swiper-container swiper-container-horizontal"
+          class="tab-container-order-history swiper-container swiper-container-horizontal"
         >
           <div class="swiper-wrapper">
             <div
@@ -63,6 +63,17 @@
                 {{ quantityOrderDelivered }}
               </div>
               <div class="tab-history-item-text">Đã vận chuyển</div>
+              <div class="tab-history-item-border"></div>
+            </div>
+            <div
+              class="tab-history-item swiper-slide"
+              @click="getOrdersData(this.$Enum.ORDER_STATUS.COMPLETE)"
+              style="width: 150px"
+            >
+              <div class="tab-history-item-number">
+                {{ quantityOrderComplete }}
+              </div>
+              <div class="tab-history-item-text">Hoàn tất</div>
               <div class="tab-history-item-border"></div>
             </div>
             <div
@@ -209,6 +220,7 @@ export default {
       quantityOrderConfirmed: 0,
       quantityOrderShipping: 0,
       quantityOrderDelivered: 0,
+      quantityOrderComplete: 0,
       ordersCancelled: [],
       orderStatus: null,
     };
@@ -254,6 +266,11 @@ export default {
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.DELIVERED
               );
               break;
+            case this.$Enum.ORDER_STATUS.COMPLETE:
+              this.orders = res.data.filter(
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
+              );
+              break;
             case this.$Enum.ORDER_STATUS.CANCELLED:
               this.orders = res.data.filter(
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
@@ -278,6 +295,9 @@ export default {
               ).length;
               this.quantityOrderCancelled = res.data.filter(
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
+              ).length;
+              this.quantityOrderComplete = res.data.filter(
+                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
               ).length;
               break;
           }

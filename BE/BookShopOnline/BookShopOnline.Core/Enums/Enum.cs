@@ -28,6 +28,10 @@ namespace BookShopOnline.Core.Enums
         /// </summary>
         DELIVERED = 3,
         /// <summary>
+        /// Hoàn thành
+        /// </summary>
+        COMPLETE = 4,
+        /// <summary>
         /// Đã hủy
         /// </summary>
         CANCELLED = 4,
@@ -38,6 +42,9 @@ namespace BookShopOnline.Core.Enums
     /// </summary>
     public enum DeliveryStatus
     {
+        /// <summary>
+        /// Chưa giao hàng
+        /// </summary>
         NOT_DELIVERY = 0,
         /// <summary>
         /// Chờ lấy hàng

@@ -114,5 +114,17 @@ namespace BookShopOnline.Core.Services
             while (await _unitOfWork.Order.CheckDuplicateCodeAsync(orderCodeNew));
             return orderCodeNew;
         }
+
+        public async Task<int> ConfirmAllAsync()
+        {
+            _unitOfWork.BeginTransaction();
+            var res = await _unitOfWork.Order.ConfirmAllAsync();
+            if (res > 0)
+            {
+                _unitOfWork.Commit();
+                return res;
+            }
+            else return res;
+        }
     }
 }

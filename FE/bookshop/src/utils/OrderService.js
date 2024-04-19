@@ -16,6 +16,10 @@ class OrderService extends BaseService {
     const res = await this.baseAxios.put(`${this.baseUrl}/CancelOrder`,data);
     return res;
   }
+  async ConfirmAll(){
+    const res = await this.baseAxios.put(`${this.baseUrl}/ConfirmAll`);
+    return res;
+  }
 }
 const orderService = new OrderService();
 export default orderService;

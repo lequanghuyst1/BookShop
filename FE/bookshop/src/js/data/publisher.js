@@ -11,12 +11,12 @@ const publisherColumns = [
     class: "table-align-text",
     width: "152px",
   },
-  {
-    field: "Image",
-    nameField: "Hình ảnh",
-    class: "table-align-text",
-    width: "100px",
-  },
+  // {
+  //   field: "Image",
+  //   nameField: "Hình ảnh",
+  //   class: "table-align-text",
+  //   width: "100px",
+  // },
   {
     field: "PhoneNumber",
     nameField: "Số điện thoại",

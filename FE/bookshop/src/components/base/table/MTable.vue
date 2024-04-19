@@ -20,7 +20,7 @@
           </th>
         </tr>
       </thead>
-      <tbody v-if="isShowLoadingTable == false">
+      <tbody v-if="isShowLoadingTable === false">
         <tr
           v-for="data in pageData"
           :key="data.idObject"
@@ -223,7 +223,7 @@ export default {
      * @param {boolean} val
      * Author: LQHUY(06/12/2023)
      */
-    selectAll(val) {
+    selectAll: function(val) {
       if (val === false) {
         this.selectAllRecord = val;
       }
@@ -290,11 +290,9 @@ export default {
   },
   methods: {
     getImagePath(data) {
-      let imageItem = this.imageData.filter(
-        (item) => {
-          return item[this.$props.idObject] === data[this.$props.idObject]
-        }
-      );
+      let imageItem = this.imageData.filter((item) => {
+        return item[this.$props.idObject] === data[this.$props.idObject];
+      });
       if (imageItem.length > 0) {
         return "https://localhost:7015/" + imageItem[0].ImagePath;
       } else {
@@ -312,7 +310,7 @@ export default {
         if (col.type === "gender") {
           return this.$helper.formatGender(data[col.field]);
         } else if (col.type === "money") {
-          return this.$helper.formatMoney(data[col.field]);
+          return this.$helper.formatMoney(data[col.field])+ 'đ';
         } else if (col.type === "datetime") {
           return this.$helper.formatDate(data[col.field]);
         } else {
@@ -465,8 +463,15 @@ export default {
     /**
      * Hàm ẩn hiện loading mỗi khi load data
      */
-    toggleShowLoadingTable(isShow) {
-      this.isShowLoadingTable = isShow;
+    toggleShowLoadingTable(isShow, duration) {
+      if (isShow) {
+        this.isShowLoadingTable = isShow;
+      }
+      if (!isShow) {
+        setTimeout(() => {
+          this.isShowLoadingTable = isShow;
+        }, duration);
+      }
     },
   },
   data() {

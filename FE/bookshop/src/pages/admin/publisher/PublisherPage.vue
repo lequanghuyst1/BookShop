@@ -53,7 +53,7 @@
           <MInputIcon
             refEl="txtSearchString"
             v-model="searchString"
-            placeholder="Tìm kiếm theo tên sách, tên tác giả"
+            placeholder="Tìm kiếm theo tên NXB, mã NXB"
           ></MInputIcon>
         </div>
       </div>
@@ -68,7 +68,6 @@
       :columnsTable="columnsTable"
       :pageData="pageData"
       :selectAll="selectAll"
-      :image="true"
       :imageData="imageData"
       @onDelete="onDeleteItem"
       @onUpdate="onUpdateItem"
@@ -121,22 +120,27 @@ import publisherColumns from "@/js/data/publisher";
 export default {
   name: "BookPage",
   components: { PulisherDetail },
-  created() {},
+  created() {
+    this.$emitter.on("updatePageSize", this.updatePageSize);
+  },
   mounted() {
     this.loadData();
     this.loadDataImage();
-    this.$emitter.emit("toggleShowLoadingTable", true);
   },
-  beforeUnmount() {},
+  beforeUnmount() {
+    this.$emitter.off("updatePageSize", this.updatePageSize);
+  },
   watch: {
+    //theo dõi biến pageSize
+    pageSize: function () {
+      this.loadData();
+    },
     //Theo dõi biến pageNumber
-    pageNumber(newValue) {
-      if (newValue) {
-        this.loadDataTable();
-      }
+    pageNumber: function () {
+      this.loadData();
     },
     //Theo dõi biến searchString
-    searchString() {
+    searchString: function () {
       this.loadData();
     },
   },
@@ -181,7 +185,7 @@ export default {
             this.pageData = res.data.Data;
             this.totalRecord = res.data.TotalRecord;
             this.totalPage = res.data.TotalPage;
-            this.$emitter.emit("toggleShowLoadingTable", false);
+            this.$emitter.emit("toggleShowLoadingTable", false, 200);
             break;
         }
       } catch (error) {
@@ -371,6 +375,15 @@ export default {
       setTimeout(() => {
         this.selectAll = null;
       }, 500);
+    },
+
+    /**
+     * Hàm thực hiện cập nhật giá trị pageSize
+     * @param {number} value
+     * @author LQHUY(19/03/2024)
+     */
+    updatePageSize(value) {
+      this.pageSize = value;
     },
   },
   provide() {

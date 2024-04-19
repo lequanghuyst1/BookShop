@@ -17,6 +17,13 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<int> ConfirmAllAsync()
+        {
+            var procName = "Proc_Order_ConfirmAll";
+            var res = await _dbContext.Connection.ExecuteAsync(procName,transaction: _dbContext.Transaction);
+            return res;
+        }
+
         public async Task<IEnumerable<Order>> GetByUserId(Guid userId)
         {
             var procName = "Proc_Order_GetByUserId";

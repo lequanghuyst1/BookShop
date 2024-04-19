@@ -9,10 +9,13 @@
     </div>
     <div class="m-pagination__right">
       <div class="m-pagination__selected-record">
-        <p class="m-pagination__selected-text">
+        <p
+          style="margin-right: 4px !important; display: block"
+          class="m-pagination__selected-text"
+        >
           Số bản ghi/trang:
         </p>
-          <MDropdown :listItem="lstPageSize"></MDropdown>
+        <MDropdown :listItem="lstPageSize"></MDropdown>
       </div>
       <div class="m-pagination__numbers-group">
         <span class="m-page__number-current">
@@ -30,11 +33,11 @@
         <span class="m-page__number-total"
           ><b v-if="this.total === 0"> {{ "00" }} </b>
 
-          <b v-else> {{  this.endIndex < 10 ? `0${this.endIndex}` : this.endIndex}} </b></span
+          <b v-else>
+            {{ this.endIndex < 10 ? `0${this.endIndex}` : this.endIndex }}
+          </b></span
         >
-        <span style="margin-left: 4px">
-          bản ghi</span
-        >
+        <span style="margin-left: 4px"> bản ghi</span>
       </div>
       <button
         ref="btnPrev"
@@ -47,18 +50,17 @@
       >
         <i class="fa-solid fa-angle-left"></i>
       </button>
-      <!-- <div
+      <div
         v-for="number in pages"
         :key="number"
         class="m-page__number-option"
         :class="{ 'select-number': number == this.pageCurrent }"
-        @click="onChangePageNumber(number)"
       >
-        <span v-if="number !== '...'">
+        <span @click="onChangePageNumber(number)" v-if="number !== '...'">
           {{ number }}
         </span>
-        <span v-else>...</span>
-      </div> -->
+        <span style="cursor: default" v-else>...</span>
+      </div>
       <button
         ref="btnNext"
         :style="{

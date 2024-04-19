@@ -53,7 +53,7 @@
           <MInputIcon
             refEl="txtSearchString"
             v-model="searchString"
-            placeholder="Tìm kiếm theo tên sách, tên tác giả"
+            placeholder="Tìm kiếm theo tên danh mục, mã danh mục"
           ></MInputIcon>
         </div>
       </div>
@@ -120,21 +120,26 @@ import categoryColumns from "@/js/data/category";
 export default {
   name: "CategoryPage",
   components: { CategoryDetail },
-  created() {},
+  created() {
+    this.$emitter.on("updatePageSize", this.updatePageSize);
+  },
   mounted() {
     this.loadData();
-    this.$emitter.emit("toggleShowLoadingTable", true);
   },
-  beforeUnmount() {},
+  beforeUnmount() {
+    this.$emitter.off("updatePageSize", this.updatePageSize);
+  },
   watch: {
+    //theo dõi biến pageSize
+    pageSize: function () {
+      this.loadData();
+    },
     //Theo dõi biến pageNumber
-    pageNumber(newValue) {
-      if (newValue) {
-        this.loadData();
-      }
+    pageNumber: function () {
+      this.loadData();
     },
     //Theo dõi biến searchString
-    searchString() {
+    searchString: function () {
       this.loadData();
     },
   },
@@ -177,7 +182,7 @@ export default {
             this.pageData = res.data.Data;
             this.totalRecord = res.data.TotalRecord;
             this.totalPage = res.data.TotalPage;
-            this.$emitter.emit("toggleShowLoadingTable", false);
+            this.$emitter.emit("toggleShowLoadingTable", false, 200);
             break;
         }
       } catch (error) {
@@ -367,6 +372,15 @@ export default {
       setTimeout(() => {
         this.selectAll = null;
       }, 500);
+    },
+
+    /**
+     * Hàm thực hiện cập nhật giá trị pageSize
+     * @param {number} value
+     * @author LQHUY(19/03/2024)
+     */
+    updatePageSize(value) {
+      this.pageSize = value;
     },
   },
   provide() {

@@ -8,13 +8,14 @@ const orderColumns = [
   {
     field: "OrderDate",
     nameField: "Ngày tạo",
-    width: "112px",
+    width: "152px",
     type: "datetime",
+    textAlign: "center"
   },
   {
     field: "Fullname",
     nameField: "Khách hàng",
-    width: "112px",
+    width: "132px",
   },
   {
     field: "OrderStatus",
@@ -35,7 +36,7 @@ const orderColumns = [
   {
     field: "DeliveryStatus",
     nameField: "Giao hàng",
-    width: "132px",
+    width: "152px",
     type: "enum",
     enumType: "DELIVERY_STATUS"
   },

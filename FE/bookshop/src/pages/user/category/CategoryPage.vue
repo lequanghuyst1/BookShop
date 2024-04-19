@@ -350,21 +350,21 @@ export default {
   },
   data() {
     return {
-      //biến lưu trữ thônh tin chi tiết catgory
+      //Lưu trữ thông tin chi tiết catgory
       category: {},
-      //biến lưu trữ danh sách product
+      //Lưu trữ danh sách product
       products: [],
-      //biến lưu trữ tổng số bản ghi
+      //Lưu trữ tổng số bản ghi
       totalPage: 0,
-      //biến lưu trữ phân trang tối đa được hiện
+      //Lưu trữ phân trang tối đa được hiện
       maxPages: 4,
-      //biến lưu trữ danh sách các tác giả được chọn
+      //Lưu trữ danh sách các tác giả được chọn
       authorsChecked: [],
-      //biến lưu trữ danh sách các nhà xuất bản được chọn
+      //Lưu trữ danh sách các nhà xuất bản được chọn
       publishersChecked: [],
-      //biến lưu trữ danh sách các tác giả
+      //Lưu trữ danh sách các tác giả
       authors: [],
-      //biến lưu trữ danh sách các nhà xuất bản
+      //Lưu trữ danh sách các nhà xuất bản
       publishers: [],
       //param filter dữ liệu
       filterData: {
@@ -378,7 +378,7 @@ export default {
         rangeColumn: [],
         filterInput: [],
       },
-      //biến lưu trữ danh sách các điều kiện tăng dần hoặc giảm dần
+      //danh sách các điều kiện tăng dần hoặc giảm dần
       sortOptions: [
         {
           columnName: "CreatedDate",
@@ -421,7 +421,7 @@ export default {
           label: "Tồn kho: Giảm dần",
         },
       ],
-      //biến lưu trữ danh sách khoảng giá lọc
+      //Danh sách khoảng giá lọc
       priceRanges: [
         {
           ColumnName: "Price",

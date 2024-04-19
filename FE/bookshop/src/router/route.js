@@ -164,21 +164,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const user = localStorageService.getItemEncodeFromLocalStorage("userInfo");
+  const user = localStorageService.getItemFromLocalStorage("userInfo");
 
-  if (
-    to.meta.requiresAuth &&
-    !checkInfoTokensInStorage() &&
-    user?.RoleName === "User"
-  ) {
+  if (to.meta.requiresAuth && !checkInfoTokensInStorage()) {
     next("/admin/login");
   } else if (
+    to.meta.requiresAuth &&
     to.path === "/admin/login" &&
     user?.RoleName === "Admin" &&
     checkInfoTokensInStorage()
   ) {
     next();
   } else {
+    console.log(to)
     next();
   }
 });
