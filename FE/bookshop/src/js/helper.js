@@ -159,7 +159,7 @@ const helper = {
   formatOrderDate(value) {
     var date = new Date(value);
     // Chuẩn hóa giờ để hiển thị đúng định dạng 12 giờ
-    var hour = date.getHours() % 12 || 12; // Nếu giờ là 0 thì chuyển thành 12
+    var hour = date.getHours() ; // Nếu giờ là 0 thì chuyển thành 12
     var minute = date.getMinutes();
 
     // Thêm số 0 đằng trước nếu cần
@@ -167,7 +167,6 @@ const helper = {
     minute = minute < 10 ? "0" + minute : minute;
 
     // Xác định AM hoặc PM
-    var ampm = date.getHours() >= 12 ? "SA" : "CH";
 
     // Tạo chuỗi định dạng mong muốn
     var formattedDate =
@@ -179,9 +178,7 @@ const helper = {
       " " +
       hour +
       ":" +
-      minute +
-      " " +
-      ampm;
+      minute 
 
     return formattedDate;
   },

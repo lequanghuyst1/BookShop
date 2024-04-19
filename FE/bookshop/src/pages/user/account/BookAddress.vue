@@ -460,7 +460,6 @@ export default {
 
         if (res.status === 200) {
           this.address = res.data;
-          console.log(this.address);
           if (this.address.Province) {
             //lấy ra provinceSelected có tên trùng với Province
             this.provinceSelected = this.provinceData.filter(

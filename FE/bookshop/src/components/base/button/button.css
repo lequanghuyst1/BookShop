@@ -23,7 +23,7 @@
 }
 
 .m-button:hover {
-  background-color: #57c841;
+  opacity: 0.9;
 }
 .m-button:active {
   background-color: #118044;

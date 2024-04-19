@@ -33,7 +33,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Cart, CartDto>();
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDetail, OrderDetailDto>();
-            CreateMap<ProductReview, ProductReviewDto>();
+            CreateMap<ReviewProduct, ReviewProductDto>();
         }
     }
 }

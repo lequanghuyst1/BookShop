@@ -95,8 +95,8 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
-builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
-builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
+builder.Services.AddScoped<IReviewProductService, ReviewProductService>();
+builder.Services.AddScoped<IReviewProductRepository, ReviewProductRepository>();
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 

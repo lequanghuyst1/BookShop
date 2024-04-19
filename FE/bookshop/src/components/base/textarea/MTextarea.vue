@@ -1,20 +1,19 @@
 <template>
   <div class="form-group">
-    <label :for="id" class="m-lable">{{
-      label
-    }}</label>
+    <label :for="id" class="m-lable">{{ label }}</label>
     <textarea
       class="m-textarea"
       :id="id"
       v-model="value"
       name="message"
-      rows="10"
+      :rows="rows ? rows : 10"
       style="width: 100%"
+      :placeholder="placeholder"
     ></textarea>
   </div>
 </template>
 <script>
-import { validateValue } from '@/js/validate/validate';
+import { validateValue } from "@/js/validate/validate";
 export default {
   name: "MTextarea",
   props: {
@@ -26,11 +25,16 @@ export default {
     },
     id: {
       type: String,
-
     },
     rules: {
       type: Object,
       required: false,
+    },
+    placeholder: {
+      type: String,
+    },
+    rows: {
+      type: Number,
     },
   },
   watch: {
@@ -42,6 +46,8 @@ export default {
       }
     },
     modelValue(newValue) {
+      console.log(newValue)
+
       this.value = newValue;
     },
   },

@@ -14,7 +14,7 @@ import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/Layou
 import HomeUserPage from "../pages/user/home/HomePage.vue";
 import CartPage from "../pages/user/cart/CartPage.vue";
 import CategoryUserPage from "../pages/user/category/CategoryPage.vue";
-import ProductPage from "../pages/user/product/Index.vue";
+import ProductPage from "../pages/user/product/Product.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
 import BookAddressPage from "../pages/user/account/BookAddress.vue";
