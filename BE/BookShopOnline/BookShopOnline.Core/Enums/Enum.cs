@@ -61,7 +61,10 @@ namespace BookShopOnline.Core.Enums
     /// </summary>
     public enum DeliveryMethod
     {
-        OCD = 0,
+        /// <summary>
+        /// giao hàng tận nơi
+        /// </summary>
+        LOCAL_DELIVERY = 0,
     }
 
     /// <summary>
@@ -69,7 +72,7 @@ namespace BookShopOnline.Core.Enums
     /// </summary>
     public enum PaymentMethod
     {
-        CASH_PAYMENT = 0,
+        COD = 0,
         ZALOPAY_WALLTET = 1,
         VNPAY = 2,
         MONO_WALLET = 3,

@@ -18,7 +18,7 @@
                   class="checkbox-add-cart"
                   type="checkbox"
                   id="checkbox-all-products"
-                  @click="this.lstIdItemSelected = []"
+                  @click="this.itemIdsSelected = []"
                   v-model="selectAllItem"
                 />
               </div>
@@ -46,7 +46,7 @@
                   <input
                     type="checkbox"
                     :value="item.CartItemId"
-                    v-model="lstIdItemSelected"
+                    v-model="itemIdsSelected"
                     @click="handleOnSelectItem(item)"
                     class="checkbox-add-cart"
                   />
@@ -97,6 +97,12 @@
                         </div>
                       </div>
                     </div>
+                    <p
+                      v-if="messageNotEnough[item.BookCode]"
+                      class="message-not-enough"
+                    >
+                      {{ messageNotEnough[item.BookCode] }}
+                    </p>
                   </div>
                   <div class="number-product-cart">
                     <div class="product-view-quantity-box">
@@ -117,6 +123,7 @@
                           class="qty-carts"
                           id="qty-387389"
                           maxlength="12"
+                          @input="onChangeQuantiy(item, $event)"
                           v-model="item.Quantity"
                           title="So luong"
                         /><a
@@ -172,14 +179,29 @@
                 <div class="total-cart-page">
                   <div class="title-cart-page-left">Thành tiền</div>
                   <div class="number-cart-page-right">
-                    <span class="price">{{ totalAmountCart }} đ</span>
+                    <span class="price"
+                      >{{ this.$helper.formatMoney(totalAmountCart) }} đ</span
+                    >
+                  </div>
+                </div>
+                <div
+                  v-if="this.itemIdsSelected.length > 0"
+                  class="total-cart-page"
+                >
+                  <div class="title-cart-page-left">Phí vận chuyển</div>
+                  <div class="number-cart-page-right">
+                    <span class="price"
+                      >{{ this.$helper.formatMoney(shippingFee) }} đ</span
+                    >
                   </div>
                 </div>
                 <div class="border-product"></div>
                 <div class="total-cart-page title-final-total">
                   <div class="title-cart-page-left">Tổng Số Tiền (gồm VAT)</div>
                   <div class="number-cart-page-right">
-                    <span class="price">{{ totalAmountCart }} đ</span>
+                    <span class="price"
+                      >{{ this.$helper.formatMoney(totalAmountCart) }} đ</span
+                    >
                   </div>
                 </div>
               </div>
@@ -221,7 +243,7 @@ export default {
     this.getQuantityOfCart();
   },
   mounted() {
-    this.lstIdItemSelected = localStorageService.getItemFromLocalStorage(
+    this.itemIdsSelected = localStorageService.getItemFromLocalStorage(
       "itemSelected"
     )
       ? localStorageService.getItemFromLocalStorage("itemSelected")
@@ -231,13 +253,15 @@ export default {
     return {
       cartData: [],
       totalAmountCart: 0,
-      lstIdItemSelected: [],
+      itemIdsSelected: [],
       quantityOfCart: 0,
       quantityItemSected: 0,
+      shippingFee: 0,
+      messageNotEnough: {},
     };
   },
   watch: {
-    lstIdItemSelected: function () {
+    itemIdsSelected: function () {
       this.getQuantityItemSelected();
       this.calculatorTotalAmountCart();
     },
@@ -251,9 +275,9 @@ export default {
         return this.cartData
           ? this.cartData
               .map((item) => item.CartItemId)
-              .every((ele) => this.lstIdItemSelected.includes(ele)) &&
-              this.lstIdItemSelected.length >= this.cartData.length &&
-              this.lstIdItemSelected.length > 0
+              .every((ele) => this.itemIdsSelected.includes(ele)) &&
+              this.itemIdsSelected.length >= this.cartData.length &&
+              this.itemIdsSelected.length > 0
           : false;
       },
       // Khi thay đổi giá trị computed property
@@ -261,27 +285,27 @@ export default {
         if (value) {
           this.cartData.forEach((item) => {
             if (
-              !this.lstIdItemSelected
+              !this.itemIdsSelected
                 .map((ele) => ele.CartItemId)
                 .includes(item.CartItemId)
             ) {
-              this.lstIdItemSelected.push(item.CartItemId);
+              this.itemIdsSelected.push(item.CartItemId);
             }
           });
-          this.lstIdItemSelected = [...this.lstIdItemSelected];
+          this.itemIdsSelected = [...this.itemIdsSelected];
           localStorageService.setItemToLocalStorage(
             "itemSelected",
-            this.lstIdItemSelected
+            this.itemIdsSelected
           );
         } else {
-          if (this.lstIdItemSelected.length > 0) {
+          if (this.itemIdsSelected.length > 0) {
             return;
           } else {
-            this.lstIdItemSelected = [];
+            this.itemIdsSelected = [];
 
             localStorageService.setItemToLocalStorage(
               "itemSelected",
-              this.lstIdItemSelected
+              this.itemIdsSelected
             );
           }
         }
@@ -310,7 +334,7 @@ export default {
      */
     getQuantityItemSelected() {
       const itemSelected = this.cartData.filter((item) => {
-        return this.lstIdItemSelected.includes(item.CartItemId);
+        return this.itemIdsSelected.includes(item.CartItemId);
       });
       this.quantityItemSected = itemSelected.reduce(
         (accumulator, item) => accumulator + item.Quantity,
@@ -324,13 +348,15 @@ export default {
      */
     calculatorTotalAmountCart() {
       const itemSelected = this.cartData.filter((item) => {
-        return this.lstIdItemSelected.includes(item.CartItemId);
+        return this.itemIdsSelected.includes(item.CartItemId);
       });
       const totalAmount = itemSelected.reduce(
         (accumulator, item) => accumulator + item.Price * item.Quantity,
         0
       );
-      this.totalAmountCart = this.$helper.formatMoney(totalAmount);
+      this.shippingFee = itemSelected.length > 0 ? 19000 : 0;
+      const totalOrder = totalAmount + this.shippingFee;
+      this.totalAmountCart = totalOrder;
     },
 
     /**
@@ -339,8 +365,15 @@ export default {
      */
     async handleOnIncreaseQuantity(item) {
       item.Quantity++;
+      if (item.Quantity > item.QuantityInStock) {
+        item.Quantity = item.QuantityInStock;
+        this.messageNotEnough[item.BookCode] = `Số lượng yêu cầu ${
+          item.Quantity + 1
+        } không có sẵn.`;
+      } else {
+        this.messageNotEnough[item.BookCode] = null;
+      }
       await this.handleOnEdit(item);
-
     },
 
     /**
@@ -352,11 +385,34 @@ export default {
       if (item.Quantity < 1) {
         item.Quantity = 1;
       }
+      this.messageNotEnough[item.BookCode] = null;
       await this.handleOnEdit(item);
     },
 
     /**
-     * Hàm update cart item
+     * Thực hiện kiểm tra sự thay đổi của giá trị có thỏa mã không
+     * @param {object} item
+     * @param {object} event
+     * @author LQHUY(021/04/2024)
+     */
+    onChangeQuantiy(item, event) {
+      if (item.Quantity > item.QuantityInStock) {
+        item.Quantity = item.QuantityInStock;
+        this.messageNotEnough[
+          item.BookCode
+        ] = `Số lượng yêu cầu ${event.target.value} không có
+                      sẵn.`;
+      } else {
+        this.messageNotEnough[item.BookCode] = null;
+        item.Quantity = Number(event.target.value);
+      }
+      this.handleOnEdit(item);
+      if (event.target.value < 0) {
+        item.Quantity = 1;
+      }
+    },
+    /**
+     * Thực hiện update cart item
      * @param {object} item
      * @author LQHUY(11/04/2024)
      */
@@ -378,6 +434,7 @@ export default {
           this.$emitter.emit("getQuantityOfCart");
           this.getQuantityOfCart();
           this.calculatorTotalAmountCart();
+          this.getQuantityItemSelected();
         }
       } catch (error) {
         console.log(error);
@@ -405,31 +462,29 @@ export default {
         this.$emitter.emit("getQuantityOfCart");
         this.getQuantityOfCart();
 
-        setTimeout(() => {
-          this.$emitter.emit("toggleShowLoading", false);
-        }, 300);
+        this.$emitter.emit("toggleShowLoading", false, 300);
       }
     },
 
     /**
-     * Hàm thực hiện thêm hoặc gỡ id được chọn vào lstIdItemSelected khi click vào chekbox
+     * Hàm thực hiện thêm hoặc gỡ id được chọn vào itemIdsSelected khi click vào chekbox
      * @param {object} item
      * @author LQHUY(09/04/2024)
      */
     handleOnSelectItem(item) {
-      // this.lstIdItemSelected[index] = true;
-      const index = this.lstIdItemSelected.indexOf(item.CartItemId);
+      // this.itemIdsSelected[index] = true;
+      const index = this.itemIdsSelected.indexOf(item.CartItemId);
       if (index === -1) {
         // Nếu phần tử không tồn tại trong mảng, thêm nó vào mảng
-        this.lstIdItemSelected.push(item.CartItemId);
+        this.itemIdsSelected.push(item.CartItemId);
       } else {
         // Nếu phần tử tồn tại trong mảng, loại bỏ nó khỏi mảng
-        this.lstIdItemSelected.splice(index, 1);
+        this.itemIdsSelected.splice(index, 1);
       }
-      this.lstIdItemSelected = [...this.lstIdItemSelected];
+      this.itemIdsSelected = [...this.itemIdsSelected];
       localStorageService.setItemToLocalStorage(
         "itemSelected",
-        this.lstIdItemSelected
+        this.itemIdsSelected
       );
     },
   },

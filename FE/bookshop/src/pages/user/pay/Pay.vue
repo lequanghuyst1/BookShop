@@ -217,13 +217,14 @@
                 <input
                   type="radio"
                   name="delivery"
-                  :value="this.$Enum.DELIVERY_METHOD.OCD"
+                  :value="this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY"
                   v-model="order.DeliveryMethod"
                 />
                 <span class="checkmark"></span>
               </label>
               <p style="flex: 1; font-weight: bold; font-size: 14px">
-                Giao hàng tận nơi: 19.000 đ
+                Giao hàng tận nơi:
+                {{ this.$helper.formatMoney(this.order.ShippingFee) }} đ
               </p>
             </div>
           </div>
@@ -314,7 +315,7 @@
                 :key="item.CartItemId"
                 class="product"
               >
-                <div class="product__image">
+                <div class="product__image" style="overflow: hidden">
                   <img
                     :src="'https://localhost:7015/' + item.ImagePath"
                     alt=""
@@ -322,7 +323,7 @@
                 </div>
                 <div class="product__desc">
                   <div
-                    v-tippy="{ content: 'Nam,e', placement: 'top' }"
+                    v-tippy="{ content: item.BookName, placement: 'top' }"
                     class="product__name"
                   >
                     {{ item.BookName }}
@@ -332,9 +333,7 @@
                       {{ this.$helper.formatMoney(item.Price) }}đ
                     </p>
                     <p class="product__price--through">
-                      {{
-                        this.$helper.formatMoney(item.OriginalPrice)
-                      }}
+                      {{ this.$helper.formatMoney(item.OriginalPrice) }}
                       đ
                     </p>
                   </div>
@@ -393,15 +392,21 @@
             </div>
             <div class="total-line mt-3 total-sub-total">
               <p class="total-name">Thành tiền</p>
-              <p class="total-price">{{ totalAmountCart }}</p>
+              <p class="total-price">
+                {{ this.$helper.formatMoney(this.totalAmountCart) }} đ
+              </p>
             </div>
             <div class="total-line total-delivery">
               <p class="total-name">Phí vận chuyển</p>
-              <p class="total-price">-</p>
+              <p class="total-price">
+                {{ this.$helper.formatMoney(this.order.ShippingFee) }}đ
+              </p>
             </div>
             <div class="total-line total-amount">
               <p class="total-name">Tổng số tiền</p>
-              <p class="total-price">{{ totalAmountCart }} đ</p>
+              <p class="total-price">
+                {{ this.$helper.formatMoney(this.totalAmountCart) }} đ
+              </p>
             </div>
             <div
               style="margin-top: 16px; margin-bottom: 16px"
@@ -454,8 +459,6 @@ export default {
 
       addressDeliveryDefault: {},
 
-      orderInfo: {},
-
       isShowNote: false,
       isAddressExist: false,
       isShowFormAddress: false,
@@ -463,10 +466,11 @@ export default {
       totalAmountCart: 0,
       order: {
         OrderStatus: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
-        DeliveryMethod: this.$Enum.DELIVERY_METHOD.OCD,
+        DeliveryMethod: this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY,
         DeliveryStatus: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
-        PaymentMethod: this.$Enum.PAYMENT_METHOD.CASH_PAYMENT,
+        PaymentMethod: this.$Enum.PAYMENT_METHOD.COD,
         PaymentStatus: this.$Enum.PAYMENT_STATUS.UNPAID,
+        ShippingFee: 19000,
       },
     };
   },
@@ -531,25 +535,23 @@ export default {
       this.$emitter.emit("toggleShowLoading", true);
 
       try {
-        //thiết lập các giá trị cho orderInfo
-        this.orderInfo.OrderDetails = this.orderDetailData;
-
+        //thiết lập thông tin đơn hàng
         this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
         this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
         this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
-        this.order.TotalAmount = this.$helper.formatMoneySendApi(
-          this.totalAmountCart
-        );
-
+        this.order.TotalAmount = this.totalAmountCart;
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
 
-        this.orderInfo.Order = this.order;
-
-        this.orderInfo.CartItemIds = this.orderDetailIds;
+        //thiết lập các thông tin để truyền khi gọi Api checkout
+        const orderInfo = {
+          OrderDetails: this.orderDetailData,
+          Order: this.order,
+          CartItemIds: this.orderDetailIds,
+        };
 
         //gọi api thanh toán
-        const res = await orderService.checkout(this.orderInfo);
+        const res = await orderService.checkout(orderInfo);
         if (res.status === 201) {
           //gọi lấy lại giá trị giỏ hàng và gán vào local
           const res = await cartItemService.getByCartId(this.userInfo.CartId);
@@ -564,6 +566,7 @@ export default {
         this.$emitter.emit("toggleShowLoading", false);
       }
     },
+
     /**
      * Thực hiện tính toán tổng số tiền trong giỏ hàng
      * @author LQHUY(09/04/2024)
@@ -573,8 +576,10 @@ export default {
         (accumulator, item) => accumulator + item.Price * item.Quantity,
         0
       );
-      this.totalAmountCart = this.$helper.formatMoney(totalAmount);
+      const totalOrder = totalAmount + this.order.ShippingFee;
+      this.totalAmountCart = totalOrder;
     },
+
     async getOrderDetailsData() {
       try {
         const res = await cartItemService.getByIds(this.orderDetailIds);
@@ -586,7 +591,10 @@ export default {
         console.log(error);
       }
     },
-
+    /**
+     * Hàm lấy dữ liệu địa chỉ mặc định của người dùng
+     * Author: LQHUY(04/04/2024)
+     */
     async getAddressDeliveryDefault() {
       try {
         const res = await deliveryAddressService.getAllByUserId(

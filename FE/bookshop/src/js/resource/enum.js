@@ -30,7 +30,7 @@ const Enum = {
   },
   /**Hình thức giao hàng */
   DELIVERY_METHOD: {
-    OCD: 0,
+    LOCAL_DELIVERY: 0,
   },
 
   /**Tình trạng thanh toán */
@@ -41,7 +41,7 @@ const Enum = {
 
   /**Hình thức thanh toán */
   PAYMENT_METHOD: {
-    CASH_PAYMENT: 0,
+    COD: 0,
     ZALOPAY_WALLTET: 1,
     VNPAY: 2,
     MONO_WALLET: 3,

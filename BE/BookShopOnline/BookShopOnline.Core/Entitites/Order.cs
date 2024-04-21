@@ -20,6 +20,7 @@ namespace BookShopOnline.Core.Entitites
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public double TotalAmount { get; set; }
+        public double? ShippingFee { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DeliveryStatus DeliveryStatus { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }

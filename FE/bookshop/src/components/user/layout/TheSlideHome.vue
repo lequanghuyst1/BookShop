@@ -1,5 +1,5 @@
 <template>
-   <div class="slideshow-container">
+  <!-- <div class="slideshow-container">
     <div
       class="slideshow"
       @mousedown="handleMouseDown"
@@ -15,75 +15,66 @@
         <img :src="slide.image" alt="Slide Image" class="slide-image" />
       </div>
     </div>
-  </div>
+  </div> -->
+  <swiper
+    style="height: 100%"
+    :autoplay="{ delay: 3000, disableOnInteraction: false }"
+    :modules="modules"
+    :slides-per-view="1"
+    :pagination="{ clickable: true }"
+  >
+    <swiper-slide
+      :pagination="{ clickable: true }"
+      v-for="(slide, index) in slides"
+      :key="index"
+    >
+      <img :src="slide.image" class="slide-image" />
+    </swiper-slide>
+  </swiper>
 </template>
 
 <script>
+// import Swiper core and required modules
+import { Pagination, Scrollbar, Autoplay } from "swiper/modules";
+
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
+// Import Swiper styles
 export default {
-  name: "SlideHome",
-  data() {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  setup() {
+    const onSwiper = (swiper) => {
+      console.log(swiper);
+    };
+    const onSlideChange = () => {
+      console.log("slide change");
+    };
+    const slides = [
+      { image: require("@/assets/banner/slider_1.jpg") },
+      { image: require("@/assets/banner/slider_2.jpg") },
+      { image: require("@/assets/banner/slider_3.jpg") },
+      { image: require("@/assets/banner/slider_4.jpg") },
+      { image: require("@/assets/banner/slider_5.jpg") },
+      // Add more slides as needed
+    ];
     return {
-      slides: [
-        { image: require("@/assets/banner/slider_1.jpg") },
-        { image: require("@/assets/banner/slider_2.jpg") },
-        { image: require("@/assets/banner/slider_3.jpg") },
-        { image: require("@/assets/banner/slider_4.jpg") },
-        { image: require("@/assets/banner/slider_5.jpg") },
-        // Add more slides as needed
-      ],
-      currentSlideIndex: 0,
-      slideInterval: null,
-      isDragging: false,
-      startX: 0,
-      endX: 0,
+      onSwiper,
+      onSlideChange,
+      slides,
+      modules: [Autoplay, Pagination, Scrollbar],
     };
   },
-  mounted() {
-    this.startSlideShow();
-  },
-  methods: {
-    startSlideShow() {
-      this.slideInterval = setInterval(() => {
-        this.nextSlide();
-      }, 4000); // Thời gian chuyển đổi giữa các slide (3 giây)
-    },
-    nextSlide() {
-      this.currentSlideIndex =
-        (this.currentSlideIndex + 1) % this.slides.length;
-    },
-    prevSlide() {
-      if (this.currentSlideIndex === 0) {
-        this.currentSlideIndex = this.slides.length - 1;
-      } else {
-        this.currentSlideIndex--;
-      }
-    },
-    handleMouseDown(event) {
-      this.isDragging = true;
-      this.startX = event.clientX;
-    },
-    handleMouseMove(event) {
-      if (this.isDragging) {
-        this.endX = event.clientX;
-      }
-    },
-    handleMouseUp() {
-      if (this.isDragging) {
-        this.isDragging = false;
-        const deltaX = this.endX - this.startX;
-        if (deltaX > 0) {
-          this.prevSlide();
-        } else {
-          this.nextSlide();
-        }
-      }
-    },
-  },
-  beforeUnmount() {
-    clearInterval(this.slideInterval);
-  },
 };
-
 </script>
 
 <style>

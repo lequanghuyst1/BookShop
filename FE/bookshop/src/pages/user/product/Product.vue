@@ -110,7 +110,7 @@
                     </div>
                   </div>
                   <form v-on:submit.prevent action="" id="add-item-form">
-                    <div class="select-action d-flex align-items-center">
+                    <div class="select-action d-flex align-items-center mb-3">
                       <span class="select-title" style="min-width: 150px">
                         Số lượng
                       </span>
@@ -134,6 +134,9 @@
                         </button>
                       </div>
                     </div>
+                    <p v-if="messageInfo" class="not-enough-quantity">
+                      {{ messageInfo }}
+                    </p>
                     <div class="wrap-addcart">
                       <button @click="handleOnAdd" class="add-to-cart">
                         <i class="fa-solid fa-cart-plus"></i>
@@ -152,7 +155,7 @@
         </div>
         <div class="col-3">
           <div class="pro-service">
-            <div class="pro-service-title">Chỉ có ở Vinabook</div>
+            <div class="pro-service-title">Chỉ có ở Fahasa</div>
 
             <div class="pro-service-item">
               <div class="pro-service-icon">
@@ -206,7 +209,7 @@
   <div class="product-introduction">
     <div class="container">
       <div class="row">
-        <div class="product-introduction-header">Vinabook giới thiệu</div>
+        <div class="product-introduction-header">Fahasa giới thiệu</div>
       </div>
       <div class="product-introduction-body">
         <div class="introduction-btn btn-prev">
@@ -648,7 +651,7 @@ export default {
     return {
       productInfo: {},
       cartItem: {},
-      quantity: 1,
+      // quantity: 1,
       isShowMoreViewDesc: false,
       isShowFormPreviewProduct: false,
       reviewProducts: [],
@@ -668,7 +671,13 @@ export default {
   watch: {
     //Theo dõi biến số lượng cập nhật số tiền
     "cartItem.Quantity": function (newValue) {
-      this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
+      if (newValue <= this.productInfo.QuantityInStock) {
+        this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
+      } else {
+        this.cartItem.Quantity = this.productInfo.QuantityInStock;
+        this.messageInfo = `Số lượng yêu cầu ${newValue} không có
+                      sẵn.`;
+      }
     },
   },
   computed: {
@@ -688,7 +697,7 @@ export default {
         if (res.status === 200) {
           this.productInfo = res.data;
           this.cartItem = res.data;
-          this.cartItem.Quantity = 1;
+          this.cartItem.Quantity = this.productInfo.QuantityInStock > 0 ? 1 : 0;
           this.cartItem.ProvisionalMoney = this.cartItem.Price;
           this.getReviewProductData();
         }
@@ -1060,6 +1069,10 @@ export default {
   border-radius: 4px;
   overflow: hidden;
 }
+.not-enough-quantity {
+  font-size: 14px !important;
+  color: #c92127;
+}
 .quantity-add {
   width: 30px;
   border: none;
@@ -1074,7 +1087,7 @@ export default {
   outline: none;
 }
 .wrap-addcart {
-  margin-top: 24px;
+  margin-top: 16px;
   display: flex;
   justify-content: center;
   column-gap: 20px;

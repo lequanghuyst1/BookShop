@@ -11,24 +11,21 @@
               this.order.OrderStatus ===
               this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
                 ? '#DEB85B'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
+                : this.order.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
                 ? '#a90000'
                 : '#a0dbb3',
             borderColor:
               this.order.OrderStatus ===
               this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
                 ? '#DEB85B'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
+                : this.order.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
                 ? '#a90000'
                 : '#a0dbb3',
             backgroundColor:
               this.order.OrderStatus ===
               this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
                 ? '#fdfde8'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
+                : this.order.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
                 ? '#f3b4af'
                 : '#f1fcf5',
           }"
@@ -63,7 +60,7 @@
         <div class="order-view-note">
           <span style="flex: 1">Ghi chú: </span>
           <span class="dont-have-info" style="flex: 16; font-weight: 500">{{
-            order.Note ? oreder.Note : "(Không có)"
+            order.Note ? order.Note : "(Không có)"
           }}</span>
         </div>
       </div>
@@ -487,7 +484,7 @@
             <div class="order-box-title">
               <div class="order-view-title">Phương thức vận chuyển</div>
             </div>
-            <div class="order-box-info">Giao hàng tiêu chuẩn</div>
+            <div class="order-box-info">Giao hàng tận nơi</div>
           </div>
         </div>
         <div class="order-view-box">
@@ -585,32 +582,32 @@
             <div
               class="order-view-status"
               :style="{
-            color:
-              this.order.OrderStatus ===
-              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
-                ? '#DEB85B'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
-                ? '#a90000'
-                : '#a0dbb3',
-            borderColor:
-              this.order.OrderStatus ===
-              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
-                ? '#DEB85B'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
-                ? '#a90000'
-                : '#a0dbb3',
-            backgroundColor:
-              this.order.OrderStatus ===
-              this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
-                ? '#fdfde8'
-                : this.order.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.CANCELLED
-                ? '#f3b4af'
-                : '#f1fcf5',
-          }"
-        >
+                color:
+                  this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                    ? '#DEB85B'
+                    : this.order.OrderStatus ===
+                      this.$Enum.ORDER_STATUS.CANCELLED
+                    ? '#a90000'
+                    : '#a0dbb3',
+                borderColor:
+                  this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                    ? '#DEB85B'
+                    : this.order.OrderStatus ===
+                      this.$Enum.ORDER_STATUS.CANCELLED
+                    ? '#a90000'
+                    : '#a0dbb3',
+                backgroundColor:
+                  this.order.OrderStatus ===
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                    ? '#fdfde8'
+                    : this.order.OrderStatus ===
+                      this.$Enum.ORDER_STATUS.CANCELLED
+                    ? '#f3b4af'
+                    : '#f1fcf5',
+              }"
+            >
               {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
             </div>
             <div>
@@ -690,8 +687,9 @@
                       <div>
                         <span class="orderHs-price-old"
                           ><span class="price">{{
-                          this.$helper.formatMoney(orderDetail.OriginalPrice)
-                        }}</span> đ</span
+                            this.$helper.formatMoney(orderDetail.OriginalPrice)
+                          }}</span>
+                          đ</span
                         >
                       </div>
                     </div>
@@ -744,9 +742,10 @@
           <div>
             <span>Phí vận chuyển: </span>
             <span class="order-totals-price"
-              ><span class="price">19.000</span>&nbsp;<span class="sym-totals"
-                >đ</span
-              ></span
+              ><span class="price">{{
+                this.$helper.formatMoney(order.ShippingFee)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span></span
             >
           </div>
 

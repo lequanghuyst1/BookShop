@@ -37,7 +37,7 @@ const PAYMENT_METHOD = {
       description: null,
       image:
         "https://cdn0.fahasa.com/skin/frontend/base/default/images/payment_icon/ico_cashondelivery.svg?q=105574",
-      value: Enum.PAYMENT_METHOD.CASH_PAYMENT,
+      value: Enum.PAYMENT_METHOD.COD,
     },
   ],
 };
