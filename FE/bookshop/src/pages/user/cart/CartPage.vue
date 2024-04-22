@@ -49,6 +49,7 @@
                     v-model="itemIdsSelected"
                     @click="handleOnSelectItem(item)"
                     class="checkbox-add-cart"
+                    :class="{ disable: item.QuantityInStock === 0 }"
                   />
                 </div>
                 <div class="img-product-cart">
@@ -406,10 +407,14 @@ export default {
         this.messageNotEnough[item.BookCode] = null;
         item.Quantity = Number(event.target.value);
       }
-      this.handleOnEdit(item);
-      if (event.target.value < 0) {
-        item.Quantity = 1;
+
+      if (event.target.value === "" || event.target.value === null) {
+        this.messageNotEnough[item.BookCode] = "Tối thiểu 1 cho mỗi đơn hàng";
+      } else {
+        this.messageNotEnough[item.BookCode] = null;
       }
+
+      this.handleOnEdit(item);
     },
     /**
      * Thực hiện update cart item
@@ -472,20 +477,21 @@ export default {
      * @author LQHUY(09/04/2024)
      */
     handleOnSelectItem(item) {
-      // this.itemIdsSelected[index] = true;
-      const index = this.itemIdsSelected.indexOf(item.CartItemId);
-      if (index === -1) {
-        // Nếu phần tử không tồn tại trong mảng, thêm nó vào mảng
-        this.itemIdsSelected.push(item.CartItemId);
-      } else {
-        // Nếu phần tử tồn tại trong mảng, loại bỏ nó khỏi mảng
-        this.itemIdsSelected.splice(index, 1);
+      if (item.QuantityInStock > 0) {
+        const index = this.itemIdsSelected.indexOf(item.CartItemId);
+        if (index === -1) {
+          // Nếu phần tử không tồn tại trong mảng, thêm nó vào mảng
+          this.itemIdsSelected.push(item.CartItemId);
+        } else {
+          // Nếu phần tử tồn tại trong mảng, loại bỏ nó khỏi mảng
+          this.itemIdsSelected.splice(index, 1);
+        }
+        this.itemIdsSelected = [...this.itemIdsSelected];
+        localStorageService.setItemToLocalStorage(
+          "itemSelected",
+          this.itemIdsSelected
+        );
       }
-      this.itemIdsSelected = [...this.itemIdsSelected];
-      localStorageService.setItemToLocalStorage(
-        "itemSelected",
-        this.itemIdsSelected
-      );
     },
   },
 };
@@ -510,6 +516,10 @@ input[type="checkbox"] {
   top: 3px;
   transition-duration: 0.1s;
   height: 0;
+}
+input[type="checkbox"].disable {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
 }
 input[type="checkbox"]:checked {
   /* background-color: #ffffff;

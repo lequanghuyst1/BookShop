@@ -21,6 +21,7 @@ const Enum = {
     DELIVERED: 3,
     CANCELLED: 4,
     COMPLETE: 5,
+    WAIT_FOR_PAY: 6,
   },
   /**Tình trạng giao hàng */
   DELIVERY_STATUS: {

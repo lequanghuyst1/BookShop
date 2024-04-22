@@ -28,13 +28,17 @@ namespace BookShopOnline.Core.Enums
         /// </summary>
         DELIVERED = 3,
         /// <summary>
-        /// Hoàn thành
-        /// </summary>
-        COMPLETE = 4,
-        /// <summary>
         /// Đã hủy
         /// </summary>
         CANCELLED = 4,
+        /// <summary>
+        /// Hoàn thành
+        /// </summary>
+        COMPLETE = 5,
+        /// <summary>
+        /// Chờ thanh toán
+        /// </summary>
+        WAIT_FOR_PAY = 6,
     }
 
     /// <summary>

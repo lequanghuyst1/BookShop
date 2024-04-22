@@ -26,7 +26,7 @@
               :modules="modules"
               :slides-per-view="5"
               :slides-per-column="2"
-              :slides-per-column-fill="'row'"
+              slides-per-column-fill="row"
               :pagination="{ clickable: true }"
             >
               <swiper-slide

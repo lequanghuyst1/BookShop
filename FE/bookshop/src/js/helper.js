@@ -134,12 +134,15 @@ const helper = {
         } else if (value === Enum.ORDER_STATUS.CANCELLED) {
           return resource().ENUM_ORDER_STATUS.cancelled;
         }
+        else if(value === Enum.ORDER_STATUS.WAIT_FOR_PAY){
+          return resource().ENUM_ORDER_STATUS.waitForPay;
+
+        }
         break;
       case "DELIVERY_STATUS":
         if (value === Enum.DELIVERY_STATUS.NOT_DELIVERY) {
           return resource().ENUM_DELIVERY_STATUS.notDelivery;
-        }
-        else if (value === Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY) {
+        } else if (value === Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY) {
           return resource().ENUM_DELIVERY_STATUS.wattingForDelivery;
         } else if (value === Enum.DELIVERY_STATUS.RECEIVED_THE_GOODS) {
           return resource().ENUM_DELIVERY_STATUS.receviedTheGoods;
@@ -149,7 +152,14 @@ const helper = {
         if (value === Enum.PAYMENT_STATUS.UNPAID) {
           return resource().ENUM_PAYMENT_STATUS.unpaid;
         } else if (value === Enum.PAYMENT_STATUS.PAID) {
-          return this.resource.ENUM_PAYMENT_STATUS.paid;
+          return resource().ENUM_PAYMENT_STATUS.paid;
+        }
+        break;
+      case "PAYMENT_METHOD":
+        if (value === Enum.PAYMENT_METHOD.COD) {
+          return resource().PAYMENT_METHOD.cod;
+        } else if (value === Enum.PAYMENT_METHOD.VNPAY) {
+          return resource().PAYMENT_METHOD.vnPay;
         }
         break;
       default:
@@ -159,7 +169,7 @@ const helper = {
   formatOrderDate(value) {
     var date = new Date(value);
     // Chuẩn hóa giờ để hiển thị đúng định dạng 12 giờ
-    var hour = date.getHours() ; // Nếu giờ là 0 thì chuyển thành 12
+    var hour = date.getHours(); // Nếu giờ là 0 thì chuyển thành 12
     var minute = date.getMinutes();
 
     // Thêm số 0 đằng trước nếu cần
@@ -178,7 +188,7 @@ const helper = {
       " " +
       hour +
       ":" +
-      minute 
+      minute;
 
     return formattedDate;
   },

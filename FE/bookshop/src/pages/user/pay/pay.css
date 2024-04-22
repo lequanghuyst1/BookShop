@@ -357,54 +357,174 @@
   margin-top: 32px;
   margin-bottom: 32px;
 }
-.input-group{
-    margin: 12px 0;
-    position: relative;
+.input-group {
+  margin: 12px 0;
+  position: relative;
 }
-.input-group .textfiled{
-    box-shadow: 0 0 0 1px #d9d9d9;
-    transition: all 0.2s ease-out;
-    background-color: white;
-    color: #333333;
-    border-radius: 4px !important;
-    display: block;
-    box-sizing: border-box;
-    width: 600px;
-    padding: 8px;
-    word-break: normal;
-    outline: none;
-    border: 1px solid #ccc;
-    font-size: 14px;
+.input-group .textfiled {
+  box-shadow: 0 0 0 1px #d9d9d9;
+  transition: all 0.2s ease-out;
+  background-color: white;
+  color: #333333;
+  border-radius: 4px !important;
+  display: block;
+  box-sizing: border-box;
+  width: 600px;
+  padding: 8px;
+  word-break: normal;
+  outline: none;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
-.input-group .textfiled:focus{
-    border-color: #338dbc;
-    box-shadow: 0 0 0 1px #338dbc;
+.input-group .textfiled:focus {
+  border-color: #338dbc;
+  box-shadow: 0 0 0 1px #338dbc;
 }
-.input-group .label{
-    position: absolute;
-    font-size: 12px;
-    background-color: #fff;
-    top: -10px;
-    left: 16px;
+.input-group .label {
+  position: absolute;
+  font-size: 12px;
+  background-color: #fff;
+  top: -10px;
+  left: 16px;
 }
 
-.member-shop{
-    padding: 16px;
+.member-shop {
+  padding: 16px;
   background-color: #fff;
   border-radius: 8px;
   margin-top: 32px;
   margin-bottom: 32px;
   font-size: 14px;
 }
-.member-shop .checkout-member{
+.member-shop .checkout-member {
+}
+.member-shop .checkout-input-checkbox {
+  margin: 12px 0;
+}
+.member-shop .checkout-input-checkbox label {
+  margin-left: 12px;
+  position: absolute;
+  transform: translateY(2px);
+  display: inline-block;
+}
 
+.payment-online {
+  background-color: #f0f0f0;
+  width: 100%;
+  height: 100vh;
+  position: relative;
 }
-.member-shop .checkout-input-checkbox{
-    margin: 12px 0;
+.payment-wrap {
+  width: 45%;
+  height: auto;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  border-radius: 4px;
 }
-.member-shop .checkout-input-checkbox label{
-    margin-left: 12px;
-    position: absolute;
-    transform: translateY(2px);
-    display: inline-block;
+.payment__header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #ccc;
+}
+.payment__header-logo {
+  height: 100%;
+}
+.payment__header-logo img {
+  max-height: 100%;
+  max-width: 100%;
+}
+.payment__body {
+  padding: 16px;
+  display: flex;
+  column-gap: 40px;
+  margin-top: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 26px;
+}
+.payment__body .payment-info {
+  flex-basis: 36%;
+  background-color: #f5f7f9;
+  border-radius: 4px;
+  padding: 12px;
+}
+.payment__body .card-info {
+  flex: 1;
+}
+.payment-info-title {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ccc;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+.info-item {
+  margin: 16px 0;
+  font-size: 14px;
+}
+.info-item .info-item-title {
+  color: #75727c;
+}
+.card-info-header {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+.card-info-header p:nth-child(1) {
+  margin-bottom: 16px !important;
+}
+.card-info-header p:nth-child(2) {
+  font-size: 15px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #0051c8;
+}
+.payment-form {
+  margin-top: 12px;
+}
+.payment-form .form-group .m-label {
+  margin-bottom: 4px !important;
+}
+.group-button-payment {
+  display: flex;
+  column-gap: 20px;
+  justify-content: space-between;
+}
+.payment__footer {
+  height: 60px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.payment__footer-contact {
+  display: flex;
+  column-gap: 30px;
+  font-size: 14px;
+}
+.payment__footer .icon {
+  display: flex;
+  column-gap: 8px;
+}
+.payment__header-transaction-time{
+  display: flex;
+}
+.payment__header-transaction-time .title{
+  font-size: 14px;
+  margin-right: 12px !important;
+}
+.payment__header-transaction-time .time{
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  line-height: 26px;
+  text-align: center;
 }

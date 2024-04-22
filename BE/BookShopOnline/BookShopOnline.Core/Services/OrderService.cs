@@ -23,7 +23,7 @@ namespace BookShopOnline.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> CheckoutServiceAsync(OrderData orderData)
+        public async Task<Order> CheckoutServiceAsync(OrderData orderData)
         {
             _unitOfWork.BeginTransaction();
             var order = orderData.Order;
@@ -67,12 +67,12 @@ namespace BookShopOnline.Core.Services
                     if (resultDelete > 0)
                     {
                         _unitOfWork.Commit();
-                        return res;
+                        return order;
                     }
                     _unitOfWork.Rollback();
                 }
             }
-            return 0;
+            return order;
 
         }
 

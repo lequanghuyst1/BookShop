@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Wk6jPGhpDLxc8GOVpdrshf5u9R5lXBtUWlChUrEf2R0=",
+  "Hash": "O4xsxD2cflGrrH5vE7XPhhWWOvgHr7ymsiFwoC5IUGU=",
   "Source": "BookShopOnline.Api",
   "BasePath": "_content/BookShopOnline.Api",
   "Mode": "Default",
@@ -102,6 +102,23 @@
       "OriginalItemSpec": "wwwroot\\images\\8935086856352.jpg"
     },
     {
+      "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\8935235241411.jpg",
+      "SourceId": "BookShopOnline.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\",
+      "BasePath": "_content/BookShopOnline.Api",
+      "RelativePath": "images/8935235241411.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\8935235241411.jpg"
+    },
+    {
       "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\8936066685412_1.jpg",
       "SourceId": "BookShopOnline.Api",
       "SourceType": "Discovered",
@@ -117,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\8936066685412_1.jpg"
+    },
+    {
+      "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\8936067605693.jpg",
+      "SourceId": "BookShopOnline.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\",
+      "BasePath": "_content/BookShopOnline.Api",
+      "RelativePath": "images/8936067605693.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\8936067605693.jpg"
     },
     {
       "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\8936067609813.jpg",

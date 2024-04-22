@@ -102,6 +102,7 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 //builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 //builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));

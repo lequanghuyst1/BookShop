@@ -110,7 +110,7 @@
                     </div>
                   </div>
                   <form v-on:submit.prevent action="" id="add-item-form">
-                    <div class="select-action d-flex align-items-center mb-3">
+                    <div class="select-action d-flex align-items-center pb-3">
                       <span class="select-title" style="min-width: 150px">
                         Số lượng
                       </span>
@@ -138,7 +138,7 @@
                       {{ messageInfo }}
                     </p>
                     <div class="wrap-addcart">
-                      <button @click="handleOnAdd" class="add-to-cart">
+                      <button @click="handleOnAddCart" class="add-to-cart">
                         <i class="fa-solid fa-cart-plus"></i>
                         <span>Thêm vào giỏ hàng</span>
                       </button>
@@ -666,6 +666,7 @@ export default {
         { rating: 1, quantity: 0 },
       ],
       avergeRating: null,
+      messageInfo: null,
     };
   },
   watch: {
@@ -674,9 +675,9 @@ export default {
       if (newValue <= this.productInfo.QuantityInStock) {
         this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
       } else {
-        this.cartItem.Quantity = this.productInfo.QuantityInStock;
         this.messageInfo = `Số lượng yêu cầu ${newValue} không có
-                      sẵn.`;
+        sẵn.`;
+        this.cartItem.Quantity = this.productInfo.QuantityInStock;
       }
     },
   },
@@ -737,7 +738,7 @@ export default {
      * Thực hiện thêm vào giỏ hàng khi clcik btn Thêm vào giỏ hàng
      * @author LQHUY(09/04/2024)
      */
-    async handleOnAdd() {
+    async handleOnAddCart() {
       this.cartItem.CartId = this.userInfo.CartId;
       this.cartItem.UnitPrice = this.cartItem.Price;
       const formData = new FormData();

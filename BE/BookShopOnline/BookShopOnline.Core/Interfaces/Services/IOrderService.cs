@@ -20,7 +20,7 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// 1 - thanh toán thành công 
         /// 0 - thanh toán thất bại</returns>
         /// Created By: LQHUY(12/02/2024)
-        Task<int> CheckoutServiceAsync(OrderData orderData);
+        Task<Order> CheckoutServiceAsync(OrderData orderData);
         /// <summary>
         /// Lấy ra danh sách các bản ghi theo userId
         /// </summary>

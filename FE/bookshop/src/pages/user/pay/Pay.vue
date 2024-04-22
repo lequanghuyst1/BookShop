@@ -431,6 +431,7 @@ import PAYMENT_METHOD from "@/js/resource/payment-method";
 import cartItemService from "@/utils/CartItemService";
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 import orderService from "@/utils/OrderService";
+import vnPayService from "@/utils/VnPayService";
 export default {
   name: "PayUserPage",
   components: { TheHeader, InputAccount },
@@ -465,7 +466,6 @@ export default {
       orderDetailData: [],
       totalAmountCart: 0,
       order: {
-        OrderStatus: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
         DeliveryMethod: this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY,
         DeliveryStatus: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
         PaymentMethod: this.$Enum.PAYMENT_METHOD.COD,
@@ -542,6 +542,10 @@ export default {
         this.order.TotalAmount = this.totalAmountCart;
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
+        this.order.OrderStatus =
+          this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.COD
+            ? this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+            : this.$Enum.ORDER_STATUS.WAIT_FOR_PAY;
 
         //thiết lập các thông tin để truyền khi gọi Api checkout
         const orderInfo = {
@@ -554,12 +558,29 @@ export default {
         const res = await orderService.checkout(orderInfo);
         if (res.status === 201) {
           //gọi lấy lại giá trị giỏ hàng và gán vào local
-          const res = await cartItemService.getByCartId(this.userInfo.CartId);
-          cartLocalStorageService.setCartToLocalStorage(res.data);
+          const cartData = await cartItemService.getByCartId(
+            this.userInfo.CartId
+          );
+          cartLocalStorageService.setCartToLocalStorage(cartData.data);
           this.$emitter.emit("getQuantityOfCart");
           this.$emitter.emit("toggleShowLoading", false);
           localStorageService.setItemToLocalStorage("itemSelected", []);
-          location.href = "http://localhost:8080/customer/order";
+          if (this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.VNPAY) {
+            const paymentInfo = {
+              OrderType: "electronic",
+              Amount: this.order.TotalAmount,
+              TransactionContent: "Thanh toán tiền sách",
+              OrderId: res.data.OrderId,
+            };
+            const resUrl = await vnPayService.CreatePaymentUrl(paymentInfo);
+            if (resUrl.status === 201) {
+              const urlPayment = resUrl.data;
+              console.log(urlPayment);
+              location.href = urlPayment;
+            }
+          } else {
+            location.href = "http://localhost:8080/customer/order";
+          }
         }
       } catch (error) {
         console.log(error);

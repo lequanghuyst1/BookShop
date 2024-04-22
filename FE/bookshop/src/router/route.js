@@ -14,6 +14,7 @@ import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/Layou
 import HomeUserPage from "../pages/user/home/HomePage.vue";
 import CartPage from "../pages/user/cart/CartPage.vue";
 import CategoryUserPage from "../pages/user/category/CategoryPage.vue";
+import OnlinePayment from "@/pages/user/pay/OnlinePayment.vue";
 import ProductPage from "../pages/user/product/Product.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
@@ -21,7 +22,7 @@ import BookAddressPage from "../pages/user/account/BookAddress.vue";
 import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
 import PayUserPage from "@/pages/user/pay/Pay.vue";
 import OrderPage from "@/pages/user/order/OrderPage.vue";
-import OrderDatail from "@/pages/user/order/OrderDatail.vue";
+import OrderDatail from "@/pages/user/order/OrderDetail.vue";
 
 import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
@@ -105,6 +106,10 @@ const routes = [
     ],
   },
   {
+    path: "/payment/vnpay/transaction",
+    component: OnlinePayment,
+  },
+  {
     path: "/admin/login",
     component: LoginAdminPage,
   },
@@ -176,7 +181,7 @@ router.beforeEach((to, from, next) => {
   ) {
     next();
   } else {
-    console.log(to)
+    console.log(to);
     next();
   }
 });

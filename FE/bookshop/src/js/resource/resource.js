@@ -62,6 +62,7 @@ const Resource = {
       delivered: "Đã giao hàng",
       complete: "Hoàn thành",
       cancelled: "Bị hủy",
+      waitForPay: "Chờ thanh toán",
     },
     ENUM_DELIVERY_STATUS: {
       notDelivery: "Chưa giao hàng",
@@ -72,6 +73,10 @@ const Resource = {
       unpaid: "Chưa thanh toán",
       paid: "Đã thanh toán",
     },
+    PAYMENT_METHOD: {
+      cod: "Thanh toán khi nhận hàng",
+      vnPay: "Thanh toán bằng VNPAY",
+    }
   },
 };
 export default Resource;

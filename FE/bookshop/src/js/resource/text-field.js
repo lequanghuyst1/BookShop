@@ -382,6 +382,41 @@ const TEXT_FIELD = {
         },
       },
     },
+    onlinePayment: {
+      accountName: {
+        name: "AccountName",
+        label: "Tên chủ thẻ",
+        ref: "refAccountName",
+        placeholder: "Nhập tên chủ thẻ(không dấu)",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      cardNumber: {
+        name: "CardNumber",
+        label: "Số thẻ",
+        ref: "refCardNumber",
+        placeholder: "Nhập số thẻ",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      releaseDate: {
+        name: "ReleaseDate",
+        label: "Ngày phát hành",
+        ref: "refReleaseDate",
+        placeholder: "MM/YYYY",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+    },
   },
 };
 export default TEXT_FIELD;

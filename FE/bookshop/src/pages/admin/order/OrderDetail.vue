@@ -51,7 +51,7 @@
             <p>{{ this.$helper.formatOrderDate(order.OrderDate) }}</p>
           </div>
           <div class="order-status">
-            <div class="order__info-title">Tình tạng đơn hàng</div>
+            <div class="order__info-title">Tình trạng đơn hàng</div>
             <p
               :style="{
                 color:
@@ -102,7 +102,22 @@
 
           <div class="payment-status">
             <div class="order__info-title">Trạng thái thanh toán</div>
-            <p>
+            <p
+              :style="{
+                color:
+                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
+                    ? '#DEB85B'
+                    : '#a0dbb3',
+                borderColor:
+                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
+                    ? '#DEB85B'
+                    : '#a0dbb3',
+                backgroundColor:
+                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
+                    ? '#DEB85B'
+                    : '#f1fcf5',
+              }"
+            >
               {{
                 this.$helper.hanldeValueTypeEnum(
                   "PAYMENT_STATUS",
@@ -119,8 +134,7 @@
           style="background-color: #0051c8"
           class="m-button m-button-icon"
           icon="fa-solid fa-print"
-          >In</MButton
-        >
+        ></MButton>
       </div>
     </div>
     <div class="order-detail__body">
@@ -210,6 +224,126 @@
               </button>
             </div>
           </div>
+          <div class="info-payment mt-3">
+            <div class="info-payment__header">
+              <p
+                :style="{
+                  color:
+                    this.order.PaymentMethod ===
+                    this.$Enum.PAYMENT_METHOD.UNPAID
+                      ? '#DEB85B'
+                      : '#a0dbb3',
+                  borderColor:
+                    this.order.PaymentMethod ===
+                    this.$Enum.PAYMENT_METHOD.UNPAID
+                      ? '#DEB85B'
+                      : '#a0dbb3',
+                  backgroundColor:
+                    this.order.PaymentMethod ===
+                    this.$Enum.PAYMENT_METHOD.UNPAID
+                      ? '#DEB85B'
+                      : '#f1fcf5',
+                }"
+              >
+                {{
+                  this.$helper.hanldeValueTypeEnum(
+                    "PAYMENT_STATUS",
+                    order.PaymentStatus
+                  )
+                }}
+              </p>
+            </div>
+            <div class="info-payment__content mb-4">
+              <div class="row">
+                <div class="col-6">
+                  <div class="add-note" style="text-align: right">
+                    <MInput label="Ghi chú đơn hàng"></MInput>
+                    <button class="m-button" style="background-color: #0051c8">
+                      Cập nhật
+                    </button>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="info-wrap">
+                    <div class="info-item">
+                      <p class="info-item__title">Số lượng sản phẩm</p>
+                      <p class="info-item__value">2</p>
+                    </div>
+                    <div class="info-item">
+                      <p class="info-item__title">Tổng tiền hàng</p>
+                      <p class="info-item__value">
+                        {{
+                          this.$helper.formatMoney(
+                            order.TotalAmount - order.ShippingFee
+                          )
+                        }}đ
+                      </p>
+                    </div>
+                    <div class="info-item">
+                      <p class="info-item__title">Giảm giá</p>
+                      <p class="info-item__value">0đ</p>
+                    </div>
+                    <div class="info-item">
+                      <p class="info-item__title">Vận chuyển</p>
+                      <p class="info-item__value">
+                        {{ this.$helper.formatMoney(order.ShippingFee) }}đ
+                      </p>
+                    </div>
+                    <div class="info-item">
+                      <div class="info-item__title">
+                        <b>Tổng giá trị đơn hàng</b>
+                      </div>
+                      <p class="info-item__value">
+                        <b
+                          >{{ this.$helper.formatMoney(order.TotalAmount) }}đ</b
+                        >
+                      </p>
+                    </div>
+                    <p class="payment-method">
+                      {{
+                        this.$helper.hanldeValueTypeEnum(
+                          "PAYMENT_METHOD",
+                          order.PaymentMethod
+                        )
+                      }}
+                    </p>
+                    <div class="info-item">
+                      <p class="info-item__title">Đã thanh toán</p>
+                      <p class="info-item__value">
+                        {{ this.$helper.formatMoney(order.TotalAmount) }}đ
+                      </p>
+                    </div>
+
+                    <div class="payment" style="text-align: right">
+                      <button
+                        v-if="
+                          order.PaymentStatus ===
+                          this.$Enum.PAYMENT_STATUS.UNPAID
+                        "
+                        class="m-button"
+                        style="background-color: #0051c8"
+                      >
+                        Thanh toán
+                      </button>
+                      <button
+                        v-if="
+                          order.PaymentStatus === this.$Enum.PAYMENT_STATUS.PAID
+                        "
+                        class="m-button"
+                        style="
+                          background-color: #e2e9ea;
+                          color: #333;
+                          cursor: not-allowed;
+                        "
+                      >
+                        Thanh toán
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-3">
           <div class="confirm-order">
@@ -218,7 +352,8 @@
             <div
               v-if="
                 order.OrderStatus ===
-                this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION ||
+                order.OrderStatus === this.$Enum.ORDER_STATUS.WAIT_FOR_PAY
               "
               class="confirm-group"
             >

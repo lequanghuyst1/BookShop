@@ -495,7 +495,14 @@
           <div class="order-box-info">
             <div class="order-box-info-historypayment">
               <div>
-                <p>Thanh toán bằng tiền mặt khi nhận hàng</p>
+                <p>
+                  {{
+                    this.$helper.hanldeValueTypeEnum(
+                      "PAYMENT_METHOD",
+                      order.PaymentMethod
+                    )
+                  }}
+                </p>
               </div>
             </div>
           </div>
