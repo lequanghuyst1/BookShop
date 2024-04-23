@@ -101,5 +101,7 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.GetBySlugAsync<TEntity>(slug);
             return res;
         }
+
+        
     }
 }

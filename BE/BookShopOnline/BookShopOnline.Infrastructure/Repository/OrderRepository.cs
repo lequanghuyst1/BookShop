@@ -17,6 +17,13 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<IEnumerable<object>> CalculateTotalSalesPerMonth(int year)
+        {
+            var procName = "Proc_Order_CalculateTotalSalesPerMonth";
+            var res = await _dbContext.Connection.QueryAsync<object>(procName, new { Year = year });
+            return res;
+        }
+
         public async Task<int> ConfirmAllAsync()
         {
             var procName = "Proc_Order_ConfirmAll";
@@ -30,6 +37,23 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.Connection.QueryAsync<Order>(procName, new { UserId = userId }, _dbContext.Transaction);
             return res;
         }
+
+        public async Task<int> GetTotalOrderByConditionIn24Hour(string? fieldCondition)
+        {
+            string sqlCommand = @"SELECT COUNT(*) FROM view_order WHERE OrderDate >= NOW() - INTERVAL 24 HOUR";
+            DynamicParameters parameters = new DynamicParameters();
+
+            if (!string.IsNullOrEmpty(fieldCondition))
+            {
+                string conditionString = $"{fieldCondition} = @Condition";
+                parameters.Add("Condition", Core.Enums.OrderStatus.WAIT_FOR_CONFIRMATION);
+                sqlCommand += $" AND {conditionString}";
+            }
+
+            var result = await _dbContext.Connection.ExecuteScalarAsync<int>(sqlCommand, parameters);
+            return result;
+        }
+
     }
 }
   

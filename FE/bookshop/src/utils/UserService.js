@@ -36,6 +36,11 @@ class UserService extends BaseService {
     var res = await this.baseAxios.post(`${this.baseUrl}/Logout`, data);
     return res;
   }
+
+  async GetTotalCustomerNewBy24Hours() {
+    var res = await this.baseAxios.get(`${this.baseUrl}/TotalNewCustomer`);
+    return res;
+  }
 }
 const userService = new UserService();
 export default userService;

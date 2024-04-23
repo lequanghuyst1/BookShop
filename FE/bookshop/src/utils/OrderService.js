@@ -13,11 +13,25 @@ class OrderService extends BaseService {
     return res;
   }
   async CancelOrder(data) {
-    const res = await this.baseAxios.put(`${this.baseUrl}/CancelOrder`,data);
+    const res = await this.baseAxios.put(`${this.baseUrl}/CancelOrder`, data);
     return res;
   }
-  async ConfirmAll(){
+  async ConfirmAll() {
     const res = await this.baseAxios.put(`${this.baseUrl}/ConfirmAll`);
+    return res;
+  }
+  async CalculateTotalSalesPerMonth(data) {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/CalculateTotalSalesPerMonth`,
+      data
+    );
+    return res;
+  }
+  async getTotalOrderByConditionIn24Hour(data) {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/TotalOrderBy24Hour`,
+      data
+    );
     return res;
   }
 }

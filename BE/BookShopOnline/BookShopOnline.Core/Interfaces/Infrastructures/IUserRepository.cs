@@ -21,7 +21,6 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// Created By: LQHUY(06/04/2024)
         Task<bool> CheckUserIsExist(string email);
 
-
         /// <summary>
         /// Kiểm tra thông tin người dùng có xác thực không
         /// </summary>
@@ -33,10 +32,34 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// Created By: LQHUY(06/04/2024)
         Task<User?> FindUserByEmailAndPassword(UserLogin userLogin);
 
+        /// <summary>
+        /// Lấy ra thông tin người dùng theo Email
+        /// </summary>
+        /// <param name="email">email đăng nh</param>
+        /// <returns>
+        /// thông tin người dùng
+        /// </returns>
+        /// Created By: LQHUY(06/04/2024)
         Task<User?> FindByEmailAsync(string email);
 
+        /// <summary>
+        /// Lấy ra thông tin người dùng theo token
+        /// </summary>
+        /// <param name="token">thông tin token</param>
+        /// <returns>
+        /// thông tin người dùng
+        /// </returns>
+        /// Created By: LQHUY(06/04/2024)
         Task<User?> GetUserByToken(string token);
 
+        /// <summary>
+        /// Hàm lấy tổng số khách hàng mới trong 24h qua
+        /// </summary>
+        /// <returns>
+        /// tổng sổ sách hàng mới
+        /// </returns>
+        /// Created By: LQHUY(23/04/2024)
+        Task<int> GetTotalUserNewBy24Hours();
     }
 
 }

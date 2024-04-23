@@ -211,6 +211,7 @@ export default {
     this.$emitter.on("toggleShowLoadingTable", this.toggleShowLoadingTable);
   },
   mounted() {
+    console.log(this.pageData);
     this.columnsResizable();
   },
   beforeUnmount() {

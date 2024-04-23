@@ -73,5 +73,7 @@ namespace BookShopOnline.Core.Services.Base
             var res = MapEntityToDto(entity);
             return res;
         }
+
+       
     }
 }

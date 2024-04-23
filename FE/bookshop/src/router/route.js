@@ -181,7 +181,6 @@ router.beforeEach((to, from, next) => {
   ) {
     next();
   } else {
-    console.log(to);
     next();
   }
 });

@@ -42,6 +42,13 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
+        public async Task<int> GetTotalUserNewBy24Hours()
+        {
+            string sqlCommand = @"SELECT COUNT(*) FROM view_user WHERE CreatedDate >= NOW() - INTERVAL 24 HOUR AND RoleName = 'User'";
+            var result = await _dbContext.Connection.ExecuteScalarAsync<int>(sqlCommand);
+            return result;
+        }
+
         public async Task<User?> GetUserByToken(string token)
         {
             var sql = "Select * from User where RefreshToken = @RefreshToken";

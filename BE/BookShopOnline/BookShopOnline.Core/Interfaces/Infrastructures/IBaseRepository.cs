@@ -73,5 +73,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// <returns>thông tin bản ghi</returns>
         /// Created By: LQHUY(13/04/2024)
         Task<TEntity> GetBySlugAsync(string slug);
+
+        
     }
 }

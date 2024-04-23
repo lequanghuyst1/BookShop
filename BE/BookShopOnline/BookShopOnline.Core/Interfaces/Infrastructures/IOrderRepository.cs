@@ -27,5 +27,25 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// </returns>
         /// Created By: LQHUY(19/02/2024)
         Task<int> ConfirmAllAsync();
+
+        /// <summary>
+        /// Hàm lấy ra tổng số tiền của hóa đơn theo từng tháng của 1 năm
+        /// </summary>
+        /// <param name="year">năm cần lấy</param>
+        /// <returns>
+        /// object - chứa tháng và tổng tiền tháng đó
+        /// </returns>
+        /// Created By: LQHUY(23/04/2024)
+        Task<IEnumerable<object>> CalculateTotalSalesPerMonth(int year);
+
+        /// <summary>
+        /// Hàm lấy ra tổng đơn hàng mới theo điều kiện trong vòng 24h
+        /// </summary>
+        /// <param name="filedCondition">trường cần tìm kiếm</param>
+        /// <returns>
+        /// tổng số đơn
+        /// </returns>
+        /// Created By: LQHUY(23/04/2024)
+        Task<int> GetTotalOrderByConditionIn24Hour(string? filedCondition);
     }
 }

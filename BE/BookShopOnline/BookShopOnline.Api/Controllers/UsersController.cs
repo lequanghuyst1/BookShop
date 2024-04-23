@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Dto;
 using BookShopOnline.Core.Dto.User;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +15,12 @@ namespace BookShopOnline.Api.Controllers
     {
         IUserService _userService;
         IJWTAuthenticationService _jwtAuthenticationService;
-        public UsersController(IUserService userService, IJWTAuthenticationService jwtAuthenticationService) : base(userService)
+        IUserRepository _userRepository;
+        public UsersController(IUserService userService, IJWTAuthenticationService jwtAuthenticationService, IUserRepository userRepository) : base(userService)
         {
             _userService = userService;
             _jwtAuthenticationService = jwtAuthenticationService;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -94,5 +97,18 @@ namespace BookShopOnline.Api.Controllers
             return StatusCode(201);
         }
 
+        /// <summary>
+        /// Api thực hiện lấy tổng số khách hàng mới trong 24h quá
+        /// </summary>
+        /// <returns>
+        /// tổng số khách hàn
+        /// </returns>
+        /// Created By: LQHUY(23/04/2024)
+        [HttpGet("TotalNewCustomer")]
+        public async Task<IActionResult> TotalNewCustomer()
+        {
+            var res = await _userRepository.GetTotalUserNewBy24Hours();
+            return Ok(res);
+        }
     }
 }

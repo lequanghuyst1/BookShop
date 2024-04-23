@@ -808,6 +808,7 @@ export default {
     this.getOrderDetailsData();
     this.getOrderData();
   },
+  mounted() {},
   computed: {
     resource: function () {
       return this.$Resource[this.$languageCode];
@@ -821,7 +822,7 @@ export default {
       //Lưu danh sách chi tiết từng đơn hàng
       orderDetails: [],
       //Lưu thông tin chi tiết đơn hàng
-      order: [],
+      order: {},
       //Lưu tổng số lượng của đơn hàng
       totalQuantity: 0,
       orderIdReOrder: [],
