@@ -1,5 +1,10 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import PrimeVue from "primevue/config";
+
+//in main.js
+import "primevue/resources/themes/aura-light-green/theme.css";
+import "primevue/resources/primevue.min.css";
 
 import router from "./router/route";
 import axios from "axios";
@@ -37,6 +42,8 @@ import "tippy.js/animations/scale-extreme.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
+
+
 const app = createApp(App);
 
 app.component("MButton", MButton);
@@ -64,7 +71,6 @@ app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$axios = axios;
 
-
 app.use(
   VueTippy,
   // optional
@@ -78,7 +84,7 @@ app.use(
     }, // => Global default options * see all props
   }
 );
-
+app.use(PrimeVue);
 app.use(router);
 // Make BootstrapVue available throughout your project
 // Optionally install the BootstrapVue icon components plugin

@@ -34,6 +34,27 @@ class OrderService extends BaseService {
     );
     return res;
   }
+  async calculateTotalAmountByTypeOfTime(data) {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/Chart/CalculateTotalAmountByTypeOfTime`,
+      data
+    );
+    return res;
+  }
+  async getTotalRevenvue() {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/Chart/GetTotalRevenvue`
+    );
+    return res;
+  }
+
+  async getOrderByTypeOfTime(data) {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/GetByTypeOfTime`,
+      data
+    );
+    return res;
+  }
 }
 const orderService = new OrderService();
 export default orderService;

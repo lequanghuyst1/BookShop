@@ -17,6 +17,17 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
+        public async Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
+        {
+            var procName = "Proc_Order_CalculateTotalAmountByTypeOfTime";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("typeOfTime", typeOfTime);
+            parameters.Add("fromDate", fromDate);
+            parameters.Add("toDate", toDate);
+            var res = await _dbContext.Connection.QueryAsync<object>(procName, parameters);
+            return res;
+        }
+
         public async Task<IEnumerable<object>> CalculateTotalSalesPerMonth(int year)
         {
             var procName = "Proc_Order_CalculateTotalSalesPerMonth";
@@ -38,6 +49,13 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
+        public async Task<double> GetTotalRevenue()
+        {
+            var procName = "Proc_Order_GetTotalRevenvue";
+            var res = await _dbContext.Connection.ExecuteScalarAsync<double>(procName);
+            return res;
+        }
+
         public async Task<int> GetTotalOrderByConditionIn24Hour(string? fieldCondition)
         {
             string sqlCommand = @"SELECT COUNT(*) FROM view_order WHERE OrderDate >= NOW() - INTERVAL 24 HOUR";
@@ -54,6 +72,16 @@ namespace BookShopOnline.Infrastructure.Repository
             return result;
         }
 
+        public async Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
+        {
+            var procName = "Proc_Order_GetByTimeType";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("typeOfTime", typeOfTime);
+            parameters.Add("fromDate", fromDate);
+            parameters.Add("toDate", toDate);
+            var res = await _dbContext.Connection.QueryAsync<OrderDto>(procName, parameters);
+            return res;
+        }
     }
 }
   

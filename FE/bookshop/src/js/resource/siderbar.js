@@ -24,5 +24,10 @@ const menu = [
         icon: "fa-solid fa-file-invoice",
         path: "order-manegement",
     },
+    {
+        title: "Thống kê doanh thu",
+        icon: "fa-solid fa-chart-simple",
+        path: "revenue-statistics",
+    },
 ]
 export default menu;

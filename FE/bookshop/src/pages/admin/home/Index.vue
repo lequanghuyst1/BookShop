@@ -179,7 +179,7 @@ import userService from "@/utils/UserService";
 export default {
   name: "HomeAdminPage",
   components: { LineChart },
-  created() {
+  mounted() {
     this.getTotalProduct();
     this.getTotalOrder();
     this.getTotalCustomer();
@@ -197,7 +197,7 @@ export default {
       totalCustomer: 0,
       //Lưu tổng số khách hàng mới trong 24h
       totalNewCustomer: 0,
-      //Lưu tổng số đơn hàng mới trong 24h 
+      //Lưu tổng số đơn hàng mới trong 24h
       totalNewOrder: 0,
       //Lưu tổng số đơn hàng mới cần xác nhận trong 24h
       totalComfirmedNewOrder: 0,

@@ -50,9 +50,14 @@ const Enum = {
   },
   SORT_TYPE: {
     NULL: 0,
-    ASC: 1, 
+    ASC: 1,
     DESC: 2,
-  }
+  },
+  TYPE_OF_TIME: {
+    DATE: 0,
+    MONTH: 1,
+    YEAR: 2,
+  },
 };
 
 export default Enum;

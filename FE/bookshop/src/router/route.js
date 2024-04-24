@@ -9,6 +9,7 @@ import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import HomeAdminPage from "../pages/admin/home/Index.vue";
 import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
 import OrderDetailAdminPage from "@/pages/admin/order/OrderDetail.vue";
+import RevenueStatisticsPage from "@/pages/admin/revenue-statistics/RevenueStatisticsPage.vue"
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
@@ -157,6 +158,12 @@ const routes = [
         path: "order-manegement/:id",
         components: {
           ContentRouterView: OrderDetailAdminPage,
+        },
+      },
+      {
+        path: "revenue-statistics",
+        components: {
+          ContentRouterView: RevenueStatisticsPage,
         },
       },
     ],

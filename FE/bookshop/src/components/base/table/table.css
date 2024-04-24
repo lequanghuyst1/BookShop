@@ -40,8 +40,7 @@
   font-size: 14px;
 }
 
-.m-table td,
-th {
+.m-table td{
   padding: 0 16px;
   border-bottom: 1px solid #e0e0e0;
   border-right: 1px dashed #e0e0e0;

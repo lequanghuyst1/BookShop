@@ -47,5 +47,8 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// </returns>
         /// Created By: LQHUY(23/04/2024)
         Task<int> GetTotalOrderByConditionIn24Hour(string? filedCondition);
+        Task<double> GetTotalRevenue();
+        Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
+        Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
     }
 }

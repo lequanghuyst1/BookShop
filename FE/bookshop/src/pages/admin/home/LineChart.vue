@@ -10,6 +10,7 @@
 </template>
 
 <script>
+
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,

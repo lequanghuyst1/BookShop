@@ -98,6 +98,28 @@ namespace BookShopOnline.Api.Controllers
             var res = await _orderRepository.GetTotalOrderByConditionIn24Hour(conditionField);
             return Ok(res);
         }
+
+        [HttpGet("Chart/[action]")]
+        public async Task<IActionResult> CalculateTotalAmountByTypeOfTime(int typeOfTime,DateTime fromDate, DateTime toDate)
+        {
+            var res = await _orderRepository.CalculateTotalAmountByTypeOfTime(typeOfTime,fromDate, toDate);
+            return Ok(res);
+        }
+
+        [HttpGet("Chart/[action]")]
+        public async Task<IActionResult> GetTotalRevenvue()
+        {
+            var res = await _orderRepository.GetTotalRevenue();
+            return Ok(res);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
+        {
+            var res = await _orderRepository.GetByTypeOfTime(typeOfTime, fromDate, toDate);
+            return Ok(res);
+        }
+
     }
 
-}
+}   
