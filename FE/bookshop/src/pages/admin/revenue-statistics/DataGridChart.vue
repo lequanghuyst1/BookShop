@@ -3,7 +3,8 @@
     size="Normal"
     showGridlines
     stripedRows
-    
+    lazy
+    :loading="loading"
     scrollable
     scrollHeight="400px"
     :value="this.$props.gridData"
@@ -46,12 +47,27 @@ import Column from "primevue/column";
 
 export default {
   mounted() {
+    this.loadLazyData();
+    this.loading = true;
   },
   components: { DataTable, Column },
   props: {
     gridData: {
       type: Array,
       required: true,
+    },
+  },
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  methods: {
+    loadLazyData() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
     },
   },
 };

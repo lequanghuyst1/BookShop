@@ -205,20 +205,29 @@
       </div>
     </div>
     <div class="revenue-chart mt-2">
-      <div class="revenue-chart-title">
+      <div class="revenue-chart-title f-flex justify-content-between">
+        <div class="d-flex gap-2">
+          <p
+            class="view-mode"
+            @click="this.viewMode = 1"
+            :class="{ active: this.viewMode === 1 }"
+          >
+            Tổng quan
+          </p>
+          <p
+            class="view-mode"
+            @click="this.viewMode = 2"
+            :class="{ active: this.viewMode === 2 }"
+          >
+            Chi tiết
+          </p>
+        </div>
         <p
           class="view-mode"
-          @click="this.viewMode = 1"
-          :class="{ active: this.viewMode === 1 }"
+          style="background-color: #29c24d; color: #fff"
+          @click="hanldeOnExportRevenue"
         >
-          Tổng quan
-        </p>
-        <p
-          class="view-mode"
-          @click="this.viewMode = 2"
-          :class="{ active: this.viewMode === 2 }"
-        >
-          Chi tiết
+          Xuất Excel
         </p>
       </div>
       <div v-if="this.viewMode === 1" class="wrap-chart">
@@ -237,6 +246,8 @@ import Calendar from "primevue/calendar";
 import RevenueChart from "./RevenueChart.vue";
 import orderService from "@/utils/OrderService";
 import DataGridChart from "./DataGridChart.vue";
+import { saveAs } from "file-saver";
+
 export default {
   created() {
     this.setUpTimeFilter();
@@ -347,7 +358,7 @@ export default {
       this.getChartData();
       this.getGridData();
     },
-    
+
     async getChartData() {
       try {
         const params = {
@@ -408,6 +419,26 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async hanldeOnExportRevenue() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        const res = await orderService.exportRevenue(this.gridData);
+        console.log(res)
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }); 
+        var fileName = this.$Resource[this.$languageCode].TEXT.FileNameExcel;
+        if (res.status == 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          // Mở cửa sổ thoại mở thư mục và cho phép thay tên file
+          saveAs(blob, fileName, { autoBom: false });
+        }
+      } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
       }
     },
   },

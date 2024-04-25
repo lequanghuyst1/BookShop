@@ -1,6 +1,7 @@
 ﻿using BookShopOnline.Api.Controllers.Base;
 using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
@@ -14,10 +15,12 @@ namespace BookShopOnline.Api.Controllers
     {
         IOrderService _orderService;
         IOrderRepository _orderRepository;
-        public OrdersController(IOrderService orderService, IOrderRepository orderRepository) : base(orderService)
+        IOrderExcelService _orderExcelService;
+        public OrdersController(IOrderService orderService, IOrderRepository orderRepository, IOrderExcelService orderExcelService) : base(orderService)
         {
             _orderService = orderService;
             _orderRepository = orderRepository;
+            _orderExcelService = orderExcelService;
         }
 
         [HttpPost("Checkout")]
@@ -119,6 +122,43 @@ namespace BookShopOnline.Api.Controllers
             var res = await _orderRepository.GetByTypeOfTime(typeOfTime, fromDate, toDate);
             return Ok(res);
         }
+
+        /// <summary>
+        /// Xuất tất cả thông tin nhân viên vào file excel
+        /// </summary>
+        /// <returns>
+        /// - Status Code: 200 - link download file excel
+        /// - StatusCode: 500 có vấn đề trên service
+        /// </returns>
+        /// Created by: LQHUY(06/01/2024)
+        [HttpPost("Export")]
+        public async Task<IActionResult> ExportToExcel([FromBody] List<Guid>? ids)
+        {
+            var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            var fileName = "Thống kê doanh thu";
+            if (ids?.Count() > 0)
+            {
+                var bytes = await _orderExcelService.ExportListAsync(ids);
+                return File(bytes, contenType, fileName);
+            }
+            var res = await _orderExcelService.ExportAllAsync();
+
+            return File(res, contenType, fileName);
+        }
+
+        [HttpPost("Export/Revenue")]
+        public IActionResult ExportRevenueExcel(List<Order> orders)
+        {
+            var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            var fileName = "Thống kê doanh thu";
+            
+            var res = _orderExcelService.ExportRevenue(orders);
+
+            return File(res, contenType, fileName);
+        }
+
 
     }
 

@@ -12,7 +12,7 @@
   border-radius: 4px;
 }
 .filter-wrap .filter-item.active {
-  background-color: #2BB7E6;
+  background-color: #2bb7e6;
   color: #fff;
 }
 
@@ -71,19 +71,22 @@
   top: 188px;
   right: 192px;
 }
-.revenue-chart-title{
+.revenue-chart-title {
   display: flex;
   column-gap: 10px;
 }
-.wrap-chart{
+.wrap-chart {
   background-color: #fff;
   padding: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  padding-left: 40px;
 }
-.wrap-chart-title{
+.wrap-chart-title {
   font-size: 16px;
   font-weight: 600;
 }
-.view-mode{
+.view-mode {
   color: #333;
   font-size: 14px;
   padding: 4px 8px !important;
@@ -91,13 +94,14 @@
   margin-bottom: 6px !important;
   background-color: #fff;
   cursor: pointer;
-  
 }
-.view-mode.active{
- 
-  background-color: #2BB7E6;
+.view-mode.active {
+  background-color: #2bb7e6;
   color: #fff;
 }
-.data-grid{
+.data-grid {
   background-color: #fff;
+  height: 400px;
+  border-radius: 6px;
+  overflow: hidden;
 }

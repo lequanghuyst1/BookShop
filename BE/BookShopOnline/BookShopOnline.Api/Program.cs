@@ -1,5 +1,7 @@
 ﻿using BookShopOnline.Api.Middleware;
 using BookShopOnline.Core.AutoMapper;
+using BookShopOnline.Core.Excel;
+using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
@@ -90,6 +92,7 @@ builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderExcelService, OrderExcelService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();

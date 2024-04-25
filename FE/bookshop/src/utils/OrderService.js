@@ -55,6 +55,20 @@ class OrderService extends BaseService {
     );
     return res;
   }
+
+  async exportRevenue(data) {
+    const res = await this.baseAxios.post(
+      `${this.baseUrl}/Export/Revenue`,
+      data,
+      {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res;
+  }
 }
 const orderService = new OrderService();
 export default orderService;

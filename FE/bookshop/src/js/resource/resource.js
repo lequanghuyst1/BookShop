@@ -12,6 +12,9 @@ const ToastMessage = {
     Info: "Thông tin!",
   },
 };
+const TEXT = {
+  FileNameExcel: "Thống kê doanh thu",
+}
 const Dialog = {
   Type: {
     Question: "question",
@@ -35,6 +38,7 @@ const Resource = {
       return `Bạn có chắc chắn xóa những ${className} đã chọn này?`;
     },
     WanrningMessage: "Cảnh báo",
+    TEXT,
     VALIDATE_STATUS: {
       loginFail: "Tên đăng nhập hoặc mật khẩu không đúng",
       email: "Email không đúng định dạng",
