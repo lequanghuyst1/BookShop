@@ -68,7 +68,7 @@
               <div class="tab-history-item-border"></div>
             </div>
 
-            <div
+            <!-- <div
               class="tab-history-item swiper-slide"
               @click="
                 getOrdersData(
@@ -83,7 +83,7 @@
               </div>
               <div class="tab-history-item-text">Đã vận chuyển</div>
               <div class="tab-history-item-border"></div>
-            </div>
+            </div> -->
 
             <div
               class="tab-history-item swiper-slide"
@@ -143,8 +143,8 @@
     <div class="my-account">
       <div class="table-order-container">
         <div class="table-order-row table-order-header">
-          <div class="table-order-cell">Mã đơn hàng</div>
-          <div class="table-order-cell">Ngày mua</div>
+          <div class="table-order-cell" style="width: 120px;">Mã đơn hàng</div>
+          <div class="table-order-cell" style="text-align: center;">Ngày mua</div>
           <div class="table-order-cell">Người nhận</div>
           <div class="table-order-cell">Tổng Tiền</div>
           <div class="table-order-cell">Trạng thái</div>
@@ -175,7 +175,7 @@
           <div class="table-order-cell">
             <div class="table-order-cell-content">
               <div class="order-history-date-mobile">Ngày mua:</div>
-              <div>{{ this.$helper.formatDate(order.OrderDate) }}</div>
+              <div style="text-align: center;">{{ this.$helper.formatOrderDate(order.OrderDate) }}</div>
             </div>
           </div>
           <div class="table-order-cell" style="max-width: 250px">

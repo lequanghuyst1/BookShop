@@ -702,7 +702,7 @@ export default {
               location.href = urlPayment;
             }
           } else {
-            location.href = "http://localhost:8080/customer/order";
+            location.href = "http://localhost:8080/payment/success";
           }
         }
       } catch (error) {

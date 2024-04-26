@@ -9,13 +9,14 @@ import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import HomeAdminPage from "../pages/admin/home/Index.vue";
 import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
 import OrderDetailAdminPage from "@/pages/admin/order/OrderDetail.vue";
-import RevenueStatisticsPage from "@/pages/admin/revenue-statistics/RevenueStatisticsPage.vue"
+import RevenueStatisticsPage from "@/pages/admin/revenue-statistics/RevenueStatisticsPage.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
 import CartPage from "../pages/user/cart/CartPage.vue";
 import CategoryUserPage from "../pages/user/category/CategoryPage.vue";
 import OnlinePayment from "@/pages/user/pay/OnlinePayment.vue";
+import PaymentSuccess from "@/pages/user/pay/PaymentSuccess.vue";
 import ProductPage from "../pages/user/product/Product.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
 import InfoAccountUserPage from "../pages/user/account/InfoAccount.vue";
@@ -103,6 +104,14 @@ const routes = [
             },
           },
         ],
+      },
+      {
+        path: "payment/success",
+        name: "success",
+        components: {
+          ViewRouterContainer: PaymentSuccess,
+        },
+        props: true,
       },
     ],
   },
