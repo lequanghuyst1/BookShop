@@ -203,6 +203,8 @@ export default {
         this.isShowActionRowTable = [];
       }
     });
+    document.title = "Quản lý đơn hàng";
+
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);
@@ -376,6 +378,7 @@ export default {
               );
               this.totalRecord = this.orders.length;
               this.totalPage = Math.ceil(this.orders.length / this.pageSize);
+              
               break;
             case "DeliveryStatus":
               this.orders = res.data.Data.filter(

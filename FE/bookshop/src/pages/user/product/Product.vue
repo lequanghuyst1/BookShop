@@ -145,7 +145,7 @@
                         <i class="fa-solid fa-cart-plus"></i>
                         <span>Thêm vào giỏ hàng</span>
                       </button>
-                      <button class="buy-now">
+                      <button @click="handleOnPurchase" class="buy-now">
                         <i class="fa-solid fa-money-bill-wave"></i>
                         <span>Mua ngay</span>
                       </button>
@@ -601,7 +601,7 @@
                     Sửa
                   </li>
                   <li
-                    @click="hanldeOnDelete(item.ReviewProductId)"
+                    @click="hanldeOnDeleteReviewProduct(item.ReviewProductId)"
                     class="action-item"
                   >
                     Xóa
@@ -782,8 +782,8 @@ export default {
           this.productInfo = res.data;
           this.cartItem = res.data;
           this.cartItem.Quantity = this.productInfo.QuantityInStock > 0 ? 1 : 0;
-          this.cartItem.ProvisionalMoney = this.cartItem.Price;
           this.getReviewProductData();
+          document.title = this.productInfo.BookName;
         }
       } catch (error) {
         console.log(error);
@@ -843,7 +843,6 @@ export default {
           //thêm mới item vào cart local
           cartLocalStorageService.setCartToLocalStorage(dataCart);
         }
-
         this.$emitter.emit(
           "onShowToastMessage",
           this.$Resource[this.$languageCode].ToastMessage.Type.Success,
@@ -853,6 +852,51 @@ export default {
 
         //Update lại tổng số lượng sản phẩm trong cart
         this.$emitter.emit("getQuantityOfCart");
+      }
+    },
+    async handleOnPurchase() {
+      try {
+        if (
+          this.cartItem.Quantity > this.cartItem.QuantityInStock ||
+          this.cartItem.Quantity === 0
+        ) {
+          return;
+        }
+        this.cartItem.CartId = this.userInfo.CartId;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.cartItem));
+        //gọi api thêm mới
+        const res = await cartItemService.post(formData);
+        if (res.status === 201) {
+          const result = await cartItemService.getByCartId(
+            this.userInfo?.CartId
+          );
+          if (result.status === 200) {
+            const dataCart = result.data;
+            const itemAddNew = dataCart.filter(
+              (item) => item.BookId === this.cartItem.BookId
+            );
+            if (itemAddNew.length > 0) {
+              localStorageService.setItemToLocalStorage("itemSelected", [
+                itemAddNew[0].CartItemId,
+              ]);
+            }
+            //set lại cart local
+            cartLocalStorageService.setCartToLocalStorage(dataCart);
+          }
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Sản phẩm đã được thêm vào giỏ hàng.",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+
+          //Update lại tổng số lượng sản phẩm trong cart
+          this.$emitter.emit("getQuantityOfCart");
+          this.$router.push("cart");
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
 
@@ -911,7 +955,7 @@ export default {
      * Thực hiện xóa đánh giá khi click xóa
      * @author LQHUY(18/04/2024);
      */
-    async hanldeOnDelete(id) {
+    async hanldeOnDeleteReviewProduct(id) {
       try {
         const res = await reviewProductService.delete(id);
         if (res.status === 200) {

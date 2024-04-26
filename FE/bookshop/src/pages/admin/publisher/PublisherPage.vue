@@ -126,6 +126,8 @@ export default {
   mounted() {
     this.loadData();
     this.loadDataImage();
+    document.title = "Quản lý nhà xuất bản";
+
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);

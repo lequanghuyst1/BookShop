@@ -1,6 +1,6 @@
 <template>
   <the-header></the-header>
-  <div class="pay-content">
+  <div v-if="isShowPaymentSuccess === false" class="pay-content">
     <div class="container">
       <div class="row">
         <div class="col-7">
@@ -412,13 +412,24 @@
               @click="handleCheckout"
               class="btn-add-address"
             >
-              <button style="width: 100%">Xác nhận thanh toán</button>
+              <button style="width: 100%">
+                {{
+                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.COD
+                    ? "Đặt hàng"
+                    : "Xác nhận thanh toán"
+                }}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <PaymentSuccess
+    title="Đặt hàng"
+    content="Đơn hàng được đặt thành công"
+    v-if="isShowPaymentSuccess"
+  ></PaymentSuccess>
 </template>
 <script>
 import TheHeader from "@/components/user/layout/TheHeader.vue";
@@ -431,13 +442,15 @@ import cartItemService from "@/utils/CartItemService";
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 import orderService from "@/utils/OrderService";
 import vnPayService from "@/utils/VnPayService";
+import PaymentSuccess from "./PaymentSuccess.vue";
 export default {
   name: "PayUserPage",
-  components: { TheHeader, InputAccount },
+  components: { TheHeader, InputAccount, PaymentSuccess },
   mounted() {
     this.getDataProvince();
     this.getAddressDeliveryDefault();
     this.getOrderDetailsData();
+    document.title = "Thanh toán";
   },
   data() {
     return {
@@ -472,6 +485,7 @@ export default {
         DeliveryMethod: this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY,
         ShippingFee: 19000,
       },
+      isShowPaymentSuccess: false,
     };
   },
   computed: {
@@ -666,9 +680,10 @@ export default {
         }
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
-        this.order.PaymentStatus = this.$Enum.PAYMENT_METHOD.COD
-          ? this.$Enum.PAYMENT_STATUS.UNPAID
-          : this.$Enum.PAYMENT_STATUS.WAIT_FOR_HANDLE;
+        this.order.PaymentStatus =
+          this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.COD
+            ? this.$Enum.PAYMENT_STATUS.UNPAID
+            : this.$Enum.PAYMENT_STATUS.WAIT_FOR_HANDLE;
 
         //thiết lập các thông tin để truyền khi gọi Api checkout
         const orderInfo = {
@@ -688,6 +703,7 @@ export default {
           this.$emitter.emit("getQuantityOfCart");
           this.$emitter.emit("toggleShowLoading", false);
           localStorageService.setItemToLocalStorage("itemSelected", []);
+          this.isShowPaymentSuccess = true;
           if (this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.VNPAY) {
             const paymentInfo = {
               OrderType: "electronic",
@@ -698,7 +714,7 @@ export default {
             const resUrl = await vnPayService.CreatePaymentUrl(paymentInfo);
             if (resUrl.status === 201) {
               const urlPayment = resUrl.data;
-              console.log(urlPayment);
+
               location.href = urlPayment;
             }
           } else {

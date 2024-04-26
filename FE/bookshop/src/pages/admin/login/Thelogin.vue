@@ -138,7 +138,7 @@ export default {
               res.data.UserDto
             );
             if (
-              localStorageService.getItemEncodeFromLocalStorage("userInfo")
+              localStorageService.getItemFromLocalStorage("userInfo")
                 .RoleName === "Admin"
             ) {
               this.$router.push("/admin/book-management");

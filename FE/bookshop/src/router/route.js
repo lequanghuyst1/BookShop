@@ -6,10 +6,11 @@ import BookPage from "../pages/admin/book/BookPage.vue";
 import CategoryPage from "../pages/admin/category/CategoryPage.vue";
 import PulisherPage from "../pages/admin/publisher/PublisherPage.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
-import HomeAdminPage from "../pages/admin/home/Index.vue";
+import OverviewPage from "../pages/admin/home/OverviewPage.vue";
 import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
 import OrderDetailAdminPage from "@/pages/admin/order/OrderDetail.vue";
 import RevenueStatisticsPage from "@/pages/admin/revenue-statistics/RevenueStatisticsPage.vue";
+import CustomerPage from "@/pages/admin/customer/CustomerPage.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
@@ -153,11 +154,11 @@ const routes = [
       {
         path: "home",
         components: {
-          ContentRouterView: HomeAdminPage,
+          ContentRouterView: OverviewPage,
         },
       },
       {
-        path: "order-manegement",
+        path: "order-management",
         components: {
           ContentRouterView: OrderManegementPage,
         },
@@ -173,6 +174,12 @@ const routes = [
         path: "revenue-statistics",
         components: {
           ContentRouterView: RevenueStatisticsPage,
+        },
+      },
+      {
+        path: "customer-management",
+        components: {
+          ContentRouterView: CustomerPage,
         },
       },
     ],

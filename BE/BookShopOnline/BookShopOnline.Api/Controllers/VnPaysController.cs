@@ -28,9 +28,9 @@ namespace BookShopOnline.Api.Controllers
         public async Task<IActionResult> PaymentCallback()
         {
             var response = await _vnPayService.PaymentExecute(Request.Query);
-            if(response!= null)
+            if(response.Success == true)
             {
-                return Redirect("http://localhost:8080/customer/order");
+                return Redirect("http://localhost:8080/payment/success");
             }
             return StatusCode(200, response);
         }

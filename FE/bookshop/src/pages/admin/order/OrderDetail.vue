@@ -334,7 +334,7 @@
               "
               class="confirm-group"
             >
-              <p class="confirm-order-text">Vui lòng xác thực đơn hàng</p>
+              <p class="confirm-order-text">Vui lòng xác thực đơn hàng.</p>
               <div class="confirm-order-button mb-2">
                 <button
                   @click="onConfirmOrder"
@@ -396,28 +396,47 @@
               <p>{{ order.Address }}</p>
             </div>
           </div>
-          <div class="change-status-order mt-3">
+          <div class="change-status-order mt-3 d-flex justify-content-between">
             <button
               v-show="
-                order.OrderStatus !== this.$Enum.ORDER_STATUS.COMPLETE &&
+                order.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED &&
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
+              "
+              @click="handleOrder"
+              class="m-button"
+              style="background-color: #0051c8"
+            >
+              Xử lý đơn hàng
+            </button>
+            <button
+              v-show="
+                order.OrderStatus === this.$Enum.ORDER_STATUS.PROCESSING &&
                 order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
               "
               @click="handleOnOrderComplete"
               class="m-button"
               style="background-color: #0051c8"
             >
-              Hoàn tất đơn hàng
+              Hoàn tất đơn
             </button>
             <button
               v-show="
                 order.OrderStatus !== this.$Enum.ORDER_STATUS.COMPLETE &&
                 order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
               "
-              @click="handleOnCancleOrder"
+              @click="onCancelOrder"
               class="m-button"
               style="background-color: #ff0000"
             >
               Hủy đơn hàng
+            </button>
+            <button
+              v-show="order.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED"
+              @click="handleOnReOrder"
+              class="m-button"
+              style="background-color: #0051c8"
+            >
+              Đặt lại hàng
             </button>
           </div>
         </div>
@@ -433,7 +452,7 @@
       }
     "
     :message="messageDialog"
-    :type="this.$Resource[this.$languageCode].Dialog.Type.Info"
+    :type="this.$Resource[this.$languageCode].Dialog.Type.Question"
   >
     <template #footerLeft>
       <MButton
@@ -456,7 +475,7 @@ import orderService from "@/utils/OrderService";
 import userService from "@/utils/UserService";
 export default {
   name: "OrderDetailAdminPage",
-  async created() {
+  async mounted() {
     await this.getOrderData();
     await this.getOrderDetailsData();
     await this.getUserInfoData();
@@ -540,8 +559,19 @@ export default {
 
     async handleOnConfirmDelivery() {
       try {
+        if (
+          this.order.OrderStatus ===
+          this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+        ) {
+          this.isShowDialog = true;
+          this.messageDialog =
+            "Bạn cần xác thực đơn hàng trước khi giao. Bạn muốn xác thực đơn hàng <" +
+            this.order.OrderCode +
+            ">";
+          this.typeStatus = "Confirm Order";
+          return;
+        }
         this.$emitter.emit("toggleShowLoading", true);
-        this.order.OrderStatus = this.$Enum.ORDER_STATUS.PROCESSING;
         this.order.DeliveryStatus =
           this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED;
         const formData = new FormData();
@@ -600,7 +630,7 @@ export default {
           this.$emitter.emit(
             "onShowToastMessage",
             this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-            "Thanh toán thành công",
+            "Thanh toán thành công.",
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.$emitter.emit("toggleShowLoading", false);
@@ -624,7 +654,7 @@ export default {
           this.$emitter.emit(
             "onShowToastMessage",
             this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-            "Thanh toán thành công",
+            "Đơn hàng được hoàn tất.",
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.$emitter.emit("toggleShowLoading", false);
@@ -648,7 +678,32 @@ export default {
           this.$emitter.emit(
             "onShowToastMessage",
             this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-            "Thanh toán thành công",
+            "Hủy đơn hàng thành công.",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          this.getOrderData();
+          //đóng dialog
+          this.isShowDialog = false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async handleOrder() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        this.order.OrderStatus = this.$Enum.ORDER_STATUS.PROCESSING;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.order));
+        const res = await orderService.put(this.order.OrderId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Đơn hàng đang được xử lý.",
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.$emitter.emit("toggleShowLoading", false);
@@ -663,8 +718,40 @@ export default {
     },
     onConfirmOrder() {
       this.isShowDialog = true;
-      this.messageDialog = "Xác thực đơn hàng <" + this.order.OrderCode + ">";
+      this.messageDialog =
+        "Bạn muốn xác thực đơn hàng <" + this.order.OrderCode + "> ?";
       this.typeStatus = "Confirm Order";
+    },
+    onCancelOrder() {
+      this.isShowDialog = true;
+      this.messageDialog = "Bạn có chắc chắn hủy đơn hàng này?";
+      this.typeStatus = "Confirm Cancel";
+    },
+
+    async handleOnReOrder() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        this.order.OrderStatus = this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION;
+        this.order.DeliveryStatus = this.$Enum.DELIVERY_STATUS.NOT_DELIVERY;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.order));
+        const res = await orderService.put(this.order.OrderId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Đơn hàng đang được xử lý.",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          this.getOrderData();
+          //đóng dialog
+          this.isShowDialog = false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     backToOrderManagement() {
       location.href = "http://localhost:8080/admin/order-manegement";

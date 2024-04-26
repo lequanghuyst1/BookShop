@@ -1,5 +1,6 @@
 ﻿using BookShopOnline.Core.Dto.User;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// </returns>
         /// Created By: LQHUY(23/04/2024)
         Task<int> GetTotalUserNewBy24Hours();
+        Task<PagingEntity<User>> GetFilterPagingByRoleName(UserFilter userFilter);
     }
 
 }

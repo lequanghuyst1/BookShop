@@ -1,7 +1,7 @@
 <template>
   <div class="content__header">
     <div class="content__header-title">
-      <h3>Quản lý sách</h3>
+      <h3>Quản lý danh mục</h3>
     </div>
     <div class="content__header-group-button">
       <tippy content="Thêm mới" placement="bottom" animation="scale">
@@ -125,6 +125,8 @@ export default {
   },
   mounted() {
     this.loadData();
+    document.title = "Quản lý danh mục";
+
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);

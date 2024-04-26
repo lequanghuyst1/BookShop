@@ -5,6 +5,7 @@ using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
+using BookShopOnline.Core.Model;
 using BookShopOnline.Core.Services.Base;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -130,6 +131,17 @@ namespace BookShopOnline.Core.Services
         public override Task ValidateBeforeUpdate(User user)
         {
             return base.ValidateBeforeUpdate(user);
+        }
+
+        public async Task<PagingEntity<UserDto>> GetFilterPagingByRoleName(UserFilter userFilter)
+        {
+            var res = await _userRepository.GetFilterPagingByRoleName(userFilter);
+            var pagingDto = new PagingEntity<UserDto>();
+            pagingDto.Data = res.Data.Select(item => MapEntityToDto(item));
+            pagingDto.TotalPage = res.TotalPage;
+            pagingDto.TotalRecord = res.TotalRecord;
+            return pagingDto;
+
         }
     }
 }

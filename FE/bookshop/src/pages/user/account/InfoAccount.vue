@@ -135,6 +135,8 @@ export default {
     this.user = localStorageService.getItemFromLocalStorage("userInfo")
       ? localStorageService.getItemFromLocalStorage("userInfo")
       : {};
+      document.title = "Thông tin tài khoản"
+
   },
   watch: {
     date(newValue) {

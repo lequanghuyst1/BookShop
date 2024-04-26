@@ -4,5 +4,9 @@
 <script>
 export default{
     name: "HomeAccountUserPage",
+    mounted(){
+      document.title = "Tài khoản"
+
+    },
 }
 </script>

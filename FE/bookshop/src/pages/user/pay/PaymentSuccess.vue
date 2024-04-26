@@ -5,14 +5,16 @@
         <div class="success__icon">
           <i class="fa-solid fa-circle-check"></i>
         </div>
-        <div class="success__title">Thanh toán thành công</div>
+        <div class="success__title">{{ this.$props.title }} thành công</div>
         <div class="success__content w-75">
-          Đơn hàng của quý khách đã thanh toán thành công. Fahasa sẽ sớm liên hệ
-          với quý khách sớm để bàn giao sản phẩm.
+          {{ this.$props.content }}. Fahasa sẽ sớm liên hệ với quý khách sớm để
+          bàn giao sản phẩm.
         </div>
         <div class="see-order-detail">
           Bạn có thể xem chi tiết đơn hàng trong
-          <a style="color: #32A5EA;" href="http://localhost:8080/customer/order">Đơn hàng của tôi</a>
+          <a style="color: #32a5ea" href="http://localhost:8080/customer/order"
+            >Đơn hàng của tôi</a
+          >
         </div>
         <div class="button-purchase">
           <button @click="goToHomePage">Tiếp tục mua hàng</button>
@@ -23,11 +25,21 @@
 </template>
 <script>
 export default {
-    methods: {
-        goToHomePage(){
-            location.href = "http://localhost:8080/"
-        }
-    }
+  props: {
+    title: {
+      type: String,
+      default: "Thanh toán",
+    },
+    content: {
+      type: String,
+      default: "Đơn hàng của quý khách đã thanh toán thành công",
+    },
+  },
+  methods: {
+    goToHomePage() {
+      location.href = "http://localhost:8080/";
+    },
+  },
 };
 </script>
 <style scoped>
@@ -65,7 +77,7 @@ export default {
   width: 200px;
   font-size: 14px;
   border-radius: 6px;
-  background-color: #008FE5;
+  background-color: #008fe5;
   outline: none;
   color: #fff;
   border: none;

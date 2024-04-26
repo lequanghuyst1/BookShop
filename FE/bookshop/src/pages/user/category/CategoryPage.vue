@@ -547,6 +547,7 @@ export default {
         const res = await categoryService.getBySlug(this.$route.params.slug);
         if (res.status === 200) {
           this.category = res.data;
+          document.title = "Sách " + this.category.CategoryName; 
         }
       } catch (error) {
         console.log(error);

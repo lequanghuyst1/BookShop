@@ -822,7 +822,9 @@ export default {
     this.getOrderDetailsData();
     this.getOrderData();
   },
-  mounted() {},
+  mounted() {
+    
+  },
   computed: {
     resource: function () {
       return this.$Resource[this.$languageCode];
@@ -869,7 +871,7 @@ export default {
         const res = await orderService.getById(this.$route.params.id);
         if (res.status === 200) {
           this.order = res.data;
-          this.orderReplica = res.data;
+          document.title = "Order # " + this.order.OrderCode;
         }
       } catch (error) {
         console.log(error);

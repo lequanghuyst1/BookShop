@@ -18,6 +18,7 @@ namespace BookShopOnline.Core.Dto
         public Guid BookId { get; set; }
         public int Quantity { get; set; }
         public string BookCode { get; set; }
+        public string? BookSlug { get; set; }
         public string BookName { get; set; }
         public string ImagePath { get; set; }
         public double Price { get; set; }

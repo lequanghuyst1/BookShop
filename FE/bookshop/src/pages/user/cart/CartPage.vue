@@ -42,7 +42,7 @@
               >
                 <div class="checked-product-cart">
                   <input
-                    v-if="item.QuantityInStock > 0 "
+                    v-if="item.QuantityInStock > 0"
                     type="checkbox"
                     :value="item.CartItemId"
                     v-model="itemIdsSelected"
@@ -59,7 +59,7 @@
                 <div class="img-product-cart">
                   <a
                     class="product-image"
-                    href="https://www.fahasa.com/chu-khung-long-tham-an-giai-cuu-giang-sinh-bai-hoc-ve-thoi-tham-lam-song-ngu.html"
+                    :href="'http://localhost:8080/' + item.BookSlug"
                     ><img
                       :src="
                         item.ImagePath
@@ -75,7 +75,7 @@
                   <div class="info-product-cart">
                     <div>
                       <h2 class="product-name-full-text">
-                        <a :href="'product' + item.BookId">{{
+                        <a :href="'http://localhost:8080/' + item.BookSlug">{{
                           item.BookName
                         }}</a>
                       </h2>
@@ -222,6 +222,7 @@
               <div class="checkout-type-button-cart" style="text-align: center">
                 <div class="method-button-cart">
                   <button
+                    v-if="itemIdsSelected.length > 0"
                     @click="this.$router.push('checkout')"
                     type="button"
                     title="Thanh toán"
@@ -229,12 +230,18 @@
                   >
                     <span><span>Thanh toán</span></span>
                   </button>
-                  <div class="retail-note">
-                    <a
-                      href="https://www.fahasa.com/chinh-sach-khach-si/"
-                      target="_blank"
-                      >(Giảm giá trên web chỉ áp dụng cho bán lẻ)</a
+                  <button
+                    v-else
+                    type="button"
+                    title="Thanh toán"
+                    class="button button-disable btn-proceed-checkout btn-checkout"
+                  >
+                    <span style="background-color: #e0e0e0; cursor: not-allowed"
+                      ><span>Thanh toán</span></span
                     >
+                  </button>
+                  <div class="retail-note">
+                    <a>(Giảm giá trên web chỉ áp dụng cho bán lẻ)</a>
                   </div>
                 </div>
               </div>
@@ -262,6 +269,7 @@ export default {
     )
       ? localStorageService.getItemFromLocalStorage("itemSelected")
       : [];
+    document.title = "Giỏ hàng";
   },
   data() {
     return {

@@ -256,6 +256,8 @@ export default {
     this.getTotalRevenue();
     this.getChartData();
     this.getGridData();
+    document.title = "Thống kê doanh thu";
+
   },
   components: { Dropdown, Calendar, RevenueChart, DataGridChart },
 

@@ -54,6 +54,9 @@ export default {
   created() {
     this.user = JSON.parse(localStorage.getItem("User"));
   },
+  mounted(){
+    document.title = "Admin"
+  },
   computed: {
     user: () => {
       return localStorageService.getItemFromLocalStorage("userInfo");

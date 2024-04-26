@@ -22,7 +22,12 @@ const menu = [
     {
         title: "Quản lý đơn hàng",
         icon: "fa-solid fa-file-invoice",
-        path: "order-manegement",
+        path: "order-management",
+    },
+    {
+        title: "Quản lý khách hàng",
+        icon: "fa-solid fa-user-tie",
+        path: "customer-management",
     },
     {
         title: "Thống kê doanh thu",

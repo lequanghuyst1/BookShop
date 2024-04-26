@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Dto.User;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using BookShopOnline.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// Created By: LQHUY(06/04/2024)
         Task<int> RegisterAdminServiceAsync(UserRegister userRegister);
 
+        Task<PagingEntity<UserDto>> GetFilterPagingByRoleName(UserFilter userFilter);
 
     }
 }

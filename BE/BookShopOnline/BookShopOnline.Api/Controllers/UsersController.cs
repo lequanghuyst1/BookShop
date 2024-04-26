@@ -5,6 +5,7 @@ using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using BookShopOnline.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -108,6 +109,13 @@ namespace BookShopOnline.Api.Controllers
         public async Task<IActionResult> TotalNewCustomer()
         {
             var res = await _userRepository.GetTotalUserNewBy24Hours();
+            return Ok(res);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetFilterPagingByRoleName(UserFilter userFilter)
+        {
+            var res = await _userRepository.GetFilterPagingByRoleName(userFilter);
             return Ok(res);
         }
     }

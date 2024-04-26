@@ -237,6 +237,8 @@ export default {
         });
       }
     });
+    document.title = "Đơn hàng của tôi"
+
   },
   data() {
     return {

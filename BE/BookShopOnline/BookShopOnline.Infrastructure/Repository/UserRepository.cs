@@ -1,6 +1,7 @@
 ﻿using BookShopOnline.Core.Dto.User;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Core.Model;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
 using System;
@@ -40,6 +41,27 @@ namespace BookShopOnline.Infrastructure.Repository
             var procName = "Proc_User_FindUserByEmailAndPassword";
             var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(procName, userLogin);
             return res;
+        }
+
+        public async Task<PagingEntity<User>> GetFilterPagingByRoleName(UserFilter userFilter)
+        {
+            var procName = "Proc_User_FilterPagingByRole";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@PageSize", userFilter.PageSize);
+            parameters.Add("@PageNumber", userFilter.PageNumber);
+            parameters.Add("@RoleName", userFilter.RoleName);
+            parameters.Add("@SearchString", userFilter.SearchString);
+            parameters.Add("@TotalRecord", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+            parameters.Add("@TotalPage", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+            var pagingResult = new PagingEntity<User>();
+            var res = await _dbContext.Connection.QueryAsync<User>(procName, parameters);
+
+            pagingResult.Data = res;
+            pagingResult.TotalRecord = parameters.Get<int>("@TotalRecord");
+            pagingResult.TotalPage = parameters.Get<int>("@TotalPage");
+
+            return pagingResult;
         }
 
         public async Task<int> GetTotalUserNewBy24Hours()
