@@ -13,22 +13,24 @@ const Enum = {
     Login: 0,
     Register: 1,
   },
+
   /**Tình trạng đơn hàng */
   ORDER_STATUS: {
     WAIT_FOR_CONFIRMATION: 0,
     CONFIRMED: 1,
-    SHIPPING: 2,
-    DELIVERED: 3,
+    PROCESSING: 2,
+    COMPLETE: 3,
     CANCELLED: 4,
-    COMPLETE: 5,
-    WAIT_FOR_PAY: 6,
   },
+
   /**Tình trạng giao hàng */
   DELIVERY_STATUS: {
     NOT_DELIVERY: 0,
-    WAITTING_FOR_DELIVERY: 1,
-    RECEIVED_THE_GOODS: 2,
+    BEING_TRANSPORTED: 1,
+    DELIVERIED: 2,
+    CANCELLED: 3,
   },
+
   /**Hình thức giao hàng */
   DELIVERY_METHOD: {
     LOCAL_DELIVERY: 0,
@@ -37,7 +39,8 @@ const Enum = {
   /**Tình trạng thanh toán */
   PAYMENT_STATUS: {
     UNPAID: 0,
-    PAID: 1,
+    WAIT_FOR_HANDLE: 1,
+    PAID: 2,
   },
 
   /**Hình thức thanh toán */
@@ -48,11 +51,13 @@ const Enum = {
     MONO_WALLET: 3,
     SHOPPEPAY_WALLET: 4,
   },
+
   SORT_TYPE: {
     NULL: 0,
     ASC: 1,
     DESC: 2,
   },
+
   TYPE_OF_TIME: {
     DATE: 0,
     MONTH: 1,

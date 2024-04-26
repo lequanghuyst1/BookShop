@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BookShopOnline.Infrastructure.Repository
-{ 
+{
     /// <summary>
     /// Class DeliveryAddressRepository
     /// </summary>
@@ -28,16 +28,16 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task RemoveDefaultAddressAsync()
+        public async Task RemoveDefaultAddressAsync(Guid userId)
         {
             var procName = "Proc_DeliveryAddress_RemoveDefault";
-            await _dbContext.Connection.ExecuteAsync(procName);
+            await _dbContext.Connection.ExecuteAsync(procName, new { UserId = userId });
         }
 
-        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id)
+        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id, DeliveryAddress deliveryAddress)
         {
             var procName = "Proc_DeliveryAddress_SetDefault";
-            await _dbContext.Connection.ExecuteAsync(procName, new { DeliveryAddressId  = id});
+            await _dbContext.Connection.ExecuteAsync(procName, deliveryAddress);
         }
         #endregion
     }

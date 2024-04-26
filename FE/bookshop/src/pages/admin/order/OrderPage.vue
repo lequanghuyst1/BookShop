@@ -128,9 +128,9 @@
                   <ul data-v-7c375989="" class="p-0 mb-0">
                     <li
                       v-if="
-                        order.OrderStatus ==
-                          this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION ||
-                        order.ORDER_STATUS === this.$Enum.ORDER_STATUS.CANCELLED
+                        order.OrderStatus ===
+                          this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION &&
+                        order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
                       "
                       @click="handleOnConfirmOrder(order, index)"
                       data-v-7c375989=""
@@ -143,7 +143,7 @@
                       data-v-7c375989=""
                       class="action-item"
                     >
-                      Xem và xác nhận
+                      Xem chi tiết
                     </li>
                   </ul>
                 </div>

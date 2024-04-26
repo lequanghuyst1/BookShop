@@ -69,12 +69,17 @@ namespace BookShopOnline.Core.Services
             var pay = new VnPayLibrary();
             var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
             //Nếu thanh toán thành công thì cập nhật lại trạng thái đơn hàng
-            if(response.Success == true)
+            var orderId = new Guid(response.OrderId);
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (response.Success == true)
             {
-                var orderId = new Guid(response.OrderId);
-                var order = await _orderRepository.GetByIdAsync(orderId);
                 order.PaymentStatus = Enums.PaymentStatus.PAID;
-                order.OrderStatus = Enums.OrderStatus.WAIT_FOR_CONFIRMATION;
+                await _orderRepository.UpdateAsync(orderId, order);
+                return response;
+            }
+            else
+            {
+                order.PaymentStatus = Enums.PaymentStatus.UNPAID;
                 await _orderRepository.UpdateAsync(orderId, order);
                 return response;
             }

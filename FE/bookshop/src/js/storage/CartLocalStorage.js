@@ -48,8 +48,6 @@ class CartLocalStorageService {
         else {
           const itemExistObject = checkItemExist[0];
           itemExistObject.Quantity = itemExistObject.Quantity + value.Quantity;
-          itemExistObject.ProvisionalMoney =
-            itemExistObject.Quantity * value.Price;
         }
       } else {
         data.push(value);
@@ -74,7 +72,6 @@ class CartLocalStorageService {
         //Update số lượng gỡ bỏ cái cũ thêm cái mới
         const itemExistObject = checkItemExist[0];
         itemExistObject.Quantity = value.Quantity;
-        itemExistObject.ProvisionalMoney = value.Quantity * value.Price;
       }
 
       //Cập nhật lại dữ liệu vào local

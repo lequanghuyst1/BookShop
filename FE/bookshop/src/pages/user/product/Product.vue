@@ -137,7 +137,10 @@
                     <p v-if="messageInfo" class="not-enough-quantity">
                       {{ messageInfo }}
                     </p>
-                    <div class="wrap-addcart">
+                    <div
+                      v-show="productInfo.QuantityInStock > 0"
+                      class="wrap-addcart"
+                    >
                       <button @click="handleOnAddCart" class="add-to-cart">
                         <i class="fa-solid fa-cart-plus"></i>
                         <span>Thêm vào giỏ hàng</span>
@@ -207,65 +210,116 @@
   </div>
 
   <div class="product-introduction">
-    <div class="container">
-      <div class="row">
-        <div class="product-introduction-header">Fahasa giới thiệu</div>
-      </div>
+    <div class="container" style="padding: 0 !important">
       <div class="product-introduction-body">
-        <div class="introduction-btn btn-prev">
-          <i class="fa-solid fa-chevron-left"></i>
-        </div>
-        <div class="row">
-          <div class="col-lg-5ths col-md-5ths">
-            <div class="product-item">
-              <div class="product-image d-block text-center">
-                <div class="product-sale">-10%</div>
-                <a :href="'product/' + productInfo.BookId" class="d-block">
-                  <img
-                    :src="productInfo.ImagePath ? productInfo.ImagePath : ''"
-                    alt=""
-                  />
-                </a>
-                <div class="group-button">
-                  <button class="btn-action button-add-like">
-                    <a href="/heart">
-                      <i class="fa-solid fa-heart"></i>
-                    </a>
-                  </button>
-                  <button class="btn-action button-add-cart">
-                    <a href="/cart">
-                      <i class="fa-solid fa-cart-plus"></i>
-                    </a>
-                  </button>
-                  <button class="btn-action button-detail">
-                    <a href="/detail">
-                      <i class="fa-solid fa-eye"></i>
-                    </a>
-                  </button>
-                </div>
-              </div>
-              <div class="product-detail">
-                <h3 class="product-name">
-                  <a href="">
-                    {{ productInfo.BookName }}
-                  </a>
-                </h3>
-                <div class="product-price d-flex flex-wrap">
-                  <div class="product-pirce--discount me-2">
-                    {{ this.$helper.formatMoney(productInfo.Price) }} đ
+        <div class="home-product home-product-new">
+          <div class="tab-heading">
+            <h4>Fahasa giới thiệu</h4>
+          </div>
+          <div class="tab-content">
+            <div
+              @click="onPrevSlide"
+              v-if="startIndex !== 0"
+              class="wrap-button button-prev-slide"
+            >
+              <i class="fa-solid fa-chevron-left"></i>
+            </div>
+            <div class="">
+              <swiper
+                :modules="modules"
+                :slides-per-view="5"
+                :slides-per-column="2"
+                slides-per-column-fill="row"
+                :pagination="{ clickable: true }"
+              >
+                <swiper-slide
+                  v-for="item in booksOutStanding?.slice(startIndex, endIndex)"
+                  :key="item.BookId"
+                  style="margin-right: 10px"
+                >
+                  <div class="inner-item" :title="item.BookName">
+                    <div
+                      :style="{
+                        backgroundColor:
+                          item.QuantityInStock > 0
+                            ? '#fff'
+                            : 'rgba(173, 161, 161, 0.1)',
+                      }"
+                      class="product-item"
+                    >
+                      <div class="product-image d-block text-center">
+                        <a
+                          :href="'http://localhost:8080/' + item.BookSlug"
+                          class="d-block"
+                        >
+                          <img
+                            :src="
+                              item.ImagePath
+                                ? item.ImagePath
+                                : 'https://t3.ftcdn.net/jpg/04/34/72/82/240_F_34728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg'
+                            "
+                            alt=""
+                          />
+                        </a>
+                        <div
+                          v-if="item.QuantityInStock > 0"
+                          class="group-button"
+                        >
+                          <button class="btn-action button-add-like">
+                            <i class="fa-solid fa-heart"></i>
+                          </button>
+                          <button
+                            @click="handleOnAdd(item)"
+                            class="btn-action button-add-cart"
+                          >
+                            <i class="fa-solid fa-cart-plus"></i>
+                          </button>
+                          <button class="btn-action button-detail">
+                            <i class="fa-solid fa-eye"></i>
+                          </button>
+                        </div>
+                        <div
+                          v-if="item.QuantityInStock === 0"
+                          class="product-sold-out"
+                        >
+                          Hết hàng
+                        </div>
+                      </div>
+                      <div class="product-detail">
+                        <h3 class="product-name">
+                          <a href="">
+                            {{ item.BookName }}
+                          </a>
+                        </h3>
+                        <div class="product-price">
+                          <div class="group-price d-flex align-items-center">
+                            <div class="product-pirce--discount me-2">
+                              {{ this.$helper.formatMoney(item.Price) }}đ
+                            </div>
+                            <div v-if="item.Discount" class="discount-percent">
+                              - {{ item.Discount }}%
+                            </div>
+                          </div>
+                          <div
+                            class="product-pirce--original text-decoration-line-through"
+                          >
+                            {{ this.$helper.formatMoney(item.OriginalPrice) }}đ
+                          </div>
+                        </div>
+                        <div class="product-quantity-sold">
+                          <p>Đã bán:</p>
+                          <p>{{ item.QuantitySold }}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    class="product-pirce--original text-decoration-line-through"
-                  >
-                    {{ this.$helper.formatMoney(productInfo.OriginalPrice) }}đ
-                  </div>
-                </div>
-              </div>
+                </swiper-slide>
+              </swiper>
+            </div>
+            <div @click="onNextSlide" class="wrap-button button-next-slide">
+              <i class="fa-solid fa-chevron-right"></i>
             </div>
           </div>
-        </div>
-        <div class="introduction-btn btn-next">
-          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
     </div>
@@ -302,7 +356,7 @@
             <tr>
               <th class="table-label">Năm XB</th>
               <td class="data_publish_year">
-                {{ productInfo.PublicationDate }}
+                {{ this.$helper.formatDate(productInfo.PublicationDate) }}
               </td>
             </tr>
             <tr>
@@ -635,10 +689,20 @@ import bookService from "@/utils/BookService";
 import cartItemService from "@/utils/CartItemService";
 import PreviewProduct from "./PreviewProduct.vue";
 import reviewProductService from "@/utils/ReviewProductService";
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
+// Import Swiper styles
+import "swiper/css";
 // import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "ProductPage",
-  components: { PreviewProduct },
+  components: { PreviewProduct, Swiper, SwiperSlide },
   props: {
     id: {
       type: String,
@@ -646,6 +710,9 @@ export default {
   },
   created() {
     this.loadDataProduct();
+  },
+  mounted() {
+    this.loadDataBooksOutStanding();
   },
   data() {
     return {
@@ -667,14 +734,16 @@ export default {
       ],
       avergeRating: null,
       messageInfo: null,
+
+      booksOutStanding: [],
+      startIndex: 0,
+      endIndex: 10,
     };
   },
   watch: {
     //Theo dõi biến số lượng cập nhật số tiền
     "cartItem.Quantity": function (newValue) {
-      if (newValue <= this.productInfo.QuantityInStock) {
-        this.cartItem.ProvisionalMoney = this.cartItem.Price * newValue;
-      } else {
+      if (newValue > this.productInfo.QuantityInStock) {
         this.messageInfo = `Số lượng yêu cầu ${newValue} không có
         sẵn.`;
         this.cartItem.Quantity = this.productInfo.QuantityInStock;
@@ -687,6 +756,20 @@ export default {
     },
   },
   methods: {
+    async loadDataBooksOutStanding() {
+      try {
+        const params = {
+          pageSize: 20,
+          pageNumber: 1,
+        };
+        const res = await bookService.getFilterPaging({ params });
+        if (res.status === 200) {
+          this.booksOutStanding = res.data.Data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     /**
      * Thực hiện lấy dữ liệu chi tiết của sản phẩm
      * @author LQHUY(09/04/2024)
@@ -721,6 +804,9 @@ export default {
      */
     hanldeOnReduceQuantity() {
       this.cartItem.Quantity--;
+      if (this.messageInfo) {
+        this.messageInfo = null;
+      }
       if (this.cartItem.Quantity < 1) {
         this.cartItem.Quantity = 1;
       }
@@ -739,8 +825,13 @@ export default {
      * @author LQHUY(09/04/2024)
      */
     async handleOnAddCart() {
+      if (
+        this.cartItem.Quantity > this.cartItem.QuantityInStock ||
+        this.cartItem.Quantity === 0
+      ) {
+        return;
+      }
       this.cartItem.CartId = this.userInfo.CartId;
-      this.cartItem.UnitPrice = this.cartItem.Price;
       const formData = new FormData();
       formData.append("dataJson", JSON.stringify(this.cartItem));
       //gọi api thêm mới
@@ -764,8 +855,6 @@ export default {
         this.$emitter.emit("getQuantityOfCart");
       }
     },
-
-    onShowFormPreviewProdcut() {},
 
     /**
      * Thực hiện lấy danh sách các đánh giá và nhận xét
@@ -831,6 +920,17 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    onNextSlide() {
+      if (this.endIndex + 2 <= this.booksOutStanding.length) {
+        this.startIndex += 2;
+        this.endIndex += 2;
+      }
+    },
+    onPrevSlide() {
+      this.startIndex -= 2;
+      this.endInd;
     },
   },
 };
@@ -1313,5 +1413,69 @@ export default {
   font-weight: 600;
   color: #646464;
   cursor: pointer;
+}
+.main-content {
+  background-color: #f0f0f0;
+}
+.home-product {
+  background-color: #fff;
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1),
+    0 2px 6px 2px rgba(60, 64, 67, 0.15);
+}
+
+.tab-heading {
+  background: transparent;
+  border: 0;
+  text-transform: capitalize;
+  letter-spacing: 0.4px;
+  padding: 16px 16px 16px 16px;
+}
+.tab-heading h4 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.tab-content {
+  padding: 0 10px 16px 10px;
+  position: relative;
+  z-index: 1;
+}
+.wrap-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+  z-index: 1;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  font-size: 18px;
+  height: 60px;
+  justify-content: center;
+  opacity: 0.7;
+  outline: none;
+  top: 50%;
+  transition: 0.3s;
+  width: 30px;
+  cursor: pointer;
+  z-index: 2;
+}
+.button-prev-slide {
+  border-radius: 0 100px 100px 0;
+  left: 0;
+  padding-right: 10px;
+}
+.button-next-slide {
+  border-radius: 100px 0 0 100px;
+  padding-left: 10px;
+  right: 0;
+}
+.swiper-slide {
+  margin-right: 5px;
+  margin-left: 4px;
+  margin-top: 4px;
+  max-width: calc(20% - 11px);
 }
 </style>

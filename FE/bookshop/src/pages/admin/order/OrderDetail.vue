@@ -2,40 +2,9 @@
   <div class="wrap-order-detail">
     <div :id="this.$route.params.id" class="breadcrumb-shop">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pd5">
-            <ol
-              class="breadcrumb breadcrumb-arrows"
-              itemscope=""
-              itemtype="http://schema.org/BreadcrumbList"
-            >
-              <li
-                itemprop="itemListElement"
-                itemscope=""
-                itemtype="http://schema.org/ListItem"
-                class="d-flex align-items-center"
-              >
-                <a
-                  href="http://localhost:8080/admin/order-manegement"
-                  target="_self"
-                  itemprop="item"
-                  ><span itemprop="name">Đơn hàng</span></a
-                >
-                <meta itemprop="position" content="1" />
-              </li>
-
-              <li
-                itemprop="itemListElement"
-                itemscope=""
-                itemtype="http://schema.org/ListItem"
-              >
-                <a href="/collections" target="_self" itemprop="item">
-                  <span itemprop="name">{{ order.OrderCode }}</span>
-                </a>
-                <meta itemprop="position" content="2" />
-              </li>
-            </ol>
-          </div>
+        <div @click="backToOrderManagement" class="breadcrumb-title">
+          <i class="fa-solid fa-angles-left"></i>
+          Quay lại
         </div>
       </div>
     </div>
@@ -90,7 +59,25 @@
           </div>
           <div class="delivery-status">
             <div class="order__info-title">Trạng thái giao hàng</div>
-            <p>
+            <p
+              :style="{
+                color:
+                  this.order.DeliveryStatus ===
+                  this.$Enum.DELIVERY_STATUS.DELIVERIED
+                    ? '#a0dbb3'
+                    : '#DEB85B',
+                borderColor:
+                  this.order.DeliveryStatus ===
+                  this.$Enum.DELIVERY_STATUS.DELIVERIED
+                    ? '#a0dbb3'
+                    : '#DEB85B',
+                backgroundColor:
+                  this.order.DeliveryStatus ===
+                  this.$Enum.DELIVERY_STATUS.DELIVERIED
+                    ? '#f1fcf5'
+                    : '#fdfde8',
+              }"
+            >
               {{
                 this.$helper.hanldeValueTypeEnum(
                   "DELIVERY_STATUS",
@@ -105,16 +92,16 @@
             <p
               :style="{
                 color:
-                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
+                  this.order.PaymentStatus === this.$Enum.PAYMENT_STATUS.UNPAID
                     ? '#DEB85B'
                     : '#a0dbb3',
                 borderColor:
-                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
+                  this.order.PaymentStatus === this.$Enum.PAYMENT_STATUS.UNPAID
                     ? '#DEB85B'
                     : '#a0dbb3',
                 backgroundColor:
-                  this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.UNPAID
-                    ? '#DEB85B'
+                  this.order.PaymentStatus === this.$Enum.PAYMENT_STATUS.UNPAID
+                    ? '#fdfde8'
                     : '#f1fcf5',
               }"
             >
@@ -193,11 +180,11 @@
                   <h3 class="product-item-name">{{ item.BookName }}</h3>
                 </div>
                 <div class="product-item-quantiy">{{ item.Quantity }}</div>
-                <div class="product-item-price">{{ item.UnitPrice }}</div>
+                <div class="product-item-price">
+                  {{ this.$helper.formatMoney(item.Price) }}đ
+                </div>
                 <div class="product-item-into-money me-1">
-                  {{
-                    this.$helper.formatMoney(item.Quantity * item.UnitPrice)
-                  }}đ
+                  {{ this.$helper.formatMoney(item.Quantity * item.Price) }}đ
                 </div>
               </div>
             </div>
@@ -229,19 +216,19 @@
               <p
                 :style="{
                   color:
-                    this.order.PaymentMethod ===
-                    this.$Enum.PAYMENT_METHOD.UNPAID
+                    this.order.PaymentStatus ===
+                    this.$Enum.PAYMENT_STATUS.UNPAID
                       ? '#DEB85B'
                       : '#a0dbb3',
                   borderColor:
-                    this.order.PaymentMethod ===
-                    this.$Enum.PAYMENT_METHOD.UNPAID
+                    this.order.PaymentStatus ===
+                    this.$Enum.PAYMENT_STATUS.UNPAID
                       ? '#DEB85B'
                       : '#a0dbb3',
                   backgroundColor:
-                    this.order.PaymentMethod ===
-                    this.$Enum.PAYMENT_METHOD.UNPAID
-                      ? '#DEB85B'
+                    this.order.PaymentStatus ===
+                    this.$Enum.PAYMENT_STATUS.UNPAID
+                      ? '#fdfde8'
                       : '#f1fcf5',
                 }"
               >
@@ -267,7 +254,7 @@
                   <div class="info-wrap">
                     <div class="info-item">
                       <p class="info-item__title">Số lượng sản phẩm</p>
-                      <p class="info-item__value">2</p>
+                      <p class="info-item__value">{{ order.TotalQuantity }}</p>
                     </div>
                     <div class="info-item">
                       <p class="info-item__title">Tổng tiền hàng</p>
@@ -317,24 +304,14 @@
                     <div class="payment" style="text-align: right">
                       <button
                         v-if="
-                          order.PaymentStatus ===
-                          this.$Enum.PAYMENT_STATUS.UNPAID
+                          order.PaymentStatus !==
+                            this.$Enum.PAYMENT_STATUS.PAID &&
+                          order.OrderStatus !==
+                            this.$Enum.ORDER_STATUS.CANCELLED
                         "
                         class="m-button"
                         style="background-color: #0051c8"
-                      >
-                        Thanh toán
-                      </button>
-                      <button
-                        v-if="
-                          order.PaymentStatus === this.$Enum.PAYMENT_STATUS.PAID
-                        "
-                        class="m-button"
-                        style="
-                          background-color: #e2e9ea;
-                          color: #333;
-                          cursor: not-allowed;
-                        "
+                        @click="handleOnOrderPayment"
                       >
                         Thanh toán
                       </button>
@@ -387,6 +364,21 @@
                   <b>{{ totalOrderUserOrdered }} đơn hàng</b>
                 </p>
               </div>
+              <div class="user-achivement quantity-ordered">
+                <p>Đơn hàng hoàn tất</p>
+                <p>
+                  <b
+                    >{{ totalOrderComplete ? totalOrderComplete : 0 }} đơn
+                    hàng</b
+                  >
+                </p>
+              </div>
+              <div class="user-achivement quantity-ordered">
+                <p>Đơn hàng đã hủy</p>
+                <p>
+                  <b>{{ totalOrderCancel ? totalOrderCancel : 0 }} đơn hàng</b>
+                </p>
+              </div>
               <div class="user-achivement accumulated-revenue">
                 <p>Doanh thu tích lũy</p>
                 <p>
@@ -401,9 +393,32 @@
             </div>
             <div class="info-border info-delivery-address">
               <p class="profile-customer-header">Địa chỉ giao hàng</p>
-
               <p>{{ order.Address }}</p>
             </div>
+          </div>
+          <div class="change-status-order mt-3">
+            <button
+              v-show="
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.COMPLETE &&
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
+              "
+              @click="handleOnOrderComplete"
+              class="m-button"
+              style="background-color: #0051c8"
+            >
+              Hoàn tất đơn hàng
+            </button>
+            <button
+              v-show="
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.COMPLETE &&
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
+              "
+              @click="handleOnCancleOrder"
+              class="m-button"
+              style="background-color: #ff0000"
+            >
+              Hủy đơn hàng
+            </button>
           </div>
         </div>
       </div>
@@ -430,7 +445,7 @@
     <template #footerRight>
       <MButton
         style="background-color: #0051c8"
-        @click="handleOnConfirmOrder"
+        @click="handleOnUpdateOrder"
         text="Xác nhận"
       ></MButton>
     </template>
@@ -445,7 +460,7 @@ export default {
     await this.getOrderData();
     await this.getOrderDetailsData();
     await this.getUserInfoData();
-    await this.caculTotalOrderUserOrdered();
+    await this.caculTotalOrder();
   },
   data() {
     return {
@@ -455,6 +470,7 @@ export default {
       totalOrderUserOrdered: 0,
       accumulatedRevenue: 0,
       isShowDialog: false,
+      typeStatus: "",
     };
   },
 
@@ -481,6 +497,7 @@ export default {
         console.log(error);
       }
     },
+
     async getUserInfoData() {
       try {
         const res = await userService.getById(this.order.UserId);
@@ -491,23 +508,42 @@ export default {
         console.log(error);
       }
     },
-    async caculTotalOrderUserOrdered() {
+
+    async caculTotalOrder() {
       const res = await orderService.GetByUserId(this.order.UserId);
       if (res.status === 200) {
         this.totalOrderUserOrdered = res.data.length;
-        this.accumulatedRevenue = res.data.reduce(
+        const ordersComplete = res.data.filter(
+          (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
+        );
+        this.totalOrderComplete = ordersComplete.length;
+
+        const ordersCancel = res.data.filter(
+          (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
+        );
+        this.totalOrderCancel = ordersCancel.length;
+        const accumulatedRevenue = ordersComplete.reduce(
           (previousValue, item) => previousValue + item.TotalAmount,
           0
         );
+        this.accumulatedRevenue = accumulatedRevenue ? accumulatedRevenue : 0;
+      }
+    },
+
+    handleOnUpdateOrder() {
+      if (this.typeStatus === "Confirm Order") {
+        this.confirmOrder();
+      } else if (this.typeStatus === "Confirm Cancel") {
+        this.cancelOrder();
       }
     },
 
     async handleOnConfirmDelivery() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        this.order.OrderStatus = this.$Enum.ORDER_STATUS.SHIPPING;
+        this.order.OrderStatus = this.$Enum.ORDER_STATUS.PROCESSING;
         this.order.DeliveryStatus =
-          this.$Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY;
+          this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED;
         const formData = new FormData();
         formData.append("dataJson", JSON.stringify(this.order));
         const res = await orderService.put(this.order.OrderId, formData);
@@ -528,7 +564,7 @@ export default {
       }
     },
 
-    async handleOnConfirmOrder() {
+    async confirmOrder() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
         this.order.OrderStatus = this.$Enum.ORDER_STATUS.CONFIRMED;
@@ -552,9 +588,86 @@ export default {
         console.log(error);
       }
     },
+
+    async handleOnOrderPayment() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        this.order.PaymentStatus = this.$Enum.PAYMENT_STATUS.PAID;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.order));
+        const res = await orderService.put(this.order.OrderId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Thanh toán thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          this.getOrderData();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async handleOnOrderComplete() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        this.order.OrderStatus = this.$Enum.ORDER_STATUS.COMPLETE;
+        this.order.DeliveryStatus = this.$Enum.DELIVERY_STATUS.DELIVERIED;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.order));
+        const res = await orderService.put(this.order.OrderId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Thanh toán thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          this.getOrderData();
+          this.caculTotalOrder();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async cancelOrder() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        this.order.OrderStatus = this.$Enum.ORDER_STATUS.CANCELLED;
+        const formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.order));
+        const res = await orderService.put(this.order.OrderId, formData);
+        if (res.status === 200) {
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Thanh toán thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+          this.$emitter.emit("toggleShowLoading", false);
+          //load lại dữ liệu đơn hàng
+          this.getOrderData();
+          //đóng dialog
+          this.isShowDialog = false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     onConfirmOrder() {
       this.isShowDialog = true;
       this.messageDialog = "Xác thực đơn hàng <" + this.order.OrderCode + ">";
+      this.typeStatus = "Confirm Order";
+    },
+    backToOrderManagement() {
+      location.href = "http://localhost:8080/admin/order-manegement";
     },
   },
 };

@@ -26,6 +26,8 @@ namespace BookShopOnline.Core.Entitites
         public DeliveryMethod DeliveryMethod { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
+        public int? TotalQuantity { get; set; }
+        public double? TotalProductCost { get; set; }
         public DateTime? OrderDate { get; set; }
         public DateTime? CancellationDate { get; set; }
         public DateTime? DeliveryDate { get; set; }

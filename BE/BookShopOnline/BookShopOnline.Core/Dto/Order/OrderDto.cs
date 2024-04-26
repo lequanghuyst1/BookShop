@@ -34,6 +34,8 @@ namespace BookShopOnline.Core.Dto.Order
         public DeliveryMethod DeliveryMethod { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
+        public int TotalQuantity { get; set; }
+        public double TotalProductCost { get; set; }
 
         [DisplayName("Ngày đặt")]
         public DateTime OrderDate { get; set; }

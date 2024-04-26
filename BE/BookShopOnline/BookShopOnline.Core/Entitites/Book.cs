@@ -35,7 +35,6 @@ namespace BookShopOnline.Core.Entitites
 
         [Required(ErrorMessage = "Số lượng nhập không được để trống")]
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng nhập vào phải là số.")]
-        public int? QuantityImported { get; set; }
         public string? Description { get; set; }
         public DateTime? PublicationDate { get; set; }
         public string? Size { get; set; }
@@ -47,6 +46,8 @@ namespace BookShopOnline.Core.Entitites
         public Guid PublisherId { get; set; }
         public string? CategoryName { get; set; }
         public string? PublisherName { get; set; }
+        public int? QuantityImported { get; set; }
+
         public int? QuantityInStock { get; set; }
         public int? QuantitySold { get; set; }
         public string? Slug { get; set; }

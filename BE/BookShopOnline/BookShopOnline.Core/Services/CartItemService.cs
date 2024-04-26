@@ -53,11 +53,16 @@ namespace BookShopOnline.Core.Services
 
             //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của tài khoản đó hay chưa
             var cartItemExit = cartItems.FirstOrDefault(item => item.BookId == cartItem.BookId);
+            var book = await _unitOfWork.Book.GetByIdAsync(cartItem.BookId);
 
             //Nếu có thì cập nhật lại số lượng
             if (cartItemExit != null)
             {
                 cartItem.Quantity = cartItem.Quantity + cartItemExit.Quantity;
+                if(cartItem.Quantity > book?.QuantityInStock)
+                {
+                    cartItem.Quantity = book?.QuantityInStock;
+                }
                 var result = await _unitOfWork.CartItems.UpdateAsync(cartItemExit.CartItemId, cartItem);
                 if (result > 0)
                 {
@@ -85,15 +90,18 @@ namespace BookShopOnline.Core.Services
         {
             _unitOfWork.BeginTransaction();
             var cartItem = JsonConvert.DeserializeObject<CartItem>(dataJson);
-            //lấy ra giỏ hàng của người dùng theo cartId
-            var cartItems = await _unitOfWork.CartItems.GetByCartIdAsync(cartItem.CartId);
 
             //kiểm tra xem sản phẩm được thêm đã có trong giỏ hàng của tài khoản đó hay chưa
-            var cartItemExit = cartItems.FirstOrDefault(item => item.BookId == cartItem.BookId);
+            var cartItemExit = await _unitOfWork.CartItems.GetByIdAsync(cartItem.CartItemId);
+            var book = await _unitOfWork.Book.GetByIdAsync(cartItem.BookId);
 
             //Nếu có thì cập nhật
             if (cartItemExit != null)
             {
+                if (cartItem.Quantity > book?.QuantityInStock)
+                {
+                    cartItem.Quantity = book?.QuantityInStock;
+                }
                 var result = await _unitOfWork.CartItems.UpdateAsync(id, cartItem);
                 if (result > 0)
                 {

@@ -11,14 +11,13 @@ namespace BookShopOnline.Core.Entitites
         public Guid OrderDetailId { get; set; }
         public Guid BookId { get; set; }
         public Guid OrderId { get; set; }
-        public double UnitPrice { get; set; }
+        public double Price { get; set; }
         public double? OriginalPrice { get; set; }
         public int? Discount { get; set; }
         public int Quantity { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
         public string ImagePath { get; set; }
-        public double Price { get; set; }
         public string Author { get; set; }
         public int QuantityImported { get; set; }
         public string? Description { get; set; }

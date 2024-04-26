@@ -35,7 +35,15 @@
                 style="margin-right: 10px"
               >
                 <div class="inner-item" :title="item.BookName">
-                  <div class="product-item">
+                  <div
+                    :style="{
+                      backgroundColor:
+                        item.QuantityInStock > 0
+                          ? '#fff'
+                          : 'rgba(173, 161, 161, 0.1)',
+                    }"
+                    class="product-item"
+                  >
                     <div class="product-image d-block text-center">
                       <a
                         :href="'http://localhost:8080/' + item.BookSlug"
@@ -50,7 +58,7 @@
                           alt=""
                         />
                       </a>
-                      <div class="group-button">
+                      <div v-if="item.QuantityInStock > 0" class="group-button">
                         <button class="btn-action button-add-like">
                           <i class="fa-solid fa-heart"></i>
                         </button>
@@ -63,6 +71,12 @@
                         <button class="btn-action button-detail">
                           <i class="fa-solid fa-eye"></i>
                         </button>
+                      </div>
+                      <div
+                        v-if="item.QuantityInStock === 0"
+                        class="product-sold-out"
+                      >
+                        Hết hàng
                       </div>
                     </div>
                     <div class="product-detail">
@@ -165,9 +179,7 @@ export default {
      */
     async handleOnAdd(item) {
       item.CartId = this.userInfo.CartId;
-      item.UnitPrice = item.Price;
       item.Quantity = 1;
-      item.ProvisionalMoney = item.Price;
       const formData = new FormData();
       formData.append("dataJson", JSON.stringify(item));
       //gọi api thêm mới
@@ -206,69 +218,71 @@ export default {
 </script>
 <style scoped>
 .banner-item-picture {
-  width: 100%;
-}
-.main-content {
-  background-color: #f0f0f0;
-}
-.home-product {
-  background-color: #fff;
-  margin-top: 16px;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1),
-    0 2px 6px 2px rgba(60, 64, 67, 0.15);
-}
+    width: 100%;
+  }
+  .main-content {
+    background-color: #f0f0f0;
+  }
+  .home-product {
+    background-color: #fff;
+    margin-top: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1),
+      0 2px 6px 2px rgba(60, 64, 67, 0.15);
+  }
+  
+  .tab-heading {
+    background: transparent;
+    border: 0;
+    text-transform: capitalize;
+    letter-spacing: 0.4px;
+    padding: 16px 16px 16px 16px;
+  }
+  .tab-heading h4 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .tab-content {
+    padding: 0 10px 16px 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .wrap-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #333;
+    z-index: 1;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    font-size: 18px;
+    height: 60px;
+    justify-content: center;
+    opacity: 0.7;
+    outline: none;
+    top: 50%;
+    transition: 0.3s;
+    width: 30px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .button-prev-slide {
+    border-radius: 0 100px 100px 0;
+    left: 0;
+    padding-right: 10px;
 
-.tab-heading {
-  background: transparent;
-  border: 0;
-  text-transform: capitalize;
-  letter-spacing: 0.4px;
-  padding: 16px 16px 16px 16px;
-}
-.tab-heading h4 {
-  font-size: 18px;
-  font-weight: 600;
-}
-.tab-content {
-  padding: 0 10px 16px 10px;
-  position: relative;
-  z-index: 1;
-}
-.wrap-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #333;
-  z-index: 1;
-  align-items: center;
-  background: #fff;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-  display: flex;
-  font-size: 18px;
-  height: 60px;
-  justify-content: center;
-  opacity: 0.7;
-  outline: none;
-  top: 50%;
-  transition: 0.3s;
-  width: 30px;
-  cursor: pointer;
-}
-.button-prev-slide {
-  border-radius: 0 100px 100px 0;
-  left: 0;
-  padding-right: 10px;
-}
-.button-next-slide {
-  border-radius: 100px 0 0 100px;
-  padding-left: 10px;
-  right: 0;
-}
-.swiper-slide {
-  margin-right: 5px;
-  margin-left: 4px;
-  margin-top: 4px;
-  max-width: calc(20% - 11px);
-}
+  }
+  .button-next-slide {
+    border-radius: 100px 0 0 100px;
+    padding-left: 10px;
+    right: 0;
+  }
+  .swiper-slide {
+    margin-right: 5px;
+    margin-left: 4px;
+    margin-top: 4px;
+    max-width: calc(20% - 11px);
+  }
 </style>

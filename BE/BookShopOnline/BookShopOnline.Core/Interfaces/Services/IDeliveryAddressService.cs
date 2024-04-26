@@ -23,7 +23,7 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// Created By: LQHUY(08/04/2024
         Task<IEnumerable<DeliveryAddressDto>> GetByUserIdServiceAsync(Guid userId);
 
-        Task UpdateDeleliveryAddressDefalutAsync(Guid id);
+        Task UpdateDeleliveryAddressDefalutAsync(Guid id, DeliveryAddress deliveryAddress);
 
     }
 }

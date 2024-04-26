@@ -23,15 +23,15 @@
                 <div class="item__content">
                   <div class="content__title d-flex gap-3">
                     <p class="title__name">
-                      {{ addressDeliveryDefault.ReminiscentName }}
+                      {{ addressDeliveryDefault?.ReminiscentName }}
                     </p>
                     <p class="title__type">Mặc định</p>
                   </div>
                   <div class="content__address">
-                    {{ addressDeliveryDefault.DeliveryAddressName }}
+                    {{ addressDeliveryDefault?.DeliveryAddressName }}
                   </div>
                   <div class="content__phone">
-                    {{ addressDeliveryDefault.PhoneNumber }}
+                    {{ addressDeliveryDefault?.PhoneNumber }}
                   </div>
                 </div>
                 <div class="button__edit-address">
@@ -196,9 +196,8 @@
                   v-model="address.HomeNumber"
                 ></InputAccount>
                 <div
-                  v-show="isAddressExist"
                   style="margin-top: 16px; margin-bottom: 16px"
-                  @click="handleSave"
+                  @click="handleOnAdd"
                   class="btn-add-address"
                 >
                   <button>Lưu địa chỉ</button>
@@ -393,7 +392,7 @@
             <div class="total-line mt-3 total-sub-total">
               <p class="total-name">Thành tiền</p>
               <p class="total-price">
-                {{ this.$helper.formatMoney(this.totalAmountCart) }} đ
+                {{ this.$helper.formatMoney(this.order.TotalProductCost) }} đ
               </p>
             </div>
             <div class="total-line total-delivery">
@@ -405,7 +404,7 @@
             <div class="total-line total-amount">
               <p class="total-name">Tổng số tiền</p>
               <p class="total-price">
-                {{ this.$helper.formatMoney(this.totalAmountCart) }} đ
+                {{ this.$helper.formatMoney(this.order.TotalAmount) }} đ
               </p>
             </div>
             <div
@@ -435,7 +434,7 @@ import vnPayService from "@/utils/VnPayService";
 export default {
   name: "PayUserPage",
   components: { TheHeader, InputAccount },
-  created() {
+  mounted() {
     this.getDataProvince();
     this.getAddressDeliveryDefault();
     this.getOrderDetailsData();
@@ -457,6 +456,7 @@ export default {
       wardData: [],
 
       lstErrorMessage: {},
+      refListError: [],
 
       addressDeliveryDefault: {},
 
@@ -466,10 +466,10 @@ export default {
       orderDetailData: [],
       totalAmountCart: 0,
       order: {
-        DeliveryMethod: this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY,
-        DeliveryStatus: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
+        OrderStatus: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
         PaymentMethod: this.$Enum.PAYMENT_METHOD.COD,
-        PaymentStatus: this.$Enum.PAYMENT_STATUS.UNPAID,
+        DeliveryStatus: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
+        DeliveryMethod: this.$Enum.DELIVERY_METHOD.LOCAL_DELIVERY,
         ShippingFee: 19000,
       },
     };
@@ -528,24 +528,147 @@ export default {
   },
   methods: {
     /**
+     * Thực hiện validate dữ liệu
+     * Author: LQHUY(04/04/2024)
+     */
+    handleValidateField() {
+      try {
+        for (let key in this.textFields) {
+          let ref = this.textFields[key].ref;
+
+          //validate dữ liệu
+          this.$refs[ref].validate();
+          let rules = this.textFields[key].rules;
+          let nameField = this.textFields[key].name;
+
+          if (rules.required === true) {
+            if (
+              this.address[nameField] === "" ||
+              this.address[nameField] === null ||
+              this.address[nameField] === undefined
+            ) {
+              this.lstErrorMessage[ref] = key;
+              this.refListError.push(ref);
+            } else {
+              delete this.lstErrorMessage[ref];
+              this.refListError = this.refListError.filter(
+                (item) => item !== ref
+              );
+            }
+          }
+        }
+
+        this.setError(
+          this.provinceSelected.province_id,
+          "refProvince",
+          "province",
+          "Tỉnh/thành phố"
+        );
+        this.setError(
+          this.districtSelected.district_id,
+          "refDistrict",
+
+          "district",
+          "Quận/huyện"
+        );
+        this.setError(
+          this.wardSelected.ward_id,
+          "refWard",
+          "ward",
+          "Xã/phường"
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    /**
+     * Thực hiện set message dữ liệu không hợp lệ
+     * Author: LQHUY(04/04/2024)
+     */
+    setError(value, ref, field, title) {
+      if (value === "" || value === null || value === undefined) {
+        this.lstErrorMessage[field] = `${title} không được phép để trống`;
+        this.refListError.push(ref);
+      } else {
+        delete this.lstErrorMessage[field];
+        this.refListError = this.refListError.filter((item) => item !== ref);
+      }
+    },
+
+    /**
+     * Thực hiện thêm mới một địa chỉ
+     * Author: LQHUY(04/04/2024)
+     */
+    async handleOnAdd() {
+      this.handleValidateField();
+      if (this.refListError.length > 0) {
+        this.$refs[this.refListError[0]].focusInput();
+        return;
+      }
+      this.addNewAdresss();
+    },
+
+    async addNewAdresss() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+
+        //gán các giá trị cho address
+        this.address.UserId = this.userInfo.UserId;
+        this.address.DeliveryAddressName =
+          `${this.address.HomeNumber}, ${this.wardSelected.ward_name}, ` +
+          `${this.districtSelected.district_name}, ${this.provinceSelected.province_name}`;
+        this.address.Ward = this.wardSelected.ward_name;
+        this.address.District = this.districtSelected.district_name;
+        this.address.Province = this.provinceSelected.province_name;
+
+        //gọi api thêm mới
+        var formData = new FormData();
+        formData.append("dataJson", JSON.stringify(this.address));
+        const res = await deliveryAddressService.post(formData);
+        if (res.status === 201) {
+          this.$emitter.emit("toggleShowLoading", false);
+          this.$emitter.emit(
+            "onShowToastMessage",
+            this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+            "Thêm mới thành công",
+            this.$Resource[this.$languageCode].ToastMessage.Status.Success
+          );
+
+          //quay lại trang danh sách địa chỉ và load lại dữ liệu
+          this.numberPage = 1;
+          this.handleLoadData();
+        }
+      } catch (error) {
+        console.log(error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+
+    /**
      * Hàm thực hiện thanh toán khi click btn Thanh toán
      * @author LQHUY(12/04/2024)
      */
     async handleCheckout() {
       this.$emitter.emit("toggleShowLoading", true);
-
       try {
         //thiết lập thông tin đơn hàng
-        this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
-        this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
-        this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
-        this.order.TotalAmount = this.totalAmountCart;
+        if (this.isAddressExist) {
+          this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
+          this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
+          this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
+        } else {
+          this.order.Fullname = this.address.ReminiscentName;
+          this.order.PhoneNumber = this.address.PhoneNumber;
+          this.order.Address =
+            `${this.address.HomeNumber}, ${this.wardSelected.ward_name}, ` +
+            `${this.districtSelected.district_name}, ${this.provinceSelected.province_name}`;
+        }
         this.order.UserId = this.userInfo.UserId;
         this.order.OrderCode = "";
-        this.order.OrderStatus =
-          this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.COD
-            ? this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
-            : this.$Enum.ORDER_STATUS.WAIT_FOR_PAY;
+        this.order.PaymentStatus = this.$Enum.PAYMENT_METHOD.COD
+          ? this.$Enum.PAYMENT_STATUS.UNPAID
+          : this.$Enum.PAYMENT_STATUS.WAIT_FOR_HANDLE;
 
         //thiết lập các thông tin để truyền khi gọi Api checkout
         const orderInfo = {
@@ -597,8 +720,14 @@ export default {
         (accumulator, item) => accumulator + item.Price * item.Quantity,
         0
       );
+      const totalQuantity = this.orderDetailData.reduce(
+        (accumulator, item) => accumulator + item.Quantity,
+        0
+      );
       const totalOrder = totalAmount + this.order.ShippingFee;
-      this.totalAmountCart = totalOrder;
+      this.order.TotalQuantity = totalQuantity;
+      this.order.TotalProductCost = totalAmount;
+      this.order.TotalAmount = totalOrder;
     },
 
     async getOrderDetailsData() {
@@ -628,8 +757,10 @@ export default {
         const addressDeliveryDefault = res.data.filter(
           (item) => item.DeliveryAddressDefault === true
         );
-        this.isAddressExist = true;
         this.addressDeliveryDefault = addressDeliveryDefault[0];
+        if (this.addressDeliveryDefault) {
+          this.isAddressExist = true;
+        }
       } catch (error) {
         console.log(error);
       }

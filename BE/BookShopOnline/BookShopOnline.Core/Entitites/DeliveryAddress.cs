@@ -25,17 +25,17 @@ namespace BookShopOnline.Core.Entitites
         /// <summary>
         /// Phường/xã
         /// </summary>
-        public string Ward { get; set; }
+        public string? Ward { get; set; }
 
         /// <summary>
         /// Quận/huyện
         /// </summary>
-        public string District { get; set; }
+        public string? District { get; set; }
 
         /// <summary>
         /// Tỉnh/thành phố
         /// </summary>
-        public string Province { get; set; }
+        public string? Province { get; set; }
 
         /// <summary>
         /// Số nhà/ tên đường
@@ -55,11 +55,11 @@ namespace BookShopOnline.Core.Entitites
         /// <summary>
         /// Họ và tên người nhận hàng
         /// </summary>
-        public string ReminiscentName { get; set; }
+        public string? ReminiscentName { get; set; }
 
         /// <summary>
         /// Số điện thoại người nhận hàng
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

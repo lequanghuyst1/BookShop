@@ -43,16 +43,16 @@ namespace BookShopOnline.Core.Services
 
             if (deliveryAddress.DeliveryAddressDefault == true)
             {
-                await _deliveryAddressRepository.RemoveDefaultAddressAsync();
+                await _deliveryAddressRepository.RemoveDefaultAddressAsync(deliveryAddress.UserId);
             }
             var result = await _baseRepository.InsertAsync(deliveryAddress);
             return result;
 
         }
 
-        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id)
+        public async Task UpdateDeleliveryAddressDefalutAsync(Guid id, DeliveryAddress deliveryAddress)
         {
-            await _deliveryAddressRepository.UpdateDeleliveryAddressDefalutAsync(id);
+            await _deliveryAddressRepository.UpdateDeleliveryAddressDefalutAsync(id, deliveryAddress);
         }
 
         public override async Task<int> UpdateServiceAsync(Guid id, string dataJson, IFormFile? imageFile)
@@ -62,7 +62,7 @@ namespace BookShopOnline.Core.Services
 
             if (deliveryAddress.DeliveryAddressDefault == true)
             {
-                await _deliveryAddressRepository.RemoveDefaultAddressAsync();
+                await _deliveryAddressRepository.RemoveDefaultAddressAsync(deliveryAddress.UserId);
             }
             var result = await _baseRepository.UpdateAsync(id,deliveryAddress);
             return result; ;

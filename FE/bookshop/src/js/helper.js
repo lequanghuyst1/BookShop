@@ -127,25 +127,23 @@ const helper = {
           return resource().ENUM_ORDER_STATUS.waitForConfirmation;
         } else if (value === Enum.ORDER_STATUS.CONFIRMED) {
           return resource().ENUM_ORDER_STATUS.confirmed;
-        } else if (value === Enum.ORDER_STATUS.SHIPPING) {
-          return resource().ENUM_ORDER_STATUS.shipping;
-        } else if (value === Enum.ORDER_STATUS.DELIVERED) {
-          return resource().ENUM_ORDER_STATUS.delivered;
+        } else if (value === Enum.ORDER_STATUS.PROCESSING) {
+          return resource().ENUM_ORDER_STATUS.processing;
+        } else if (value === Enum.ORDER_STATUS.COMPLETE) {
+          return resource().ENUM_ORDER_STATUS.complete;
         } else if (value === Enum.ORDER_STATUS.CANCELLED) {
           return resource().ENUM_ORDER_STATUS.cancelled;
-        }
-        else if(value === Enum.ORDER_STATUS.WAIT_FOR_PAY){
-          return resource().ENUM_ORDER_STATUS.waitForPay;
-
         }
         break;
       case "DELIVERY_STATUS":
         if (value === Enum.DELIVERY_STATUS.NOT_DELIVERY) {
           return resource().ENUM_DELIVERY_STATUS.notDelivery;
-        } else if (value === Enum.DELIVERY_STATUS.WAITTING_FOR_DELIVERY) {
-          return resource().ENUM_DELIVERY_STATUS.wattingForDelivery;
-        } else if (value === Enum.DELIVERY_STATUS.RECEIVED_THE_GOODS) {
-          return resource().ENUM_DELIVERY_STATUS.receviedTheGoods;
+        } else if (value === Enum.DELIVERY_STATUS.BEING_TRANSPORTED) {
+          return resource().ENUM_DELIVERY_STATUS.beingTranspoted;
+        } else if (value === Enum.DELIVERY_STATUS.DELIVERIED) {
+          return resource().ENUM_DELIVERY_STATUS.deliveried;
+        } else if (value === Enum.DELIVERY_STATUS.CANCELLED) {
+          return resource().ENUM_DELIVERY_STATUS.cancelled;
         }
         break;
       case "PAYMENT_STATUS":
@@ -153,6 +151,8 @@ const helper = {
           return resource().ENUM_PAYMENT_STATUS.unpaid;
         } else if (value === Enum.PAYMENT_STATUS.PAID) {
           return resource().ENUM_PAYMENT_STATUS.paid;
+        } else if (value === Enum.PAYMENT_STATUS.WAIT_FOR_HANDLE) {
+          return resource().ENUM_PAYMENT_STATUS.waitForHandle;
         }
         break;
       case "PAYMENT_METHOD":
@@ -166,7 +166,7 @@ const helper = {
         return "";
     }
   },
-  
+
   formatOrderDate(value) {
     var date = new Date(value);
     // Chuẩn hóa giờ để hiển thị đúng định dạng 12 giờ

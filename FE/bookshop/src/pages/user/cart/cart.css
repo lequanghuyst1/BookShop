@@ -9,7 +9,7 @@
 .cart .page-title-container {
     display: flex;
     padding: 22px 0 8px;
-    align-items: flex-end;
+    align-items: center;
 }
 .cart .page-title h1 {
     margin: 0px 0 0;
@@ -331,6 +331,7 @@ font-size: 16px;
     width: 100%;
     margin: 0px 0px 10px 0px;
     border: none;
+    padding: 0 !important;
 }
 
 .checkout-type-button-cart button span {

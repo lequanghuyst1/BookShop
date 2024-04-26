@@ -20,25 +20,18 @@ namespace BookShopOnline.Core.Enums
         /// </summary>
         CONFIRMED = 1,
         /// <summary>
-        /// Đang giao hàng
+        /// Đang xử lý
         /// </summary>
-        SHIPPING = 2,
+        PROCESSING = 2,
         /// <summary>
-        /// Đã giao hàng
+        /// Hoàn thành
         /// </summary>
-        DELIVERED = 3,
+        COMPLETE = 3,
         /// <summary>
         /// Đã hủy
         /// </summary>
         CANCELLED = 4,
-        /// <summary>
-        /// Hoàn thành
-        /// </summary>
-        COMPLETE = 5,
-        /// <summary>
-        /// Chờ thanh toán
-        /// </summary>
-        WAIT_FOR_PAY = 6,
+      
     }
 
     /// <summary>
@@ -50,14 +43,18 @@ namespace BookShopOnline.Core.Enums
         /// Chưa giao hàng
         /// </summary>
         NOT_DELIVERY = 0,
-        /// <summary>
-        /// Chờ lấy hàng
+        /// Đang giao hàng
         /// </summary>
-        WAITTING_FOR_DELIVERY = 1,
+        BEING_TRANSPORTED = 1,
         /// <summary>
         /// Đã lấy hàng
         /// </summary>
-        RECEIVED_THE_GOODS = 2,
+        DELIVERIED = 2,
+        /// <summary>
+        /// Hủy
+        /// </summary>
+        CANCELLED = 3,
+
     }
 
     /// <summary>
@@ -89,7 +86,8 @@ namespace BookShopOnline.Core.Enums
     public enum PaymentStatus
     {
         UNPAID = 0,
-        PAID = 1,
+        WAIT_FOR_HANDLE = 1,
+        PAID = 2,
     }
     public enum SortType
     {

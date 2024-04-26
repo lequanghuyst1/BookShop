@@ -661,9 +661,12 @@ export default {
     async handleSetAddressDefault() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-
         const res = await deliveryAddressService.updateAdressDefault(
-          this.addressIdSelected
+          this.addressIdSelected,
+          {
+            DeliveryAddressId: this.addressIdSelected,
+            UserId: this.userInfo.UserId,
+          }
         );
         if (res.status === 200) {
           this.$emitter.emit("toggleShowLoading", false);

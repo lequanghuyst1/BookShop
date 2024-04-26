@@ -153,6 +153,9 @@
   flex-basis: 15%;
   text-align: center;
 }
+.product-item-image{
+  margin-right: 10px;
+}
 .product-item-image img {
   max-height: 119px;
 }
@@ -286,4 +289,15 @@
   font-size: 14px;
   margin-top: -8px !important;
   color: #bbb9b9;
+}
+.breadcrumb-title{
+  margin-top: 8px;
+  font-size: 14px;
+}
+.breadcrumb-title i{
+  font-size: 12px;
+}
+.breadcrumb-title:hover{
+  cursor: pointer;
+  color: #DEB85B;
 }

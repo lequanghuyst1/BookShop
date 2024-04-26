@@ -62,20 +62,20 @@ const Resource = {
     ENUM_ORDER_STATUS: {
       waitForConfirmation: "Chờ xác nhận",
       confirmed: "Đã xác nhận",
-      shipping: "Đang vận chuyển",
-      delivered: "Đã giao hàng",
+      processing: "Đang xử lý",
       complete: "Hoàn thành",
       cancelled: "Bị hủy",
-      waitForPay: "Chờ thanh toán",
     },
     ENUM_DELIVERY_STATUS: {
       notDelivery: "Chưa giao hàng",
-      wattingForDelivery: "Chờ lấy hàng",
-      receviedTheGoods: "Đã nhận hàng",
+      beingTranspoted: "Đang giao hàng",
+      deliveried: "Đã giao",
+      cancelled: "Hủy",
     },
     ENUM_PAYMENT_STATUS: {
       unpaid: "Chưa thanh toán",
       paid: "Đã thanh toán",
+      waitForHandle: "Đang xử lý",
     },
     PAYMENT_METHOD: {
       cod: "Thanh toán khi nhận hàng",

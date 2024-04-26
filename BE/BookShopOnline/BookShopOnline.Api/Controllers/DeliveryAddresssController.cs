@@ -28,9 +28,9 @@ namespace BookShopOnline.Api.Controllers
         }
 
         [HttpPut("SetAddresDefault/{id}")]
-        public async Task SetAddressDefaultAsync(Guid id)
+        public async Task SetAddressDefaultAsync(Guid id, DeliveryAddress deliveryAddress)
         {
-           await _deliveryAddressService.UpdateDeleliveryAddressDefalutAsync(id);
+           await _deliveryAddressService.UpdateDeleliveryAddressDefalutAsync(id, deliveryAddress);
         }
-    }
+    }   
 }

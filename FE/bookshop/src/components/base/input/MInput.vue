@@ -16,7 +16,7 @@
         :placeholder="placeholder"
         :style="{ 'text-align': textAlign || 'left' }"
         ref="input"
-        @blur="onBulrInput()"
+        @blur="onBulrInput"
         autocomplete="current-password"
       />
       <div
@@ -142,25 +142,13 @@ export default {
     setBorderError() {
       this.$refs["input"].classList.add("m-textfield-error");
     },
+    
     /**
      * Blur ra ngoài ô input validate
      * Author: LQHUY(07/12/2002)
      */
     onBulrInput() {
-      if (this.required) {
-        if (
-          this.inputValue === null ||
-          this.inputValue === "" ||
-          this.inputValue === undefined
-        ) {
-          this.messageError = this.$Resource[this.$languageCode].ErrorMessage(
-            this.label
-          );
-          //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
-        } else {
-          this.messageError = "";
-        }
-      }
+      this.validate();
     },
 
     validate() {

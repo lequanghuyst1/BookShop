@@ -30,7 +30,10 @@
                 : '#f1fcf5',
           }"
         >
-          {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
+          {{
+            "Đơn hàng " +
+            this.$helper.hanldeValueTypeEnum("ORDER_STATUS", order.OrderStatus)
+          }}
         </div>
 
         <div class="order-view-id">
@@ -567,7 +570,12 @@
               ></div>
             </div>
             <div class="order-view-icon-content">
-              <p>{{ orderStatusString(order.OrderStatus) }}</p>
+              <p>{{
+              this.$helper.hanldeValueTypeEnum(
+                "ORDER_STATUS",
+                order.OrderStatus
+              )
+            }}</p>
               <p>10/04/2024 - 13:26</p>
             </div>
           </div>
@@ -615,7 +623,13 @@
                     : '#f1fcf5',
               }"
             >
-              {{ "Đơn hàng " + orderStatusString(order.OrderStatus) }}
+              {{
+                "Đơn hàng " +
+                this.$helper.hanldeValueTypeEnum(
+                  "ORDER_STATUS",
+                  order.OrderStatus
+                )
+              }}
             </div>
             <div>
               <span>Tổng tiền:</span
@@ -886,22 +900,7 @@ export default {
         console.log(error);
       }
     },
-    orderStatusString(orderStatus) {
-      switch (orderStatus) {
-        case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
-          return this.resource.ENUM_ORDER_STATUS.waitForConfirmation;
-        case this.$Enum.ORDER_STATUS.CONFIRMED:
-          return this.resource.ENUM_ORDER_STATUS.confirmed;
-        case this.$Enum.ORDER_STATUS.SHIPPING:
-          return this.resource.ENUM_ORDER_STATUS.shipping;
-        case this.$Enum.ORDER_STATUS.DELIVERED:
-          return this.resource.ENUM_ORDER_STATUS.delivered;
-        case this.$Enum.ORDER_STATUS.CANCELLED:
-          return this.resource.ENUM_ORDER_STATUS.cancelled;
-        default:
-          return "";
-      }
-    },
+
 
     /**
      * Thực hiện đặt lại hàng khi nhấn btn đặt lại hàng
@@ -911,7 +910,6 @@ export default {
       this.orderDetails.forEach(async (item) => {
         const formData = new FormData();
         item.CartId = this.userInfo.CartId;
-        item.ProvisionalMoney = item.Price * item.Quantity;
         formData.append("dataJson", JSON.stringify(item));
         //gọi api thêm mới cartItem
         const res = await cartItemService.post(formData);

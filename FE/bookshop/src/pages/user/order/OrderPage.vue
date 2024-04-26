@@ -19,10 +19,14 @@
               <div class="tab-history-item-text">Tất Cả</div>
               <div class="tab-history-item-border"></div>
             </div>
+
             <div
               class="tab-history-item swiper-slide swiper-slide-next"
               @click="
-                getOrdersData(this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION)
+                getOrdersData(
+                  'ORDER_STATUS',
+                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                )
               "
               style="width: 150px"
             >
@@ -32,9 +36,12 @@
               <div class="tab-history-item-text">Chờ xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
+
             <div
               class="tab-history-item swiper-slide"
-              @click="getOrdersData(this.$Enum.ORDER_STATUS.CONFIRMED)"
+              @click="
+                getOrdersData('ORDER_STATUS', this.$Enum.ORDER_STATUS.CONFIRMED)
+              "
               style="width: 150px"
             >
               <div class="tab-history-item-number">
@@ -43,9 +50,15 @@
               <div class="tab-history-item-text">Đã xác nhận</div>
               <div class="tab-history-item-border"></div>
             </div>
+
             <div
               class="tab-history-item swiper-slide"
-              @click="getOrdersData(this.$Enum.ORDER_STATUS.SHIPPING)"
+              @click="
+                getOrdersData(
+                  'DELIVERY_STATUS',
+                  this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED
+                )
+              "
               style="width: 150px"
             >
               <div class="tab-history-item-number">
@@ -54,9 +67,15 @@
               <div class="tab-history-item-text">Đang vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
+
             <div
               class="tab-history-item swiper-slide"
-              @click="getOrdersData(this.$Enum.ORDER_STATUS.DELIVERED)"
+              @click="
+                getOrdersData(
+                  'DELIVERY_STATUS',
+                  this.$Enum.DELIVERY_STATUS.DELIVERIED
+                )
+              "
               style="width: 150px"
             >
               <div class="tab-history-item-number">
@@ -65,9 +84,12 @@
               <div class="tab-history-item-text">Đã vận chuyển</div>
               <div class="tab-history-item-border"></div>
             </div>
+
             <div
               class="tab-history-item swiper-slide"
-              @click="getOrdersData(this.$Enum.ORDER_STATUS.COMPLETE)"
+              @click="
+                getOrdersData('ORDER_STATUS', this.$Enum.ORDER_STATUS.COMPLETE)
+              "
               style="width: 150px"
             >
               <div class="tab-history-item-number">
@@ -78,7 +100,9 @@
             </div>
             <div
               class="tab-history-item swiper-slide"
-              @click="getOrdersData(this.$Enum.ORDER_STATUS.CANCELLED)"
+              @click="
+                getOrdersData('ORDER_STATUS', this.$Enum.ORDER_STATUS.CANCELLED)
+              "
               style="width: 150px"
             >
               <div class="tab-history-item-number">
@@ -172,7 +196,12 @@
             </div>
           </div>
           <div class="table-order-cell hidden-max-width-992">
-            {{ orderStatusString(order.OrderStatus) }}
+            {{
+              this.$helper.hanldeValueTypeEnum(
+                "ORDER_STATUS",
+                order.OrderStatus
+              )
+            }}
           </div>
           <div
             class="table-order-cell table-order-link-more hidden-max-width-992"
@@ -238,44 +267,58 @@ export default {
      * Hàm thực hiện lấy danh sách các bản ghi
      * @author LQHUY(12/04/2024)
      */
-    async getOrdersData(orderStatus) {
+    async getOrdersData(enumType, value) {
       try {
         this.$emitter.emit("toggleShowLoading", true);
         const res = await orderService.GetByUserId(this.userInfo.UserId);
         if (res.status === 200) {
-          switch (orderStatus) {
-            case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
-              this.orders = res.data.filter(
-                (item) =>
-                  item.OrderStatus ===
-                  this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
-              );
+          switch (enumType) {
+            case "ORDER_STATUS":
+              if (value === this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.OrderStatus ===
+                    this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION
+                );
+              }
+              if (value === this.$Enum.ORDER_STATUS.CONFIRMED) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED
+                );
+              }
+              if (value === this.$Enum.ORDER_STATUS.COMPLETE) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
+                );
+              }
+              if (value === this.$Enum.ORDER_STATUS.CANCELLED) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
+                );
+              }
               break;
-            case this.$Enum.ORDER_STATUS.CONFIRMED:
-              this.orders = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED
-              );
+
+            case "DELIVERY_STATUS":
+              if (value === this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.DeliveryStatus ===
+                    this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED
+                );
+              }
+
+              if (value === this.$Enum.DELIVERY_STATUS.DELIVERIED) {
+                this.orders = res.data.filter(
+                  (item) =>
+                    item.DeliveryStatus ===
+                    this.$Enum.DELIVERY_STATUS.DELIVERIED
+                );
+              }
               break;
-            case this.$Enum.ORDER_STATUS.SHIPPING:
-              this.orders = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.SHIPPING
-              );
-              break;
-            case this.$Enum.ORDER_STATUS.DELIVERED:
-              this.orders = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.DELIVERED
-              );
-              break;
-            case this.$Enum.ORDER_STATUS.COMPLETE:
-              this.orders = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
-              );
-              break;
-            case this.$Enum.ORDER_STATUS.CANCELLED:
-              this.orders = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
-              );
-              break;
+
             default:
               this.orders = res.data;
               this.quantityOrder = this.orders.length;
@@ -288,10 +331,13 @@ export default {
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CONFIRMED
               ).length;
               this.quantityOrderShipping = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.SHIPPING
+                (item) =>
+                  item.DeliveryStatus ===
+                  this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED
               ).length;
               this.quantityOrderDelivered = res.data.filter(
-                (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.DELIVERED
+                (item) =>
+                  item.DeliveryStatus === this.$Enum.DELIVERY_STATUS.DELIVERIED
               ).length;
               this.quantityOrderCancelled = res.data.filter(
                 (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
@@ -311,23 +357,6 @@ export default {
 
     goToOrderDetail(orderId) {
       this.$router.push("order/order-detail/" + orderId);
-    },
-
-    orderStatusString(orderStatus) {
-      switch (orderStatus) {
-        case this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION:
-          return this.resource.ENUM_ORDER_STATUS.waitForConfirmation;
-        case this.$Enum.ORDER_STATUS.CONFIRMED:
-          return this.resource.ENUM_ORDER_STATUS.confirmed;
-        case this.$Enum.ORDER_STATUS.SHIPPING:
-          return this.resource.ENUM_ORDER_STATUS.shipping;
-        case this.$Enum.ORDER_STATUS.DELIVERED:
-          return this.resource.ENUM_ORDER_STATUS.delivered;
-        case this.$Enum.ORDER_STATUS.CANCELLED:
-          return this.resource.ENUM_ORDER_STATUS.cancelled;
-        default:
-          return "";
-      }
     },
   },
 };

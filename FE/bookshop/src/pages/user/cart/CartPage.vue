@@ -24,11 +24,9 @@
               </div>
               <div>
                 <span
-                  >Chọn tất cả (<span
-                    v-show="this.quantityItemSected > 0"
-                    class="num-items-checkbox"
-                    >{{ this.quantityItemSected }}</span
-                  >
+                  >Chọn tất cả (<span class="num-items-checkbox">{{
+                    this.quantityOfCart
+                  }}</span>
                   sản phẩm)</span
                 >
               </div>
@@ -44,10 +42,16 @@
               >
                 <div class="checked-product-cart">
                   <input
+                    v-if="item.QuantityInStock > 0 "
                     type="checkbox"
                     :value="item.CartItemId"
                     v-model="itemIdsSelected"
                     @click="handleOnSelectItem(item)"
+                    class="checkbox-add-cart"
+                  />
+                  <input
+                    v-if="item.QuantityInStock === 0"
+                    type="checkbox"
                     class="checkbox-add-cart"
                     :class="{ disable: item.QuantityInStock === 0 }"
                   />
@@ -99,6 +103,12 @@
                       </div>
                     </div>
                     <p
+                      v-show="item.QuantityInStock === 0"
+                      class="message-not-enough"
+                    >
+                      * Sản phẩm đã hết hàng. Xin gỡ bỏ.
+                    </p>
+                    <p
                       v-if="messageNotEnough[item.BookCode]"
                       class="message-not-enough"
                     >
@@ -107,7 +117,10 @@
                   </div>
                   <div class="number-product-cart">
                     <div class="product-view-quantity-box">
-                      <div class="product-view-quantity-box-block">
+                      <div
+                        v-show="item.QuantityInStock > 0"
+                        class="product-view-quantity-box-block"
+                      >
                         <a
                           @click="hanldeOnReduceQuantity(item)"
                           class="btn-subtract-qty"
@@ -256,14 +269,12 @@ export default {
       totalAmountCart: 0,
       itemIdsSelected: [],
       quantityOfCart: 0,
-      quantityItemSected: 0,
       shippingFee: 0,
       messageNotEnough: {},
     };
   },
   watch: {
     itemIdsSelected: function () {
-      this.getQuantityItemSelected();
       this.calculatorTotalAmountCart();
     },
   },
@@ -324,20 +335,6 @@ export default {
     getQuantityOfCart() {
       const cartList = cartLocalStorageService.getCartFromLocalStorage();
       this.quantityOfCart = cartList.reduce(
-        (accumulator, item) => accumulator + item.Quantity,
-        0
-      );
-    },
-
-    /**
-     * Thực hiện lẩy ra tổng số lượng sản phẩm được chọn
-     * @author LQHUY(09/04/2024)
-     */
-    getQuantityItemSelected() {
-      const itemSelected = this.cartData.filter((item) => {
-        return this.itemIdsSelected.includes(item.CartItemId);
-      });
-      this.quantityItemSected = itemSelected.reduce(
         (accumulator, item) => accumulator + item.Quantity,
         0
       );
@@ -407,7 +404,6 @@ export default {
         this.messageNotEnough[item.BookCode] = null;
         item.Quantity = Number(event.target.value);
       }
-
       if (event.target.value === "" || event.target.value === null) {
         this.messageNotEnough[item.BookCode] = "Tối thiểu 1 cho mỗi đơn hàng";
       } else {
@@ -425,7 +421,6 @@ export default {
       try {
         //gán 1 số giá trị cho item
         item.CartId = this.userInfo.CartId;
-        item.UnitPrice = item.Price;
         const formData = new FormData();
         formData.append("dataJson", JSON.stringify(item));
         //gọi api update
@@ -439,7 +434,6 @@ export default {
           this.$emitter.emit("getQuantityOfCart");
           this.getQuantityOfCart();
           this.calculatorTotalAmountCart();
-          this.getQuantityItemSelected();
         }
       } catch (error) {
         console.log(error);
