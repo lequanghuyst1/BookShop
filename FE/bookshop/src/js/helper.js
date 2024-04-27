@@ -157,9 +157,25 @@ const helper = {
         break;
       case "PAYMENT_METHOD":
         if (value === Enum.PAYMENT_METHOD.COD) {
-          return resource().PAYMENT_METHOD.cod;
+          return resource().ENUM_PAYMENT_METHOD.cod;
         } else if (value === Enum.PAYMENT_METHOD.VNPAY) {
-          return resource().PAYMENT_METHOD.vnPay;
+          return resource().ENUM_PAYMENT_METHOD.vnPay;
+        }
+        break;
+      case "ACCOUNT_STATUS":
+        if (value === Enum.ACCOUNT_STATUS.IN_ACTIVE) {
+          return resource().ENUM_ACCOUNT_STATUS.inActive;
+        } else if (value === Enum.ACCOUNT_STATUS.ACTIVE) {
+          return resource().ENUM_ACCOUNT_STATUS.active;
+        }
+        break;
+      case "GENDER":
+        if (value === Enum.GENDER.MALE) {
+          return resource().ENUM_GENDER.male;
+        } else if (value === Enum.GENDER.FEMALE) {
+          return resource().ENUM_GENDER.feMale;
+        } else if (value === Enum.GENDER.OTHER) {
+          return resource().ENUM_GENDER.other;
         }
         break;
       default:

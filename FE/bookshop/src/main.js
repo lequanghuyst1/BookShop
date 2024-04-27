@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
-
+import { createStore } from 'vuex'
 //in main.js
 import "primevue/resources/themes/aura-light-green/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -25,6 +25,10 @@ import MGenderRadio from "./components/base/radio-group/MGenderRadio.vue";
 import MCombobox from "./components/base/combobox/MCombobox.vue";
 import MDropdown from "./components/base/dropdown/MDropdown.vue";
 import MTextarea from "./components/base/textarea/MTextarea.vue";
+
+
+import Calendar from "primevue/calendar";
+
 
 import tinyEmitter from "tiny-emitter/instance";
 import Enum from "./js/resource/enum";
@@ -62,6 +66,7 @@ app.component("MCombobox", MCombobox);
 app.component("MDropdown", MDropdown);
 app.component("MLoadingData", MLoadingData);
 app.component("MTextarea", MTextarea);
+app.component("GCalendar", Calendar);
 
 app.config.globalProperties.$emitter = tinyEmitter;
 app.config.globalProperties.$Enum = Enum;
@@ -71,6 +76,27 @@ app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$axios = axios;
 
+// Create a new store instance.
+const store = createStore({
+  state () {
+    return {
+      count: 1000
+    }
+  },
+  getters: {
+    getCount(state){
+      return state.count
+    }
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  }
+})
+
+// Install the store instance as a plugin
+app.use(store)
 app.use(
   VueTippy,
   // optional

@@ -55,6 +55,7 @@
             :key="index"
             :style="{
               textAlign: col.textAlign || 'left',
+              color: col.color || '#333',
             }"
           >
             <img
@@ -211,7 +212,6 @@ export default {
     this.$emitter.on("toggleShowLoadingTable", this.toggleShowLoadingTable);
   },
   mounted() {
-    console.log(this.pageData);
     this.columnsResizable();
   },
   beforeUnmount() {
@@ -224,7 +224,7 @@ export default {
      * @param {boolean} val
      * Author: LQHUY(06/12/2023)
      */
-    selectAll: function(val) {
+    selectAll: function (val) {
       if (val === false) {
         this.selectAllRecord = val;
       }
@@ -308,10 +308,13 @@ export default {
      */
     setValueData(data, col) {
       try {
-        if (col.type === "gender") {
-          return this.$helper.formatGender(data[col.field]);
+        if (col.type === "enum") {
+          return this.$helper.hanldeValueTypeEnum(
+            col.enumType,
+            data[col.field]
+          );
         } else if (col.type === "money") {
-          return this.$helper.formatMoney(data[col.field])+ 'đ';
+          return this.$helper.formatMoney(data[col.field]) + "đ";
         } else if (col.type === "datetime") {
           return this.$helper.formatDate(data[col.field]);
         } else {

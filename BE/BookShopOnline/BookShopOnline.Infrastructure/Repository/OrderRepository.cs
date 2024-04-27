@@ -82,6 +82,18 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.Connection.QueryAsync<OrderDto>(procName, parameters);
             return res;
         }
+
+        public async Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter)
+        {
+            var procName = "Proc_Order_CalculateRevenueByProduct";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("typeOfTime", typeOfTime);
+            parameters.Add("fromDate", fromDate);
+            parameters.Add("toDate", toDate);
+            parameters.Add("quantityFilter", quantityFilter);
+            var res = await _dbContext.Connection.QueryAsync<object>(procName, parameters);
+            return res;
+        }
     }
 }
   

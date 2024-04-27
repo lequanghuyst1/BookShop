@@ -4,7 +4,7 @@
       <div class="col-9">
         <div class="content__header">
           <div class="content__header-title">
-            <h3>Tổng quan</h3>
+            <h3>Tổng quan {{ getCount }}</h3>
           </div>
         </div>
         <div class="statistical-wrap">
@@ -54,7 +54,27 @@
           </div>
         </div>
         <div class="line-chart">
-          <LineChart></LineChart>
+          <div class="line-chart__header d-flex justify-content-between">
+            <h3 class="line-chart__title">
+              Doanh thu năm {{ this.year.getFullYear() }}
+            </h3>
+            <div class="item-condition w-25">
+              <GCalendar
+                v-model="year"
+                placeholder="YYYY"
+                showIcon
+                view="year"
+                :showOnFocus="false"
+                iconDisplay="input"
+                dateFormat="yy"
+                class="w-100"
+              />
+            </div>
+          </div>
+          <LineChart :chartData="chartData"></LineChart>
+          <div style="text-align: center; margin-top: 8px; font-size: 16px">
+            Tổng doanh thu: {{ this.$helper.formatMoney(totalRevenue) }}đ
+          </div>
         </div>
       </div>
       <div class="col-3">
@@ -176,9 +196,14 @@ import bookService from "@/utils/BookService";
 import LineChart from "./LineChart.vue";
 import orderService from "@/utils/OrderService";
 import userService from "@/utils/UserService";
+import { mapGetters } from "vuex";
 export default {
   name: "HomeAdminPage",
   components: { LineChart },
+  created() {
+    const now = new Date();
+    this.year = now;
+  },
   mounted() {
     this.getTotalProduct();
     this.getTotalOrder();
@@ -186,6 +211,7 @@ export default {
     this.getTotalNewOrder();
     this.getTotalConfirmedNewOrder();
     this.getTotalNewCustomer();
+    this.getCalculateTotalSalesPerMonth();
     document.title = "Tổng quan";
   },
   data() {
@@ -202,9 +228,51 @@ export default {
       totalNewOrder: 0,
       //Lưu tổng số đơn hàng mới cần xác nhận trong 24h
       totalComfirmedNewOrder: 0,
+      year: null,
+      chartData: {},
+      totalRevenue: 0,
     };
   },
+  computed: {
+    ...mapGetters(["getCount"]),
+  },
+  watch: {
+    year: function () {
+      this.getCalculateTotalSalesPerMonth();
+    },
+  },
   methods: {
+    async getCalculateTotalSalesPerMonth() {
+      try {
+        const params = {
+          year: this.year.getFullYear(),
+        };
+        const res = await orderService.CalculateTotalSalesPerMonth({ params });
+        if (res.status === 200) {
+          const label = res.data.map((item) => `Tháng ${item.Month}`);
+          const data = res.data.map((item) => item.TotalSales);
+          this.totalRevenue = data.reduce(
+            (previousValue, currentValue) => previousValue + currentValue,
+            0
+          );
+          this.chartData = {
+            labels: label,
+            datasets: [
+              {
+                label: "VNĐ",
+                type: "line",
+                backgroundColor: ["rgba(249, 115, 22, 0.2)"],
+                borderColor: ["rgb(249, 115, 22)"],
+                borderWidth: 1,
+                data: data,
+              },
+            ],
+          };
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     /**
      * Thực hiện lấy tổng số sách
      * @author LQHUY(23/04/2024)
@@ -306,14 +374,14 @@ export default {
     },
 
     goToOrderManagement() {
-      this.$router.push("order-manegement");
+      this.$router.push("order-management");
     },
   },
 };
 </script>
 <style scoped>
 .statistical-wrap {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .statistical-item {
   background-color: #fff;

@@ -2,6 +2,7 @@
 using BookShopOnline.Core.Dto;
 using BookShopOnline.Core.Dto.User;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Enums;
 using BookShopOnline.Core.Exceptions;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
@@ -39,7 +40,7 @@ namespace BookShopOnline.Core.Services
             var userDb = await _userRepository.GetByIdAsync(id);
 
             user.Password = userDb.Password;
-
+            user.Gender = (Gender)user.Gender;
 
             //Nếu thay đổi mật khẩu thì kiểm tra xem mật khẩu hiện tại có khớp với mật khẩu trong db hay không
             if (!string.IsNullOrEmpty(user.CurrentPassword))
@@ -120,6 +121,7 @@ namespace BookShopOnline.Core.Services
             }
             return res;
         }
+
         public override async Task ValidateBeforeInsert(User user)
         {
             if (await _userRepository.CheckUserIsExist(user.Email))

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookShopOnline.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,12 @@ namespace BookShopOnline.Core.Entitites
         public string Fullname { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Password { get; set; }
+        public AccountStatus AccountStatus { get; set; }
         public string? NewPassword { get; set; }
         public string? CurrentPassword { get; set; }
         public string Email { get; set; }
         public string? Address { get; set; }
-        public int? Gender { get; set; }
+        public Gender Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public double? QuantityAmountPurched { get; set; }
         public string? RefreshToken { get; set; }

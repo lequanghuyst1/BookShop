@@ -257,8 +257,7 @@ export default {
         this.isShowActionEditAddress = [];
       }
     });
-    document.title = "Sổ địa chỉ"
-
+    document.title = "Sổ địa chỉ";
   },
 
   watch: {

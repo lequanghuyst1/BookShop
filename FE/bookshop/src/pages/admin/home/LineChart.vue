@@ -1,92 +1,71 @@
 <template>
-  <div class="chart-container">
-      <Line
-        v-if="loaded"
-        id="my-chart-id"
-        :options="chartOptions"
-        :data="chartData"
-      />
+  <div class="chart-container ms-3">
+    <Chart type="line" :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
 <script>
-
-import { Line } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-} from "chart.js";
-import orderService from "@/utils/OrderService";
-
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  LinearScale
-);
+import Chart from "primevue/chart";
 export default {
-  name: "BarChart",
-  components: { Line },
-  created() {
-    this.getCalculateTotalSalesPerMonth();
-  },
-  methods: {
-    async getCalculateTotalSalesPerMonth() {
-      try {
-        const params = {
-          year: 2024,
-        };
-        const res = await orderService.CalculateTotalSalesPerMonth({ params });
-        if (res.status === 200) {
-          res.data.forEach((item) => {
-            this.chartData.labels.push(`Tháng ${item.Month}`);
-            this.data.push(item.TotalSales);
-          });
-          this.chartData.datasets[0].data = this.data;
-          this.loaded = true;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
+  components: { Chart },
+  props: {
+    chartData: {
+      type: Object,
+      required: true,
+    }
   },
   data() {
     return {
-      data: [],
-      chartData: {
-        labels: [],
-        datasets: [
-          {
-            label: "Doanh theo thu từng tháng năm 2024",
-            backgroundColor: "#BEE1F3",
-            borderColor: "#10A5B2",
-            data: [],
-          },
-        ],
-      },
-      chartOptions: {
-        responsive: true,
-      },
-      loaded: false,
+      chartOptions: null,
     };
+  },
+  mounted() {
+    this.chartOptions = this.setChartOptions();
+  },
+  methods: {
+    setChartOptions() {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue("--text-color");
+      const textColorSecondary = documentStyle.getPropertyValue(
+        "--text-color-secondary"
+      );
+      const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+
+      return {
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor,
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: textColorSecondary,
+            },
+            grid: {
+              color: surfaceBorder,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: textColorSecondary,
+            },
+            grid: {
+              color: surfaceBorder,
+            },
+          },
+        },
+      };
+    },
   },
 };
 </script>
 <style scoped>
-.chart-container {
-  height: 420px; /* Đặt chiều cao của container chứa biểu đồ */
-  margin-left: 60px;
+.p-chart {
+  height: 380px !important;
+  width: 800px !important;
 }
 </style>

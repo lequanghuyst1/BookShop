@@ -1,9 +1,10 @@
 const Enum = {
-  Gender: {
-    Male: 0,
-    Female: 1,
-    Other: 2,
+  GENDER: {
+    MALE: 0,
+    FEMALE: 1,
+    OTHER: 2,
   },
+  
   FormMode: {
     Add: 0,
     Edit: 1,
@@ -62,6 +63,11 @@ const Enum = {
     DATE: 0,
     MONTH: 1,
     YEAR: 2,
+  },
+
+  ACCOUNT_STATUS: {
+    IN_ACTIVE: 0,
+    ACTIVE: 1,
   },
 };
 

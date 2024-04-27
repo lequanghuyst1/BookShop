@@ -73,9 +73,9 @@
               <div class="row">
                 <div class="col l-6">
                   <MCombobox
-                    url="Categories"
                     propValue="CategoryId"
                     propText="CategoryName"
+                    :dataCombobox="comboboxCategoryData"
                     :ref="textFields.categoryId.ref"
                     :label="textFields.categoryId.label"
                     :rules="textFields.categoryId.rules"
@@ -85,9 +85,9 @@
                 </div>
                 <div class="col l-6">
                   <MCombobox
-                    url="Publishers"
                     propValue="PublisherId"
                     propText="PublisherName"
+                    :dataCombobox="comboboxPublisherData"
                     :ref="textFields.publisherId.ref"
                     :label="textFields.publisherId.label"
                     :rules="textFields.publisherId.rules"
@@ -106,13 +106,13 @@
                   ></MInput>
                 </div>
                 <div class="col l-3">
-              <MInput
-                :ref="textFields.quantityImported.ref"
-                :label="textFields.quantityImported.label"
-                :rules="textFields.quantityImported.rules"
-                v-model="book.QuantityImported"
-              ></MInput>
-            </div>
+                  <MInput
+                    :ref="textFields.quantityImported.ref"
+                    :label="textFields.quantityImported.label"
+                    :rules="textFields.quantityImported.rules"
+                    v-model="book.QuantityImported"
+                  ></MInput>
+                </div>
                 <div class="col l-3">
                   <MInput
                     ref="Size"
@@ -204,6 +204,8 @@
 <script>
 import bookService from "@/utils/BookService";
 import TEXT_FIELD from "@/js/resource/text-field";
+import categoryService from "@/utils/CategoryService";
+import publisherService from "@/utils/PublisherService";
 export default {
   name: "BookDetail",
   props: {
@@ -217,9 +219,12 @@ export default {
   emits: ["loadData", "onCloseForm"],
   created() {
     this.checkModeForm();
+    this.getCategoriesData();
+    this.getPublishersData();
   },
   mounted() {
     this.$refs[this.textFields.bookCode.ref].setFocus();
+    
   },
   computed: {
     textFields() {
@@ -415,6 +420,27 @@ export default {
         console.error(error);
       }
     },
+
+    async getCategoriesData() {
+      try {
+        const res = await categoryService.getAll();
+        if (res.status == 200) {
+          this.comboboxCategoryData = res.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getPublishersData() {
+      try {
+        const res = await publisherService.getAll();
+        if (res.status === 200) {
+          this.comboboxPublisherData = res.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   data() {
     return {
@@ -422,6 +448,8 @@ export default {
       imageFile: null,
       listErr: [],
       image: {},
+      comboboxCategoryData: [],
+      comboboxPublisherData: [],
     };
   },
 };

@@ -104,4 +104,21 @@ namespace BookShopOnline.Core.Enums
         /// </summary>
         NULL = 0,
     }
+    public enum AccountStatus {
+        /// <summary>
+        /// Ngừng hoạt động
+        /// </summary>
+        IN_ACTIVE = 0,
+        /// <summary>
+        /// Đang hoạt động
+        /// </summary>
+        ACTIVCE = 1,
+    }
+    public enum Gender
+    {
+        MALE = 0,
+        FEMALE = 1,
+        OTHER = 2,
+    }
+
 }

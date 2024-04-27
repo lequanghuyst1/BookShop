@@ -10,6 +10,8 @@
   font-size: 14px;
   padding: 4px 8px;
   border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
 }
 .filter-wrap .filter-item.active {
   background-color: #2bb7e6;

@@ -41,6 +41,13 @@ class OrderService extends BaseService {
     );
     return res;
   }
+  async getRevenueByProduct(data) {
+    const res = await this.baseAxios.get(
+      `${this.baseUrl}/Chart/GetRevenueByProduct`,
+      data
+    );
+    return res;
+  }
   async getTotalRevenvue() {
     const res = await this.baseAxios.get(
       `${this.baseUrl}/Chart/GetTotalRevenvue`

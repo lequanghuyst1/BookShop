@@ -225,7 +225,7 @@ const TEXT_FIELD = {
         rules: {
           lengthMax: 50,
           required: false,
-          rule: [],
+          rule: ['phoneNumber'],
         },
       },
       address: {
@@ -233,6 +233,17 @@ const TEXT_FIELD = {
         label: "Địa chỉ",
         ref: "refAddress",
         placeholder: "Nhập địa chỉ",
+        rules: {
+          lengthMax: 100,
+          required: false,
+          rule: [],
+        },
+      },
+      accountStatus: {
+        name: "AccountStatus",
+        label: "Trạng thái",
+        ref: "refAccountStatus",
+        placeholder: "Trạngđịa chỉ",
         rules: {
           lengthMax: 100,
           required: false,

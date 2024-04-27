@@ -15,6 +15,7 @@
         ref="refInput"
         class="m-textfield"
         :class="{ 'm-textfield-error': errMessage }"
+        @blur="onBulrInput"
       />
       <span class="m-error-message">{{ errMessage }}</span>
     </div>
@@ -83,11 +84,17 @@ export default {
     focusInput() {
       this.$refs["refInput"].focus();
     },
+    onBulrInput() {
+      this.validate();
+    },
     validate() {
       let rules = this.$props.rules;
       if (rules) {
         if (rules?.required === true) {
-          this.errMessage = validateValue.required(this.inputValue, this.$props.label);
+          this.errMessage = validateValue.required(
+            this.inputValue,
+            this.$props.label
+          );
           if (!this.errMessage) {
             if (rules?.rule.length > 0) {
               rules?.rule.forEach((item) => {

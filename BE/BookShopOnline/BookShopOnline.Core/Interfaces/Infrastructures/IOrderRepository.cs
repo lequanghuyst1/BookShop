@@ -50,5 +50,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         Task<double> GetTotalRevenue();
         Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
         Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
+
+        Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter);
     }
 }

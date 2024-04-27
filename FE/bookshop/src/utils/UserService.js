@@ -41,6 +41,10 @@ class UserService extends BaseService {
     var res = await this.baseAxios.get(`${this.baseUrl}/TotalNewCustomer`);
     return res;
   }
+  async getFilterPagingByRoleName(data) {
+    var res = await this.baseAxios.post(`${this.baseUrl}/GetFilterPagingByRoleName`,data);
+    return res;
+  }
 }
 const userService = new UserService();
 export default userService;

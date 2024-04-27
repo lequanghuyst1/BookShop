@@ -77,9 +77,18 @@ const Resource = {
       paid: "Đã thanh toán",
       waitForHandle: "Đang xử lý",
     },
-    PAYMENT_METHOD: {
+    ENUM_PAYMENT_METHOD: {
       cod: "Thanh toán khi nhận hàng",
       vnPay: "Thanh toán bằng VNPAY",
+    },
+    ENUM_ACCOUNT_STATUS: {
+      inActive: "Ngừng hoạt động",
+      active: "Đang hoạt động"
+    },
+    ENUM_GENDER: {
+      male: "Nam",
+      feMale: "Nữ",
+      other: "Khác"
     }
   },
 };

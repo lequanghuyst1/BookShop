@@ -203,6 +203,12 @@ router.beforeEach((to, from, next) => {
     checkInfoTokensInStorage()
   ) {
     next();
+  }
+  else if (to.meta.requiresAuth && user?.RoleName !== "Admin") {
+    next("/admin/login");
+  }
+  else if (to.meta.requiresAuth && user?.RoleName === "Admin") {
+    next();
   } else {
     next();
   }

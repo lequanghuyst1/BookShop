@@ -110,6 +110,13 @@ namespace BookShopOnline.Api.Controllers
         }
 
         [HttpGet("Chart/[action]")]
+        public async Task<IActionResult> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter)
+        {
+            var res = await _orderRepository.GetRevenueByProduct(typeOfTime, fromDate, toDate, quantityFilter);
+            return Ok(res);
+        }
+
+        [HttpGet("Chart/[action]")]
         public async Task<IActionResult> GetTotalRevenvue()
         {
             var res = await _orderRepository.GetTotalRevenue();
@@ -158,6 +165,7 @@ namespace BookShopOnline.Api.Controllers
 
             return File(res, contenType, fileName);
         } 
+
 
 
     }

@@ -1,8 +1,11 @@
 <template>
   <div class="form-group">
-    <label for="" class="m-lable" :class="{ 'label--required': this.rules?.required }">{{
-      label
-    }}</label>
+    <label
+      for=""
+      class="m-lable"
+      :class="{ 'label--required': this.rules?.required }"
+      >{{ label }}</label
+    >
     <div class="m-textfiled-icon m-combobox" :id="id">
       <input
         placeholder="- Chọn giá trị -"
@@ -82,10 +85,6 @@ export default {
       type: String,
       required: true,
     },
-    url: {
-      type: String,
-      required: true,
-    },
     modelValue: {
       type: [String, Number],
       required: false,
@@ -98,19 +97,30 @@ export default {
       type: String,
       required: true,
     },
-
+    dataCombobox: {
+      type: Array,
+      required: true,
+    },
     rules: {
       type: Object,
       required: false,
     },
   },
   created() {
-    this.loadData();
+    this.dataFilter = this.$props.dataCombobox;
+  },
+
+  mounted() {
+    document.addEventListener("click", (e) => {
+      if (!this.$el.contains(e.target)) {
+        this.onHideCombobox();
+        this.isShowNoValue = false;
+      }
+    });
   },
   data() {
     return {
       outputText: "",
-      dataCombobox: [],
       dataFilter: [],
       currentIndex: 0,
       isShowIconUp: false,
@@ -120,19 +130,15 @@ export default {
       isShowNoValue: false,
       messageError: null,
       direction: null,
+      selectedItemId: null,
     };
   },
   watch: {
-    async modelValue(newValue) {
+    modelValue(newValue) {
       if (newValue && this.propText) {
-        var res = await this.$httpRequest.get(this.url);
-        this.dataCombobox = res.data;
-        const itemSelected = this.dataCombobox.find((item) => {
-          return item[this.propValue] === newValue;
-        });
-        if (itemSelected) {
-          this.outputText = itemSelected[this.propText];
-        }
+
+        this.selectedItemId = newValue;
+        this.setOutputSelectedItem();
       } else {
         this.outputText = "";
       }
@@ -145,9 +151,24 @@ export default {
         this.messageError = null;
       }
     },
-
+    dataCombobox() {
+      this.setOutputSelectedItem();
+    },
   },
   methods: {
+    setOutputSelectedItem() {
+      this.dataFilter = this.dataCombobox;
+      console.log(this.selectedItemId);
+      const itemSelected = this.dataCombobox.find((item) => {
+        return item[this.propValue] === this.selectedItemId;
+      });
+      if (itemSelected) {
+        this.outputText = itemSelected[this.propText];
+      }
+    },
+    onBulrInput() {
+      this.validate();
+    },
     validate() {
       if (this.rules) {
         if (this.rules?.required === true) {
@@ -163,25 +184,6 @@ export default {
             this.messageError = null;
           }
         }
-      }
-    },
-    /**
-     * Load dữ liệu combobox
-     * Author: LQHUY(02/12/2023)
-     */
-    async loadData() {
-      try {
-        var res = await this.$httpRequest.get(this.url);
-        switch (res.status) {
-          case 200:
-            this.dataCombobox = res.data;
-            this.dataFilter = res.data;
-            break;
-          default:
-            break;
-        }
-      } catch (error) {
-        this.$emitter.emit("handleApiError", error);
       }
     },
     /**
@@ -410,14 +412,6 @@ export default {
     setFocus() {
       this.$refs["input"].focus();
     },
-  },
-  mounted() {
-    document.addEventListener("click", (e) => {
-      if (!this.$el.contains(e.target)) {
-        this.onHideCombobox();
-        this.isShowNoValue = false;
-      }
-    });
   },
 };
 </script>

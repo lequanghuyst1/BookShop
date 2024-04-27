@@ -2,7 +2,20 @@
   <div class="revenue-statistics">
     <div>Báo cáo doanh thu</div>
     <div class="filter-wrap">
-      <div class="filter-item active">Thời gian</div>
+      <div
+        class="filter-item"
+        v-for="(type, index) in typeRenvenueStatistics"
+        :class="{ active: selectedTypeRenvenueValue === type.value }"
+        :key="index"
+        @click="
+          () => {
+            this.selectedTypeRenvenueValue = type.value;
+            this.indexAxis = type.indexAxis;
+          }
+        "
+      >
+        {{ type.typeName }}
+      </div>
     </div>
     <div class="condition-wrap">
       <div class="select-filter">
@@ -152,7 +165,7 @@
         <div class="item">
           <div class="item-condition">
             <button
-              @click="getDataChartAndGrid"
+              @click="getDataChartAndGridWithTypeRevenue"
               class="search m-button"
               style="background-color: #0051c8"
             >
@@ -232,10 +245,13 @@
       </div>
       <div v-if="this.viewMode === 1" class="wrap-chart">
         <div class="wrap-chart-title">Doanh thu theo thời gian</div>
-        <RevenueChart :chartData="chartData"></RevenueChart>
+        <RevenueChart
+          :chartData="chartData"
+          :selectedTypeRenvenueValue="selectedTypeRenvenueValue"
+        ></RevenueChart>
       </div>
       <div v-if="this.viewMode === 2" class="data-grid">
-        <DataGridChart :gridData="gridData"></DataGridChart>
+        <DataGridChart :gridData="gridData" :columns="columns"></DataGridChart>
       </div>
     </div>
   </div>
@@ -254,10 +270,9 @@ export default {
   },
   mounted() {
     this.getTotalRevenue();
-    this.getChartData();
-    this.getGridData();
-    document.title = "Thống kê doanh thu";
 
+    this.getDataChartAndGridWithTypeRevenue();
+    document.title = "Thống kê doanh thu";
   },
   components: { Dropdown, Calendar, RevenueChart, DataGridChart },
 
@@ -268,6 +283,18 @@ export default {
         { value: this.$Enum.TYPE_OF_TIME.MONTH, title: "Báo cáo theo tháng" },
         { value: this.$Enum.TYPE_OF_TIME.YEAR, title: "Báo cáo theo năm" },
       ],
+
+      typeRenvenueStatistics: [
+        {
+          typeName: "Thời gian",
+          value: 0,
+        },
+        {
+          typeName: "Sản phẩm",
+          value: 1,
+        },
+      ],
+      selectedTypeRenvenueValue: 0,
 
       totalRevenue: 0,
       totalRevenueByCondition: 0,
@@ -298,6 +325,83 @@ export default {
       viewMode: 1,
 
       gridData: [],
+
+      columns: [],
+
+      revenueByTimeColumns: [
+        {
+          field: "OrderCode",
+          nameField: "Mã đơn hàng",
+          class: "table-align-text",
+          width: "132px",
+        },
+        {
+          field: "Fullname",
+          nameField: "Tên khách hàng",
+          class: "table-align-text",
+          width: "132px",
+        },
+        {
+          field: "PhoneNumber",
+          nameField: "Số điện thoại",
+          class: "table-align-text",
+          width: "132px",
+        },
+        {
+          field: "OrderDate",
+          nameField: "Ngày đặt hàng",
+          class: "table-align-text",
+          width: "132px",
+          textAlign: "center",
+          type: "orderDate",
+        },
+        {
+          field: "ShippingFee",
+          nameField: "Tiền ship",
+          class: "table-align-text",
+          width: "132px",
+          textAlign: "center",
+          type: "money",
+        },
+        {
+          field: "TotalProductCost",
+          nameField: "Tiền hàng",
+          class: "table-align-text",
+          width: "132px",
+          textAlign: "center",
+          type: "money",
+        },
+        {
+          field: "TotalAmount",
+          nameField: "Tổng tiền",
+          class: "table-align-text",
+          width: "132px",
+          textAlign: "center",
+          type: "money",
+        },
+      ],
+      revenueByProductColumns: [
+        {
+          field: "book_name",
+          nameField: "Tên sách",
+          class: "table-align-text",
+          width: "132px",
+        },
+        {
+          field: "total_quantity",
+          nameField: "Số lượng",
+          class: "table-align-text",
+          width: "132px",
+        },
+        {
+          field: "profit",
+          nameField: "Tổng tiền",
+          class: "table-align-text",
+          width: "132px",
+          textAlign: "right",
+          type: "money",
+        },
+      ],
     };
   },
   watch: {
@@ -336,6 +440,9 @@ export default {
         this.toDate = this.$helper.formatDate(newValue, true);
       }
     },
+    selectedTypeRenvenueValue: function () {
+      this.getDataChartAndGridWithTypeRevenue();
+    },
   },
   methods: {
     setUpTimeFilter() {
@@ -356,12 +463,16 @@ export default {
       this.rangeDate.startDate = sevenDaysAgoDate;
     },
 
-    getDataChartAndGrid() {
-      this.getChartData();
-      this.getGridData();
+    getDataChartAndGridWithTypeRevenue() {
+      if (this.selectedTypeRenvenueValue === 0) {
+        this.getChartDataByTime();
+        this.getGridData();
+      } else {
+        this.getChartDataByProduct();
+      }
     },
 
-    async getChartData() {
+    async getChartDataByTime() {
       try {
         const params = {
           typeOfTime: this.selectedTypeOfTime.value,
@@ -374,6 +485,7 @@ export default {
         if (res.status === 200) {
           const label = res.data.map((item) => item.order_date);
           const data = res.data.map((item) => item.total_order_value);
+
           this.totalRevenueByCondition = data.reduce(
             (previousValue, currentValue) => previousValue + currentValue,
             0
@@ -383,13 +495,55 @@ export default {
             datasets: [
               {
                 label: "VNĐ",
-                data: data,
+                type: "line",
                 backgroundColor: ["rgba(249, 115, 22, 0.2)"],
                 borderColor: ["rgb(249, 115, 22)"],
                 borderWidth: 1,
+                data: data,
               },
             ],
           };
+          this.columns = this.revenueByTimeColumns;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getChartDataByProduct() {
+      try {
+        const params = {
+          typeOfTime: this.selectedTypeOfTime.value,
+          fromDate: this.fromDate,
+          toDate: this.toDate,
+          quantityFilter: 10,
+        };
+        const res = await orderService.getRevenueByProduct({
+          params,
+        });
+        if (res.status === 200) {
+          const label = res.data.map((item) => item.book_name);
+          const data = res.data.map((item) => item.profit);
+
+          this.totalRevenueByCondition = data.reduce(
+            (previousValue, currentValue) => previousValue + currentValue,
+            0
+          );
+          this.chartData = {
+            labels: label,
+            datasets: [
+              {
+                label: "Doanh thu",
+                type: "bar",
+                backgroundColor: ["#3466D1"],
+                borderColor: ["3466D1"],
+                borderWidth: 1,
+                data: data,
+              },
+            ],
+          };
+          this.gridData = res.data;
+          this.columns = this.revenueByProductColumns;
         }
       } catch (error) {
         console.log(error);
@@ -428,10 +582,10 @@ export default {
       try {
         this.$emitter.emit("toggleShowLoading", true);
         const res = await orderService.exportRevenue(this.gridData);
-        console.log(res)
+        console.log(res);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        }); 
+        });
         var fileName = this.$Resource[this.$languageCode].TEXT.FileNameExcel;
         if (res.status == 200) {
           this.$emitter.emit("toggleShowLoading", false);

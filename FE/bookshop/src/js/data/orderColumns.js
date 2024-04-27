@@ -30,8 +30,6 @@ const orderColumns = [
     width: "152px",
     type: "enum",
     enumType: "PAYMENT_STATUS",
-
-
   },
   {
     field: "DeliveryStatus",

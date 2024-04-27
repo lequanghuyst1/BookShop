@@ -1,13 +1,11 @@
 <template>
   <div class="form-group">
-    <label for="" class="m-lable">{{
-      this.$Resource[this.$languageCode].Text.Gender
-    }}</label>
+    <label for="" class="m-lable">{{ "Giới tính" }}</label>
     <label
-      v-for="item in this.$Enum.Gender"
+      v-for="item in this.$Enum.GENDER"
       :key="item"
       class="warrap__input-radio"
-      >{{ this.$helper.formatGender(item) }}
+      >{{ this.$helper.hanldeValueTypeEnum("GENDER", item) }}
       <input type="radio" name="gender" :value="item" v-model="genderValue" />
       <span class="checkmark"></span>
     </label>
@@ -24,7 +22,7 @@ export default {
     },
   },
   created() {
-    this.genderValue = this.$Enum.Gender.Male;
+    this.genderValue = this.$Enum.GENDER.MALE;
   },
   watch: {
     /**
@@ -99,7 +97,7 @@ export default {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 .warrap__input-radio input:checked ~ .checkmark {
-  background: #50b83c;
+  background: #50b83c !important;
 }
 .warrap__input-radio input:checked ~ .checkmark:after {
   display: block;

@@ -893,4 +893,51 @@ input[type="checkbox"]:checked::after {
   top: calc(-9px / 2);
   left: calc(3px / 2);
 }
+/* input radio */
+.warrap__input-radio {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 20px;
+}
+.warrap__input-radio + .warrap__input-radio {
+  margin-left: 24px;
+}
+.warrap__input-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: solid 2px #ccc;
+  border-radius: 50%;
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.warrap__input-radio .checkmark:after {
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #c92127;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.warrap__input-radio input:checked ~ .checkmark {
+  background: #fff;
+  border: solid 2px #c92127;
+}
+.warrap__input-radio input:checked ~ .checkmark:after {
+  display: block;
+}
 </style>
