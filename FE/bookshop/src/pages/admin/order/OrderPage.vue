@@ -18,20 +18,54 @@
     </div>
   </div>
   <div class="content__body">
-    <div class="content__filter">
-      <ul>
-        <li
-          class="content__filter-item"
-          v-for="(item, index) in filterOptions"
-          :key="index"
-          @click="
-            getOrdersDataFilter(item.fieldConditon, item.filterCondition, index)
-          "
-          :class="{ current: index === selectedFilterIndex }"
-        >
-          {{ item.title }}
-        </li>
-      </ul>
+    <div class="content__filter d-flex">
+      <div class="item-filter">
+        <Dropdown
+          v-model="orderStatusSelected"
+          :options="orderStatusData"
+          optionLabel="title"
+          placeholder="Trạng thái"
+          :highlightOnSelect="false"
+          class="w-full w-100"
+        />
+      </div>
+      <div class="item-filter">
+        <Dropdown
+          v-model="deliveryStatusSelected"
+          :options="deliveryStatusData"
+          optionLabel="title"
+          placeholder="Vận chuyển"
+          :highlightOnSelect="false"
+          class="w-full w-100"
+        />
+      </div>
+      <div class="item-filter">
+        <Dropdown
+          v-model="paymentStatusSelected"
+          :options="paymentStatusData"
+          optionLabel="title"
+          placeholder="Thanh toán"
+          :highlightOnSelect="false"
+          class="w-full w-100"
+        />
+      </div>
+      <button
+        @click="this.getOrdersDataFilter"
+        data-v-208e19d7=""
+        class="search m-button"
+        style="background-color: rgb(0, 81, 200)"
+      >
+        Lọc
+      </button>
+      <button
+        v-if="this.filterData.filterInput.length > 0"
+        @click="deleteFilterCondtion"
+        data-v-208e19d7=""
+        class="search m-button"
+        style="background-color: rgb(0, 81, 200)"
+      >
+        Xóa bộ lọc
+      </button>
     </div>
 
     <div class="content__toolbar">
@@ -56,6 +90,22 @@
           </MButton>
           <MButton
             class="m-button--sub m-button-none"
+            id="m-button-uncheked"
+            text="Chọn tất cả các trang"
+            style="color: #1565c0"
+            @click="handleSelectAllPage"
+          >
+          </MButton>
+          <MButton
+            class="m-button--sub m-button-none"
+            id="m-button-uncheked"
+            text="Xuất file"
+            style="color: #1565c0"
+            @click="exportListRecord"
+          >
+          </MButton>
+          <MButton
+            class="m-button--sub m-button-none"
             id="btn-delete-all"
             text="Xác nhận tất cả"
             @click="onConfirmAllOrder"
@@ -64,10 +114,18 @@
         </div>
       </div>
       <div class="content__toolbar-right">
+        <MButtonNoText
+          v-tippy="{
+            content: 'Xuất file',
+            placement: 'bottom',
+          }"
+          @click="exportAllRecord"
+          icon="fa-solid fa-file-excel"
+        ></MButtonNoText>
         <div style="width: 350px" class="content__toolbar-search">
           <MInputIcon
             refEl="txtSearchString"
-            v-model="searchString"
+            v-model="filterData.searchString"
             placeholder="Tìm kiếm theo tên khách hàng, mã đơn hàng"
           ></MInputIcon>
         </div>
@@ -95,7 +153,7 @@
           </tr>
         </thead>
         <tbody v-if="isShowLoadingTable === false">
-          <tr v-for="(order, index) in orders" :key="order.OrderId">
+          <tr v-for="(order, index) in ordersDataFilter" :key="order.OrderId">
             <td class="" style="width: 50px; text-align: center">
               <input
                 type="checkbox"
@@ -153,12 +211,15 @@
         </tbody>
       </table>
       <MLoadingData v-if="isShowLoadingTable"></MLoadingData>
+      <div class="no-data-table" v-if="this.ordersDataFilter.length === 0">
+        Không có dữ liệu nào
+      </div>
     </div>
     <MPagination
       :total="totalRecord"
       :totalPage="totalPage"
-      v-model:pageNumber="pageNumber"
-      v-model:pageSize="pageSize"
+      v-model:pageNumber="filterData.pageNumber"
+      v-model:pageSize="filterData.pageSize"
     >
     </MPagination>
   </div>
@@ -189,14 +250,16 @@
 <script>
 import orderService from "@/utils/OrderService";
 import orderColumns from "@/js/data/orderColumns";
-
+import Dropdown from "primevue/dropdown";
+import { saveAs } from "file-saver";
 export default {
   name: "OrderManagementPage",
+  components: { Dropdown },
   created() {
     this.$emitter.on("updatePageSize", this.updatePageSize);
   },
   mounted() {
-    this.getOrdersDataFilter(null, null, this.selectedFilterIndex);
+    this.getOrdersDataFilter();
 
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".button__edit-address")) {
@@ -204,7 +267,6 @@ export default {
       }
     });
     document.title = "Quản lý đơn hàng";
-
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);
@@ -217,7 +279,7 @@ export default {
   data() {
     return {
       //Lưu danh sách các đơn hàng
-      orders: [],
+      ordersDataFilter: [],
       //Columns của bảng
       orderColumns: orderColumns,
 
@@ -225,12 +287,20 @@ export default {
       totalRecord: 0,
       //Lưu tổng số trang
       totalPage: 0,
-      //Số trang hiện tại
-      pageNumber: 1,
-      //Số lượng bản ghi trong 1 trang
-      pageSize: 10,
+
+      filterData: {
+        pageSize: 10,
+        pageNumber: 1,
+        searchString: null,
+        sortColumn: {
+          columnName: "CreatedDate",
+          type: this.$Enum.SORT_TYPE.DESC,
+          label: "Mới nhất",
+        },
+        filterInput: [],
+        rangeColumn: [],
+      },
       //Chuỗi tìm kiếm nhanh
-      searchString: null,
 
       //Lưu danh sách ẩn hiện của row action table
       isShowActionRowTable: [],
@@ -244,45 +314,68 @@ export default {
       isShowLoadingTable: false,
       //Giá trị ẩn hiện dialog
       isShowDialog: false,
-      //Các giá trị của filter
-      filterOptions: [
-        {
-          title: "Tất cả",
-          fieldConditon: null,
-          filterCondition: null,
-        },
-        {
-          title: "Đơn hàng chờ xác nhận",
-          fieldConditon: "OrderStatus",
-          filterCondition: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
-        },
-        {
-          title: "Đơn hàng chưa giao",
-          fieldConditon: "DeliveryStatus",
-          filterCondition: this.$Enum.DELIVERY_STATUS.NOT_DELIVERY,
-        },
-        {
-          title: "Đơn hàng chưa thanh toán",
-          fieldConditon: "PaymentStatus",
-          filterCondition: this.$Enum.PAYMENT_STATUS.UNPAID,
-        },
-      ],
+
       //Vị trí filter được chọn
       selectedFilterIndex: 0, // Mặc định chọn 'Tất cả'
+      orderStatusSelected: {},
+      paymentStatusSelected: {},
+      deliveryStatusSelected: {},
     };
   },
   watch: {
+    orderStatusSelected: function (newValue) {
+      if (this.filterData.filterInput.length > 0) {
+        const index = this.filterData.filterInput.findIndex(
+          (item) => item.ColumnName === "OrderStatus"
+        );
+        if (index !== -1) {
+          this.filterData.filterInput.splice(index, 1);
+        }
+      }
+      this.filterData.filterInput.push({
+        ColumnName: "OrderStatus",
+        Value: `${newValue.value}`,
+      });
+    },
+    deliveryStatusSelected: function (newValue) {
+      if (this.filterData.filterInput.length > 0) {
+        const index = this.filterData.filterInput.findIndex(
+          (item) => item.ColumnName === "DeliveryStatus"
+        );
+        if (index !== -1) {
+          this.filterData.filterInput.splice(index, 1);
+        }
+      }
+      this.filterData.filterInput.push({
+        ColumnName: "DeliveryStatus",
+        Value: `${newValue.value}`,
+      });
+    },
+    paymentStatusSelected: function (newValue) {
+      if (this.filterData.filterInput.length > 0) {
+        const index = this.filterData.filterInput.findIndex(
+          (item) => item.ColumnName === "PaymentStatus"
+        );
+        if (index !== -1) {
+          this.filterData.filterInput.splice(index, 1);
+        }
+      }
+      this.filterData.filterInput.push({
+        Value: `${newValue.value}`,
+        ColumnName: "PaymentStatus",
+      });
+    },
     //theo dõi biến pageSize
-    pageSize: function () {
-      this.getOrdersDataFilter(null, null, 0);
+    "filterData.pageSize": function () {
+      this.getOrdersDataFilter();
     },
     //Theo dõi biến pageNumber
-    pageNumber: function () {
-      this.getOrdersDataFilter(null, null, 0);
+    "filterData.pageNumber": function () {
+      this.getOrdersDataFilter();
     },
     //Theo dõi biến searchString
-    searchString: function () {
-      this.getOrdersDataFilter(null, null, 0);
+    "filterData.searchString": function () {
+      this.getOrdersDataFilter();
     },
   },
   computed: {
@@ -293,20 +386,20 @@ export default {
     selectAllRecord: {
       // Khi truy cập giá trị computed property
       get: function () {
-        return this.orders
-          ? this.orders
+        return this.ordersDataFilter
+          ? this.ordersDataFilter
               .map((item) => item.OrderId)
               .every((ele) => this.orderIdsSelected.includes(ele)) &&
-              this.orderIdsSelected.length >= this.orders.length &&
+              this.orderIdsSelected.length >= this.ordersDataFilter.length &&
               this.orderIdsSelected.length > 0
           : false;
       },
       // Khi thay đổi giá trị computed property
       set: function (value) {
         let orderIdsSelected = [];
-        if (value && this.orders != null) {
+        if (value && this.ordersDataFilter != null) {
           //duyệt dữ liệu push id vào mảng
-          this.orders.forEach((item) => {
+          this.ordersDataFilter.forEach((item) => {
             let id = item.OrderId;
             //nếu trong orderIdsSelected chưa tồn tại id thì mới push
             if (!this.orderIdsSelected.map((item) => item).includes(id)) {
@@ -325,11 +418,55 @@ export default {
             return;
           }
           this.orderIdsSelected = this.orderIdsSelected.filter((ele) => {
-            return !this.orders.map((item) => item.OrderId).includes(ele);
+            return !this.ordersDataFilter
+              .map((item) => item.OrderId)
+              .includes(ele);
           });
           this.countSelectedRow();
         }
       },
+    },
+    orderStatusData: function () {
+      const data = [];
+      for (const key in this.$Enum.ORDER_STATUS) {
+        const value = this.$Enum.ORDER_STATUS[key];
+        const title = this.$helper.hanldeValueTypeEnum("ORDER_STATUS", value);
+        const item = {
+          value: value,
+          title: title,
+        };
+        data.push(item);
+      }
+      return data;
+    },
+    deliveryStatusData: function () {
+      const data = [];
+      for (const key in this.$Enum.DELIVERY_STATUS) {
+        const value = this.$Enum.DELIVERY_STATUS[key];
+        const title = this.$helper.hanldeValueTypeEnum(
+          "DELIVERY_STATUS",
+          value
+        );
+        const item = {
+          value: value,
+          title: title,
+        };
+        data.push(item);
+      }
+      return data;
+    },
+    paymentStatusData: function () {
+      const data = [];
+      for (const key in this.$Enum.PAYMENT_STATUS) {
+        const value = this.$Enum.PAYMENT_STATUS[key];
+        const title = this.$helper.hanldeValueTypeEnum("PAYMENT_STATUS", value);
+        const item = {
+          value: value,
+          title: title,
+        };
+        data.push(item);
+      }
+      return data;
     },
   },
   methods: {
@@ -354,51 +491,22 @@ export default {
      * @param {number} index
      *@author LQHUY(19/04/2024)
      */
-    async getOrdersDataFilter(fieldConditon, filterCondition, index) {
-      this.selectedFilterIndex = index;
+    async getOrdersDataFilter() {
       try {
         this.onToggleLoadingTable(true);
-        let params = !this.searchString
-          ? {
-              pageSize: this.pageSize,
-              pageNumber: this.pageNumber,
-            }
-          : {
-              searchString: this.searchString,
-              pageSize: this.pageSize,
-              pageNumber: this.pageNumber,
-            };
-        const res = await orderService.getFilterPaging({ params });
+        let params = {
+          PageSize: this.filterData.pageSize,
+          PageNumber: this.filterData.pageNumber,
+          SearchString: this.filterData.searchString,
+          FilterInput: this.filterData.filterInput,
+        };
+
+        const res = await orderService.filter(params);
         if (res.status === 200) {
           this.onToggleLoadingTable(false, 300);
-          switch (fieldConditon) {
-            case "OrderStatus":
-              this.orders = res.data.Data.filter(
-                (item) => item.OrderStatus === filterCondition
-              );
-              this.totalRecord = this.orders.length;
-              this.totalPage = Math.ceil(this.orders.length / this.pageSize);
-              
-              break;
-            case "DeliveryStatus":
-              this.orders = res.data.Data.filter(
-                (item) => item.DeliveryStatus === filterCondition
-              );
-              this.totalRecord = this.orders.length;
-              this.totalPage = Math.ceil(this.orders.length / this.pageSize);
-              break;
-            case "PaymentStatus":
-              this.orders = res.data.Data.filter(
-                (item) => item.PaymentStatus === filterCondition
-              );
-              this.totalRecord = this.orders.length;
-              this.totalPage = Math.ceil(this.orders.length / this.pageSize);
-              break;
-            default:
-              this.orders = res.data.Data;
-              this.totalPage = res.data.TotalPage;
-              this.totalRecord = res.data.TotalRecord;
-          }
+          this.ordersDataFilter = res.data.Data;
+          this.totalPage = res.data.TotalPage;
+          this.totalRecord = res.data.TotalRecord;
         }
       } catch (error) {
         console.log(error);
@@ -479,7 +587,6 @@ export default {
       if (this.orderIdsSelected.indexOf(order.OrderId) === -1) {
         this.orderIdsSelected.push(order.OrderId);
       } else {
-        console.log(this.orderIdsSelected);
         this.orderIdsSelected = this.orderIdsSelected.filter(
           (item) => item !== order.OrderId
         );
@@ -567,10 +674,74 @@ export default {
           );
           this.isShowDialog = false;
           this.getOrdersDataFilter();
-          this.btnRemoveRowSelected(null, null, 0);
+          this.btnRemoveRowSelected();
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    deleteFilterCondtion() {
+      this.filterData.filterInput = [];
+      this.orderStatusSelected = {};
+      this.paymentStatusSelected = {};
+      this.deliveryStatusSelected = {};
+      this.getOrdersDataFilter();
+    },
+    async handleSelectAllPage() {
+      try {
+        const res = await orderService.getAll();
+        if (res.status === 200) {
+          this.orderIdsSelected = res.data.map((item) => item.OrderId);
+          this.countSelectedRow();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /**
+     * Hàm thực hiện Export tất cả các bản ghi vào file excel
+     * Author: LQHUY(10/01/2024)
+     */
+    async exportAllRecord() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+
+        let res = await orderService.exportRecord([]);
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        var fileName = "Danh sách đơn hàng";
+
+        if (res.status == 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          // Mở cửa sổ thoại mở thư mục và cho phép thay tên file
+          saveAs(blob, fileName, { autoBom: false });
+        }
+      } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+
+    /**
+     * Hàm thực hiện Export danh sách các bản ghi vào file excel
+     * Author: LQHUY(10/01/2024)
+     */
+    async exportListRecord() {
+      try {
+        let res = await orderService.exportRecord(this.orderIdsSelected);
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        var fileName = "Danh sách đơn hàng";
+        if (res.status == 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          // Mở cửa sổ thoại mở thư mục và cho phép thay tên file
+          saveAs(blob, fileName, { autoBom: false });
+        }
+      } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
       }
     },
   },

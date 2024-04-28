@@ -1,5 +1,6 @@
 ﻿using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Model.Revenue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace BookShopOnline.Core.Interfaces.Excel
 {
     public interface IOrderExcelService : IBaseExcelService<OrderDto>
     {
-        byte[] ExportRevenue(List<Order> orders);
+        byte[] ExportRevenueByTime(List<Order> orders);
+        byte[] ExportRevenueByProduct(List<RevenueProduct> data);
     }
 }

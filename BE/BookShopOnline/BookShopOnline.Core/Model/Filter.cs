@@ -10,6 +10,7 @@ namespace BookShopOnline.Core.Model
     {
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public string? SearchString { get; set; }
         public string? Slug { get; set; }
         public SortColumn? SortColumn { get; set; }
         public List<FilterInput>? FilterInput { get; set; }

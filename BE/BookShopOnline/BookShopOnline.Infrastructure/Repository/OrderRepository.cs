@@ -1,9 +1,11 @@
 ﻿using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Core.Model;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,16 +19,7 @@ namespace BookShopOnline.Infrastructure.Repository
         {
         }
 
-        public async Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
-        {
-            var procName = "Proc_Order_CalculateTotalAmountByTypeOfTime";
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("typeOfTime", typeOfTime);
-            parameters.Add("fromDate", fromDate);
-            parameters.Add("toDate", toDate);
-            var res = await _dbContext.Connection.QueryAsync<object>(procName, parameters);
-            return res;
-        }
+
 
         public async Task<IEnumerable<object>> CalculateTotalSalesPerMonth(int year)
         {
@@ -38,7 +31,7 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<int> ConfirmAllAsync()
         {
             var procName = "Proc_Order_ConfirmAll";
-            var res = await _dbContext.Connection.ExecuteAsync(procName,transaction: _dbContext.Transaction);
+            var res = await _dbContext.Connection.ExecuteAsync(procName, transaction: _dbContext.Transaction);
             return res;
         }
 
@@ -72,18 +65,31 @@ namespace BookShopOnline.Infrastructure.Repository
             return result;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
+        public async Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
             var procName = "Proc_Order_GetByTimeType";
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
             parameters.Add("toDate", toDate);
+            parameters.Add("categoryId", categoryId);
             var res = await _dbContext.Connection.QueryAsync<OrderDto>(procName, parameters);
             return res;
         }
+        public async Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
+        {
+            var procName = "Proc_Order_CalculateTotalAmountByTypeOfTime";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("typeOfTime", typeOfTime);
+            parameters.Add("fromDate", fromDate);
+            parameters.Add("toDate", toDate);
+            parameters.Add("categoryId", categoryId);
 
-        public async Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter)
+            var res = await _dbContext.Connection.QueryAsync<object>(procName, parameters);
+            return res;
+        }
+
+        public async Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter, Guid? categoryId)
         {
             var procName = "Proc_Order_CalculateRevenueByProduct";
             DynamicParameters parameters = new DynamicParameters();
@@ -91,9 +97,62 @@ namespace BookShopOnline.Infrastructure.Repository
             parameters.Add("fromDate", fromDate);
             parameters.Add("toDate", toDate);
             parameters.Add("quantityFilter", quantityFilter);
+            parameters.Add("categoryId", categoryId);
+
             var res = await _dbContext.Connection.QueryAsync<object>(procName, parameters);
             return res;
         }
+
+        public async Task<PagingEntity<OrderDto>> FilterAsync(Filter filter)
+        {
+            var filterInput = filter.FilterInput;
+            DynamicParameters parameters = new DynamicParameters();
+            var sqlCommand = @"SELECT *
+                  FROM view_order vo
+                  WHERE (@searchString IS NULL
+                  OR vo.Fullname LIKE CONCAT('%', @searchString, '%')
+                  OR vo.OrderCode LIKE CONCAT('%', @searchString, '%'))";
+
+            parameters.Add("@searchString", filter.SearchString);
+            var filterConditions = new List<string>();
+            int i = 0;
+            if (filterInput != null && filterInput.Count() > 0)
+            {
+                foreach (var item in filterInput)
+                {
+                    var paramInput = $"value{i}";
+                    filterConditions.Add($"{item.ColumnName} = @{paramInput}");
+                    parameters.Add(paramInput, item.Value);
+                    i++;
+                }
+                string filterConditionString = string.Join(" AND ", filterConditions);
+
+                sqlCommand += $"AND {filterConditionString}";
+            }
+
+            var paramOrderBy = " ORDER BY vo.CreatedDate DESC";
+            var paramLimit = " LIMIT @pageSize OFFSET @start_index";
+
+            parameters.Add("@pageSize", filter.PageSize);
+            parameters.Add("@start_index", (filter.PageNumber - 1) * filter.PageSize);
+
+            sqlCommand += paramOrderBy;
+            sqlCommand += paramLimit;
+
+            // lấy ra chuỗi sql k có limit
+            int limitIndex = sqlCommand.IndexOf("LIMIT");
+            string sqlComandWithoutLimit = sqlCommand.Substring(0, limitIndex); // Cắt từ vị trí 0 đến vị trí của "LIMIT"
+
+            var res = await _dbContext.Connection.QueryAsync<OrderDto>(sqlCommand, parameters);
+            var resNoLimit = await _dbContext.Connection.QueryAsync<OrderDto>(sqlComandWithoutLimit, parameters);
+
+            var pagingResult = new PagingEntity<OrderDto>();
+            pagingResult.Data = res;
+            //gán tổng cố bản ghi
+            pagingResult.TotalRecord = resNoLimit.Count();
+            //gán tổng số trang
+            pagingResult.TotalPage = (int)Math.Ceiling((double)pagingResult.TotalRecord / filter.PageSize);
+            return pagingResult;
+        }
     }
 }
-  

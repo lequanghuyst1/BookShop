@@ -5,6 +5,8 @@ using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using BookShopOnline.Core.Model;
+using BookShopOnline.Core.Model.Revenue;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -83,7 +85,7 @@ namespace BookShopOnline.Api.Controllers
         [HttpGet("CalculateTotalSalesPerMonth")]
         public async Task<IActionResult> CalculateTotalSalesPerMonth(int year)
         {
-            var res =await _orderRepository.CalculateTotalSalesPerMonth(year);
+            var res = await _orderRepository.CalculateTotalSalesPerMonth(year);
             return Ok(res);
         }
 
@@ -103,16 +105,16 @@ namespace BookShopOnline.Api.Controllers
         }
 
         [HttpGet("Chart/[action]")]
-        public async Task<IActionResult> CalculateTotalAmountByTypeOfTime(int typeOfTime,DateTime fromDate, DateTime toDate)
+        public async Task<IActionResult> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
-            var res = await _orderRepository.CalculateTotalAmountByTypeOfTime(typeOfTime,fromDate, toDate);
+            var res = await _orderRepository.CalculateTotalAmountByTypeOfTime(typeOfTime, fromDate, toDate, categoryId);
             return Ok(res);
         }
 
         [HttpGet("Chart/[action]")]
-        public async Task<IActionResult> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter)
+        public async Task<IActionResult> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter, Guid? categoryId)
         {
-            var res = await _orderRepository.GetRevenueByProduct(typeOfTime, fromDate, toDate, quantityFilter);
+            var res = await _orderRepository.GetRevenueByProduct(typeOfTime, fromDate, toDate, quantityFilter, categoryId);
             return Ok(res);
         }
 
@@ -124,9 +126,9 @@ namespace BookShopOnline.Api.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate)
+        public async Task<IActionResult> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
-            var res = await _orderRepository.GetByTypeOfTime(typeOfTime, fromDate, toDate);
+            var res = await _orderRepository.GetByTypeOfTime(typeOfTime, fromDate, toDate, categoryId);
             return Ok(res);
         }
 
@@ -143,7 +145,7 @@ namespace BookShopOnline.Api.Controllers
         {
             var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-            var fileName = "Thống kê doanh thu";
+            var fileName = "Danh sách đơn hàng";
             if (ids?.Count() > 0)
             {
                 var bytes = await _orderExcelService.ExportListAsync(ids);
@@ -154,20 +156,38 @@ namespace BookShopOnline.Api.Controllers
             return File(res, contenType, fileName);
         }
 
-        [HttpPost("Export/Revenue")]
-        public IActionResult ExportRevenueExcel(List<Order> orders)
+        [HttpPost("Export/[action]")]
+        public IActionResult ExportRevenueByTime(List<Order> orders)
         {
             var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             var fileName = "Thống kê doanh thu";
-            
-            var res = _orderExcelService.ExportRevenue(orders);
+
+            var res = _orderExcelService.ExportRevenueByTime(orders);
 
             return File(res, contenType, fileName);
-        } 
+        }
 
+        [HttpPost("Export/[action]")]
+        public IActionResult ExportRevenueByProduct(List<RevenueProduct> data)
+        {
+            var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            var fileName = "Thống kê doanh thu";
+
+            var res = _orderExcelService.ExportRevenueByProduct(data);
+
+            return File(res, contenType, fileName);
+        }
+
+        [HttpPost("Filter")]
+        public async Task<IActionResult> FiterAsync(Filter filter)
+        {
+            var res = await _orderRepository.FilterAsync(filter);
+            return Ok(res);
+        }
 
 
     }
 
-}   
+}

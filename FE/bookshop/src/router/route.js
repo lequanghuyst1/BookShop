@@ -204,12 +204,13 @@ router.beforeEach((to, from, next) => {
   ) {
     next();
   }
-  else if (to.meta.requiresAuth && user?.RoleName !== "Admin") {
-    next("/admin/login");
-  }
-  else if (to.meta.requiresAuth && user?.RoleName === "Admin") {
-    next();
-  } else {
+  // else if (to.meta.requiresAuth && user?.RoleName !== "Admin") {
+  //   next("/admin/login");
+  // }
+  // else if (to.meta.requiresAuth && user?.RoleName === "Admin") {
+  //   next();
+  // } 
+   else {
     next();
   }
 });

@@ -1,7 +1,6 @@
 <template>
   <button class="m-button--no-text">
-    <div :class="icon"></div>
-    <slot></slot>
+    <div style="font-size: 24px; color: #486192" :class="icon"></div>
   </button>
 </template>
 <script>
@@ -12,7 +11,6 @@ export default {
       type: String,
       required: true,
     },
-
   },
 };
 </script>

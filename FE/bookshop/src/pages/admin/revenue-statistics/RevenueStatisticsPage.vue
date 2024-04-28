@@ -35,14 +35,13 @@
         <div class="item">
           <div class="item-title">Danh mục</div>
           <div class="item-condition">
-            <Dropdown
-              v-model="selectedTypeOfTime"
-              :options="typeOfTime"
-              optionLabel="title"
-              placeholder="Chọn danh mục"
-              :highlightOnSelect="false"
-              class="w-full w-100"
-            />
+            <MCombobox
+              propValue="CategoryId"
+              propText="CategoryName"
+              :dataCombobox="categories"
+              v-model="selectedCategoryId"
+              id="cbCategory"
+            ></MCombobox>
           </div>
         </div>
         <div class="item">
@@ -50,7 +49,7 @@
           <div class="item-condition">
             <Dropdown
               v-model="selectedTypeOfTime"
-              :options="typeOfTime"
+              :options="filter"
               optionLabel="title"
               placeholder="Tất cả"
               :highlightOnSelect="false"
@@ -238,7 +237,7 @@
         <p
           class="view-mode"
           style="background-color: #29c24d; color: #fff"
-          @click="hanldeOnExportRevenue"
+          @click="hanldeOnExport"
         >
           Xuất Excel
         </p>
@@ -263,7 +262,7 @@ import RevenueChart from "./RevenueChart.vue";
 import orderService from "@/utils/OrderService";
 import DataGridChart from "./DataGridChart.vue";
 import { saveAs } from "file-saver";
-
+import categoryService from "@/utils/CategoryService";
 export default {
   created() {
     this.setUpTimeFilter();
@@ -272,6 +271,7 @@ export default {
     this.getTotalRevenue();
 
     this.getDataChartAndGridWithTypeRevenue();
+    this.getCategoriesData();
     document.title = "Thống kê doanh thu";
   },
   components: { Dropdown, Calendar, RevenueChart, DataGridChart },
@@ -382,24 +382,32 @@ export default {
       ],
       revenueByProductColumns: [
         {
-          field: "book_name",
+          field: "BookName",
           nameField: "Tên sách",
           class: "table-align-text",
           width: "132px",
         },
         {
-          field: "total_quantity",
+          field: "TotalQuantitySold",
           nameField: "Số lượng",
           class: "table-align-text",
           width: "132px",
         },
         {
-          field: "profit",
+          field: "Profit",
           nameField: "Tổng tiền",
           class: "table-align-text",
           width: "132px",
           textAlign: "right",
-          type: "money",
+          type: "Boney",
+        },
+      ],
+      categories: [],
+      selectedCategoryId: null,
+      filter: [
+        {
+          value: 0,
+          title: "Tất cả",
         },
       ],
     };
@@ -478,6 +486,7 @@ export default {
           typeOfTime: this.selectedTypeOfTime.value,
           fromDate: this.fromDate,
           toDate: this.toDate,
+          categoryId: this.selectedCategoryId,
         };
         const res = await orderService.calculateTotalAmountByTypeOfTime({
           params,
@@ -517,13 +526,14 @@ export default {
           fromDate: this.fromDate,
           toDate: this.toDate,
           quantityFilter: 10,
+          categoryId: this.selectedCategoryId,
         };
         const res = await orderService.getRevenueByProduct({
           params,
         });
         if (res.status === 200) {
-          const label = res.data.map((item) => item.book_name);
-          const data = res.data.map((item) => item.profit);
+          const label = res.data.map((item) => item.BookName);
+          const data = res.data.map((item) => item.Profit);
 
           this.totalRevenueByCondition = data.reduce(
             (previousValue, currentValue) => previousValue + currentValue,
@@ -566,6 +576,7 @@ export default {
           typeOfTime: this.selectedTypeOfTime.value,
           fromDate: this.fromDate,
           toDate: this.toDate,
+          categoryId: this.selectedCategoryId,
         };
         const res = await orderService.getOrderByTypeOfTime({
           params,
@@ -577,11 +588,54 @@ export default {
         console.log(error);
       }
     },
+    async getCategoriesData() {
+      try {
+        const res = await categoryService.getAll();
+        if (res.status == 200) {
+          this.categories = res.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async hanldeOnExport() {
+      try {
+        if(this.selectedTypeRenvenueValue === 0){
+          await this.exportRenvenueByTime();
+        }
+        else if(this.selectedTypeRenvenueValue === 1){
+          await this.exportRenvenueByProduct();
 
-    async hanldeOnExportRevenue() {
+        }
+      } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+    async exportRenvenueByTime() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        const res = await orderService.exportRevenue(this.gridData);
+        const res = await orderService.exportRevenueByTime(this.gridData);
+        console.log(res);
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        var fileName = this.$Resource[this.$languageCode].TEXT.FileNameExcel;
+        if (res.status == 200) {
+          this.$emitter.emit("toggleShowLoading", false);
+          // Mở cửa sổ thoại mở thư mục và cho phép thay tên file
+          saveAs(blob, fileName, { autoBom: false });
+        }
+      } catch (error) {
+        this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
+      }
+    },
+
+    async exportRenvenueByProduct() {
+      try {
+        this.$emitter.emit("toggleShowLoading", true);
+        const res = await orderService.exportRevenueByProduct(this.gridData);
         console.log(res);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

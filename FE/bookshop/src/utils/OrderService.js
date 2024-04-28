@@ -35,6 +35,7 @@ class OrderService extends BaseService {
     return res;
   }
   async calculateTotalAmountByTypeOfTime(data) {
+    console.log(data);
     const res = await this.baseAxios.get(
       `${this.baseUrl}/Chart/CalculateTotalAmountByTypeOfTime`,
       data
@@ -63,9 +64,19 @@ class OrderService extends BaseService {
     return res;
   }
 
-  async exportRevenue(data) {
+  async exportRecord(ids) {
+    const res = await this.baseAxios.post(`${this.baseUrl}/Export`, ids, {
+      responseType: "blob",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  }
+  
+  async exportRevenueByTime(data) {
     const res = await this.baseAxios.post(
-      `${this.baseUrl}/Export/Revenue`,
+      `${this.baseUrl}/Export/ExportRevenueByTime`,
       data,
       {
         responseType: "blob",
@@ -74,6 +85,23 @@ class OrderService extends BaseService {
         },
       }
     );
+    return res;
+  }
+  async exportRevenueByProduct(data) {
+    const res = await this.baseAxios.post(
+      `${this.baseUrl}/Export/ExportRevenueByProduct`,
+      data,
+      {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res;
+  }
+  async filter(data) {
+    const res = await this.baseAxios.post(`${this.baseUrl}/Filter`, data);
     return res;
   }
 }

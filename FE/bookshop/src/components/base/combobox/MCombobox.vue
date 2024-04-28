@@ -11,6 +11,7 @@
         placeholder="- Chọn giá trị -"
         @keydown="onKeyDownInput"
         type="text"
+        @click="this.onShowcombobox"
         @input="changeValueInput"
         v-model="outputText"
         :class="{ 'm-textfield-error': messageError }"
@@ -55,6 +56,7 @@
             selected: item[this.propText] === this.outputText,
           }"
         >
+          
           <li class="m-combobox-list__item-text">
             {{ item[propText] }}
           </li>
@@ -62,6 +64,7 @@
             <i class="fa-solid fa-check"></i>
           </div>
         </div>
+        
       </ul>
     </div>
     <span class="m-error-message">{{ messageError }}</span>
@@ -136,7 +139,6 @@ export default {
   watch: {
     modelValue(newValue) {
       if (newValue && this.propText) {
-
         this.selectedItemId = newValue;
         this.setOutputSelectedItem();
       } else {
@@ -146,6 +148,7 @@ export default {
     outputText(newValue) {
       if (newValue === null || newValue === "" || newValue === undefined) {
         this.messageError = this.message;
+        this.$emit("update:modelValue", null);
         //nếu giá trị mới là rỗng hoặc null thì cập nhật giá trị = null
       } else {
         this.messageError = null;
@@ -158,7 +161,6 @@ export default {
   methods: {
     setOutputSelectedItem() {
       this.dataFilter = this.dataCombobox;
-      console.log(this.selectedItemId);
       const itemSelected = this.dataCombobox.find((item) => {
         return item[this.propValue] === this.selectedItemId;
       });

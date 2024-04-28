@@ -1,6 +1,7 @@
 ﻿using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Services.Base;
+using BookShopOnline.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +49,11 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// Created By: LQHUY(23/04/2024)
         Task<int> GetTotalOrderByConditionIn24Hour(string? filedCondition);
         Task<double> GetTotalRevenue();
-        Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
-        Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate);
+        Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId);
+        Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId);
 
-        Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter);
+        Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter, Guid? categoryId);
+
+        Task<PagingEntity<OrderDto>> FilterAsync(Filter filter);
     }
 }
