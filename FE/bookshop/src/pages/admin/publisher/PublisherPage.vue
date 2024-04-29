@@ -56,6 +56,15 @@
             placeholder="Tìm kiếm theo tên NXB, mã NXB"
           ></MInputIcon>
         </div>
+        <MButtonNoText
+          v-tippy="{
+            content: 'Load dữ liệu',
+            placement: 'bottom',
+          }"
+          @click="this.loadData"
+          icon="fa-solid fa-solid fa-arrow-rotate-right"
+        >
+        </MButtonNoText>
       </div>
     </div>
 
@@ -127,7 +136,6 @@ export default {
     this.loadData();
     this.loadDataImage();
     document.title = "Quản lý nhà xuất bản";
-
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);

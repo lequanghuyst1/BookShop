@@ -50,7 +50,7 @@
         />
       </div>
       <button
-        @click="this.getOrders"
+        @click="this.getOrdersData"
         data-v-208e19d7=""
         class="search m-button"
         style="background-color: rgb(0, 81, 200)"
@@ -114,6 +114,13 @@
         </div>
       </div>
       <div class="content__toolbar-right">
+        <div style="width: 350px" class="content__toolbar-search">
+          <MInputIcon
+            refEl="txtSearchString"
+            v-model="filterData.searchString"
+            placeholder="Tìm kiếm theo tên khách hàng, mã đơn hàng"
+          ></MInputIcon>
+        </div>
         <MButtonNoText
           v-tippy="{
             content: 'Xuất file',
@@ -122,13 +129,15 @@
           @click="exportAllRecord"
           icon="fa-solid fa-file-excel"
         ></MButtonNoText>
-        <div style="width: 350px" class="content__toolbar-search">
-          <MInputIcon
-            refEl="txtSearchString"
-            v-model="filterData.searchString"
-            placeholder="Tìm kiếm theo tên khách hàng, mã đơn hàng"
-          ></MInputIcon>
-        </div>
+        <MButtonNoText
+          v-tippy="{
+            content: 'Load dữ liệu',
+            placement: 'bottom',
+          }"
+          @click="this.getOrdersData"
+          icon="fa-solid fa-solid fa-arrow-rotate-right"
+        >
+        </MButtonNoText>
       </div>
     </div>
 
@@ -259,7 +268,7 @@ export default {
     this.$emitter.on("updatePageSize", this.updatePageSize);
   },
   mounted() {
-    this.getOrders();
+    this.getOrdersData();
 
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".button__edit-address")) {
@@ -367,15 +376,15 @@ export default {
     },
     //theo dõi biến pageSize
     "filterData.pageSize": function () {
-      this.getOrders();
+      this.getOrdersData();
     },
     //Theo dõi biến pageNumber
     "filterData.pageNumber": function () {
-      this.getOrders();
+      this.getOrdersData();
     },
     //Theo dõi biến searchString
     "filterData.searchString": function () {
-      this.getOrders();
+      this.getOrdersData();
     },
   },
   computed: {
@@ -418,9 +427,7 @@ export default {
             return;
           }
           this.orderIdsSelected = this.orderIdsSelected.filter((ele) => {
-            return !this.orders
-              .map((item) => item.OrderId)
-              .includes(ele);
+            return !this.orders.map((item) => item.OrderId).includes(ele);
           });
           this.countSelectedRow();
         }
@@ -491,7 +498,7 @@ export default {
      * @param {number} index
      *@author LQHUY(19/04/2024)
      */
-    async getOrders() {
+    async getOrdersData() {
       try {
         this.onToggleLoadingTable(true);
         let params = {
@@ -560,7 +567,7 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.isShowActionRowTable[index] = false;
-          this.getOrders(null, this.selectedFilterIndex);
+          this.getOrdersData();
           this.$emitter.emit("toggleShowLoading", false);
         }
       } catch (error) {
@@ -673,7 +680,7 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.isShowDialog = false;
-          this.getOrders();
+          this.getOrdersData();
           this.btnRemoveRowSelected();
         }
       } catch (error) {
@@ -685,13 +692,19 @@ export default {
       this.orderStatusSelected = {};
       this.paymentStatusSelected = {};
       this.deliveryStatusSelected = {};
-      this.getOrders();
+      this.getOrdersData();
     },
     async handleSelectAllPage() {
       try {
-        const res = await orderService.getAll();
+        let params = {
+          SearchString: this.filterData.searchString,
+          FilterInput: this.filterData.filterInput,
+        };
+        const res = await orderService.filter(params);
         if (res.status === 200) {
-          this.orderIdsSelected = res.data.map((item) => item.OrderId);
+          this.orderIdsSelected = res.data.Data.map((item) => item.OrderId);
+        }
+        if (res.status === 200) {
           this.countSelectedRow();
         }
       } catch (error) {

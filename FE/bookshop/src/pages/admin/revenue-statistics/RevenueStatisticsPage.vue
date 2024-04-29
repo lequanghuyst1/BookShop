@@ -59,19 +59,18 @@
         </div>
       </div>
       <dic class="">
-        <div
-          v-if="selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.DATE"
-          class="time wrap-date"
-        >
+        <div class="time wrap-date">
           <div class="item">
             <div class="item-title">Ngày bắt đầu</div>
             <div class="item-condition">
               <Calendar
-                placeholder="DD/MM/YYYY"
-                v-model="rangeDate.startDate"
+                v-model="fromDate"
                 showIcon
-                :showOnFocus="false"
                 iconDisplay="input"
+                :placeholder="selectedTypeOfTime.placeholder"
+                :dateFormat="selectedTypeOfTime.dateFormat"
+                :showOnFocus="false"
+                :view="selectedTypeOfTime.view"
                 class="w-100"
               />
             </div>
@@ -80,18 +79,19 @@
             <div class="item-title">Ngày kết thúc</div>
             <div class="item-condition">
               <Calendar
-                v-model="rangeDate.endDate"
-                placeholder="DD/MM/YYYY"
+                v-model="toDate"
                 showIcon
-                :showOnFocus="false"
                 iconDisplay="input"
-                dateFormat="dd/mm/yy"
+                :placeholder="selectedTypeOfTime.placeholder"
+                :showOnFocus="false"
+                :dateFormat="selectedTypeOfTime.dateFormat"
+                :view="selectedTypeOfTime.view"
                 class="w-100"
               />
             </div>
           </div>
         </div>
-        <div
+        <!-- <div
           v-if="selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH"
           class="time wrap-month"
         >
@@ -160,13 +160,12 @@
               />
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="item">
           <div class="item-condition">
             <button
               @click="getDataChartAndGridWithTypeRevenue"
               class="search m-button"
-              style="background-color: #0051c8"
             >
               Tìm kiếm
             </button>
@@ -269,7 +268,6 @@ export default {
   },
   mounted() {
     this.getTotalRevenue();
-
     this.getDataChartAndGridWithTypeRevenue();
     this.getCategoriesData();
     document.title = "Thống kê doanh thu";
@@ -279,9 +277,27 @@ export default {
   data() {
     return {
       typeOfTime: [
-        { value: this.$Enum.TYPE_OF_TIME.DATE, title: "Báo cáo theo ngày" },
-        { value: this.$Enum.TYPE_OF_TIME.MONTH, title: "Báo cáo theo tháng" },
-        { value: this.$Enum.TYPE_OF_TIME.YEAR, title: "Báo cáo theo năm" },
+        {
+          value: this.$Enum.TYPE_OF_TIME.DATE,
+          title: "Báo cáo theo ngày",
+          dateFormat: "dd/mm/yy",
+          placeholder: "DD/MM/YYYY",
+          view: "date",
+        },
+        {
+          value: this.$Enum.TYPE_OF_TIME.MONTH,
+          title: "Báo cáo theo tháng",
+          dateFormat: "mm/yy",
+          placeholder: "MM/YYYY",
+          view: "month",
+        },
+        {
+          value: this.$Enum.TYPE_OF_TIME.YEAR,
+          title: "Báo cáo theo năm",
+          dateFormat: "yy",
+          placeholder: "YYYY",
+          view: "year",
+        },
       ],
 
       typeRenvenueStatistics: [
@@ -302,19 +318,9 @@ export default {
       selectedTypeOfTime: {
         value: this.$Enum.TYPE_OF_TIME.DATE,
         title: "Báo cáo theo ngày",
-      },
-
-      rangeDate: {
-        startDate: null,
-        endDate: null,
-      },
-      rangeMonth: {
-        startMonth: null,
-        endMonth: null,
-      },
-      rangeYear: {
-        startYear: null,
-        endYear: null,
+        dateFormat: "dd/mm/yy",
+        placeholder: "DD/MM/YYYY",
+        view: "date",
       },
 
       fromDate: null,
@@ -414,41 +420,10 @@ export default {
   },
   watch: {
     "selectedTypeOfTime.value": function () {
-      this.rangeMonth = {};
-      this.rangeYear = {};
-      this.rangeYear = {};
+      this.fromDate = null;
+      this.toDate = null;
     },
-    "rangeDate.startDate": function (newValue) {
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.DATE) {
-        this.fromDate = this.$helper.formatDate(newValue, true);
-      }
-    },
-    "rangeDate.endDate": function (newValue) {
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.DATE) {
-        this.toDate = this.$helper.formatDate(newValue, true);
-      }
-    },
-    "rangeMonth.startMonth": function (newValue) {
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH) {
-        this.fromDate = this.$helper.formatDate(newValue, true);
-      }
-    },
-    "rangeMonth.endMonth": function (newValue) {
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH) {
-        this.toDate = this.$helper.formatDate(newValue, true);
-      }
-    },
-    "rangeYear.startYear": function (newValue) {
-
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.YEAR) {
-        this.fromDate = this.$helper.formatDate(newValue, true);
-      }
-    },
-    "rangeYear.endYear": function (newValue) {
-      if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.YEAR) {
-        this.toDate = this.$helper.formatDate(newValue, true);
-      }
-    },
+   
     selectedTypeRenvenueValue: function () {
       this.getDataChartAndGridWithTypeRevenue();
     },
@@ -456,10 +431,7 @@ export default {
   methods: {
     setUpTimeFilter() {
       const now = new Date();
-      // const day = now.getDate();
-      // const month = now.getMonth() + 1;
-      // const year = now.getFullYear();
-      this.rangeDate.endDate = now;
+      this.toDate = now;
 
       // Lấy ra timestamp của thời điểm hiện tại
       const currentTimeStamp = now.getTime();
@@ -469,7 +441,7 @@ export default {
       const sevenDaysAgoDate = new Date(sevenDaysAgoTimeStamp);
       // Format ngày và giờ 7 ngày trước theo ý muốn
       // Lưu ngày 7 ngày trước vào biến sevenDaysAgo để sử dụng trong template
-      this.rangeDate.startDate = sevenDaysAgoDate;
+      this.fromDate = sevenDaysAgoDate;
     },
 
     getDataChartAndGridWithTypeRevenue() {
@@ -601,12 +573,10 @@ export default {
     },
     async hanldeOnExport() {
       try {
-        if(this.selectedTypeRenvenueValue === 0){
+        if (this.selectedTypeRenvenueValue === 0) {
           await this.exportRenvenueByTime();
-        }
-        else if(this.selectedTypeRenvenueValue === 1){
+        } else if (this.selectedTypeRenvenueValue === 1) {
           await this.exportRenvenueByProduct();
-
         }
       } catch (error) {
         this.$emitter.emit("handleApiError", error);

@@ -40,10 +40,19 @@ const bookColumns = [
     textAlign: "right",
   },
   {
+    field: "QuantitySold",
+    nameField: "Số lượng bán",
+    class: "table-align-text",
+    width: "132px",
+    textAlign: "right",
+  },
+  {
     field: "NumberOfPage",
     nameField: "Tổng số trang",
     class: "table-align-text",
     width: "132px",
+    textAlign: "right",
+
   },
 
   {

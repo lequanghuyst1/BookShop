@@ -81,45 +81,7 @@
             :style="{ height: image ? '105px' : '48px' }"
             class="m-table__action"
           >
-            <div
-              v-tippy="{
-                content: 'Sửa',
-                placement: 'bottom',
-              }"
-              @click="
-                (e) => {
-                  onClickIconEdit(data[this.idObject], e);
-                }
-              "
-              :style="{
-                right: isShowActionMenu ? '145px' : '55px',
-              }"
-              class="m-table__action-item m-table__action-item--edit"
-            >
-              <div class="m-icon-edit"></div>
-            </div>
-
-            <div
-              v-tippy="{
-                content: 'Mở rộng',
-                placement: 'bottom',
-              }"
-              @click="
-                (e) => {
-                  onClickIconShowMenuAction(e);
-                }
-              "
-              @dblclick="
-                (e) => {
-                  e.stopPropagation();
-                }
-              "
-              class="m-table__action-item m-table__action-item--many"
-            >
-              <i class="fa-solid fa-ellipsis"></i>
-            </div>
-            <div
-              v-if="isShowActionMenu"
+          <div
               v-tippy="{
                 content: 'Xóa',
                 placement: 'bottom',
@@ -131,23 +93,26 @@
               "
               class="m-table__action-item m-table__action-item--delete"
             >
-              <div class="m-icon-delete"></div>
+              <div style="font-size: 18px; color: #6B6C72;">
+                <i class="fa-regular fa-trash-can"></i>
+              </div>
             </div>
             <div
-              v-if="isShowActionMenu"
               v-tippy="{
-                content: 'Nhân bản',
+                content: 'Sửa',
                 placement: 'bottom',
               }"
               @click="
                 (e) => {
-                  onClickIconClone(data, e);
+                  onClickIconEdit(data[this.idObject], e);
                 }
               "
-              class="m-table__action-item m-table__action-item--clone"
+              class="m-table__action-item m-table__action-item--edit"
             >
-              <div class="m-icon-clone"></div>
+              <div class="m-icon-edit"></div>
             </div>
+
+            
           </div>
         </tr>
       </tbody>

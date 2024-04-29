@@ -671,10 +671,10 @@ export default {
       try {
         this.$emitter.emit("toggleShowLoading", true);
         const orderData = {
-          Order : this.order,
-          OrderDetails: this.orderDetails
-        }
-       
+          Order: this.order,
+          OrderDetails: this.orderDetails,
+        };
+
         const res = await orderService.CancelOrder(orderData);
         if (res.status === 200) {
           this.$emitter.emit(

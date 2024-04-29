@@ -56,6 +56,15 @@
             placeholder="Tìm kiếm theo tên, email, số điện thoại"
           ></MInputIcon>
         </div>
+        <MButtonNoText
+          v-tippy="{
+            content: 'Load dữ liệu',
+            placement: 'bottom',
+          }"
+          @click="this.loadData"
+          icon="fa-solid fa-solid fa-arrow-rotate-right"
+        >
+        </MButtonNoText>
       </div>
     </div>
 

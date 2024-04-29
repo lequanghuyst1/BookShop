@@ -121,7 +121,16 @@ namespace BookShopOnline.Infrastructure.Repository
             //gán tổng cố bản ghi
             pagingEntity.TotalRecord = resNoLimit.Count();
             //gán tổng số trang
-            pagingEntity.TotalPage = (int)Math.Ceiling((double)pagingEntity.TotalRecord / filter.PageSize);
+
+            if (filter.PageSize.HasValue && filter.PageSize.Value != 0)
+            {
+                pagingEntity.TotalPage = (int)Math.Ceiling((double)pagingEntity.TotalRecord / filter.PageSize.Value);
+            }
+            else
+            {
+                pagingEntity.TotalPage = 1;
+
+            }
 
             return pagingEntity;
         }

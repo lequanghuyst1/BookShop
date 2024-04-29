@@ -4,6 +4,7 @@ using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Model;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
+using Microsoft.AspNetCore.Http.Features;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,8 +19,6 @@ namespace BookShopOnline.Infrastructure.Repository
         public OrderRepository(IDbContext dbContext) : base(dbContext)
         {
         }
-
-
 
         public async Task<IEnumerable<object>> CalculateTotalSalesPerMonth(int year)
         {
@@ -68,6 +67,8 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
             var procName = "Proc_Order_GetByTimeType";
+            fromDate = fromDate.AddDays(1);
+            toDate = toDate.AddDays(1);
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
@@ -79,6 +80,8 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
             var procName = "Proc_Order_CalculateTotalAmountByTypeOfTime";
+            fromDate = fromDate.AddDays(1);
+            toDate = toDate.AddDays(1);
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
@@ -92,6 +95,8 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter, Guid? categoryId)
         {
             var procName = "Proc_Order_CalculateRevenueByProduct";
+            fromDate = fromDate.AddDays(1);
+            toDate = toDate.AddDays(1);
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
@@ -106,6 +111,8 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<PagingEntity<OrderDto>> FilterAsync(Filter filter)
         {
             var filterInput = filter.FilterInput;
+            var pagingResult = new PagingEntity<OrderDto>();
+
             DynamicParameters parameters = new DynamicParameters();
             var sqlCommand = @"SELECT *
                   FROM view_order vo
@@ -131,27 +138,35 @@ namespace BookShopOnline.Infrastructure.Repository
             }
 
             var paramOrderBy = " ORDER BY vo.CreatedDate DESC";
-            var paramLimit = " LIMIT @pageSize OFFSET @start_index";
-
-            parameters.Add("@pageSize", filter.PageSize);
-            parameters.Add("@start_index", (filter.PageNumber - 1) * filter.PageSize);
 
             sqlCommand += paramOrderBy;
-            sqlCommand += paramLimit;
 
-            // lấy ra chuỗi sql k có limit
-            int limitIndex = sqlCommand.IndexOf("LIMIT");
-            string sqlComandWithoutLimit = sqlCommand.Substring(0, limitIndex); // Cắt từ vị trí 0 đến vị trí của "LIMIT"
+            if (filter.PageSize != null && filter.PageNumber != null)
+            {
+                var paramLimit = " LIMIT @pageSize OFFSET @start_index";
+                sqlCommand += paramLimit;
+                parameters.Add("@pageSize", filter.PageSize);
+                parameters.Add("@start_index", (filter.PageNumber - 1) * filter.PageSize);
+
+                // lấy ra chuỗi sql k có limit
+                int limitIndex = sqlCommand.IndexOf("LIMIT");
+                var sqlComandWithoutLimit = sqlCommand.Substring(0, limitIndex); // Cắt từ vị trí 0 đến vị trí của "LIMIT"
+                var resNoLimit = await _dbContext.Connection.QueryAsync<OrderDto>(sqlComandWithoutLimit, parameters);
+                //gán tổng số bản ghi
+                pagingResult.TotalRecord = resNoLimit.Count();
+                //gán tổng số trang
+                pagingResult.TotalPage = (int)Math.Ceiling((double)pagingResult.TotalRecord / filter.PageSize.Value);
+            }
 
             var res = await _dbContext.Connection.QueryAsync<OrderDto>(sqlCommand, parameters);
-            var resNoLimit = await _dbContext.Connection.QueryAsync<OrderDto>(sqlComandWithoutLimit, parameters);
 
-            var pagingResult = new PagingEntity<OrderDto>();
             pagingResult.Data = res;
-            //gán tổng cố bản ghi
-            pagingResult.TotalRecord = resNoLimit.Count();
-            //gán tổng số trang
-            pagingResult.TotalPage = (int)Math.Ceiling((double)pagingResult.TotalRecord / filter.PageSize);
+            if (filter.PageSize == null && filter.PageNumber == null)
+            {
+                pagingResult.TotalRecord = res.Count();
+                pagingResult.TotalPage = 1;
+
+            }
             return pagingResult;
         }
     }

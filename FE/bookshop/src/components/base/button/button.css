@@ -3,7 +3,7 @@
   height: 36px;
   padding: 8px 19px 9px 19px;
   border-radius: 4px;
-  background-color: #50b83c;
+  background-color: rgb(26, 93, 194);
   color: #ffffff;
   font-size: 14px;
   font-weight: 500;
@@ -26,7 +26,8 @@
   opacity: 0.9;
 }
 .m-button:active {
-  background-color: #118044;
+  background-color: rgb(1, 68, 168);
+
 }
 .m-button.disable:hover {
   background-color: transparent;
@@ -81,15 +82,15 @@
   position: relative;
 }
 .m-button--no-text.active {
-  background-color: #f4fff2;
-  color: #50b83c;
-  border: 1px solid #50b83c;
+  background-color: rgb(26, 93, 194);
+  /* color: rgb(1, 68, 168); */
+  border: 1px solid rgb(1, 68, 168);
   pointer-events: visible;
 }
 .m-button--no-text:hover {
-  background-color: #f4fff2;
-  color: #50b83c;
-  border: 1px solid #50b83c;
+  background-color: rgb(238, 244, 252);
+  color: rgb(1, 68, 168);
+  border: 1px solid rgb(1, 68, 168);
 }
 /* .m-button--no-text:active {
   background: #118044;

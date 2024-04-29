@@ -43,7 +43,7 @@ export default {
     const canvas = document.querySelectorAll(".p-chart canvas");
     console.log(canvas);
     canvas.forEach((item) => {
-      item.style.width = "670px";
+      item.style.width = "650px";
     });
   },
   methods: {

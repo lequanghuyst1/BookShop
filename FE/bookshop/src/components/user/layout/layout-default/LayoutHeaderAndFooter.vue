@@ -15,7 +15,7 @@
   </script>
   <style scoped>
   #container-main {
-    background-color: #f9f5ee;
+    background-color: #f0f0f0;
   }
   </style>
   
