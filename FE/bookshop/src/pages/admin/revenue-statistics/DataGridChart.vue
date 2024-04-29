@@ -6,7 +6,7 @@
     lazy
     :loading="loading"
     scrollable
-    scrollHeight="400px"
+    scrollHeight="380px"
     :value="this.$props.gridData"
   >
     <Column

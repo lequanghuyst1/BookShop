@@ -50,7 +50,7 @@
         />
       </div>
       <button
-        @click="this.getOrdersDataFilter"
+        @click="this.getOrders"
         data-v-208e19d7=""
         class="search m-button"
         style="background-color: rgb(0, 81, 200)"
@@ -153,7 +153,7 @@
           </tr>
         </thead>
         <tbody v-if="isShowLoadingTable === false">
-          <tr v-for="(order, index) in ordersDataFilter" :key="order.OrderId">
+          <tr v-for="(order, index) in orders" :key="order.OrderId">
             <td class="" style="width: 50px; text-align: center">
               <input
                 type="checkbox"
@@ -211,7 +211,7 @@
         </tbody>
       </table>
       <MLoadingData v-if="isShowLoadingTable"></MLoadingData>
-      <div class="no-data-table" v-if="this.ordersDataFilter.length === 0">
+      <div class="no-data-table" v-if="this.orders.length === 0">
         Không có dữ liệu nào
       </div>
     </div>
@@ -259,7 +259,7 @@ export default {
     this.$emitter.on("updatePageSize", this.updatePageSize);
   },
   mounted() {
-    this.getOrdersDataFilter();
+    this.getOrders();
 
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".button__edit-address")) {
@@ -279,7 +279,7 @@ export default {
   data() {
     return {
       //Lưu danh sách các đơn hàng
-      ordersDataFilter: [],
+      orders: [],
       //Columns của bảng
       orderColumns: orderColumns,
 
@@ -367,15 +367,15 @@ export default {
     },
     //theo dõi biến pageSize
     "filterData.pageSize": function () {
-      this.getOrdersDataFilter();
+      this.getOrders();
     },
     //Theo dõi biến pageNumber
     "filterData.pageNumber": function () {
-      this.getOrdersDataFilter();
+      this.getOrders();
     },
     //Theo dõi biến searchString
     "filterData.searchString": function () {
-      this.getOrdersDataFilter();
+      this.getOrders();
     },
   },
   computed: {
@@ -386,20 +386,20 @@ export default {
     selectAllRecord: {
       // Khi truy cập giá trị computed property
       get: function () {
-        return this.ordersDataFilter
-          ? this.ordersDataFilter
+        return this.orders
+          ? this.orders
               .map((item) => item.OrderId)
               .every((ele) => this.orderIdsSelected.includes(ele)) &&
-              this.orderIdsSelected.length >= this.ordersDataFilter.length &&
+              this.orderIdsSelected.length >= this.orders.length &&
               this.orderIdsSelected.length > 0
           : false;
       },
       // Khi thay đổi giá trị computed property
       set: function (value) {
         let orderIdsSelected = [];
-        if (value && this.ordersDataFilter != null) {
+        if (value && this.orders != null) {
           //duyệt dữ liệu push id vào mảng
-          this.ordersDataFilter.forEach((item) => {
+          this.orders.forEach((item) => {
             let id = item.OrderId;
             //nếu trong orderIdsSelected chưa tồn tại id thì mới push
             if (!this.orderIdsSelected.map((item) => item).includes(id)) {
@@ -418,7 +418,7 @@ export default {
             return;
           }
           this.orderIdsSelected = this.orderIdsSelected.filter((ele) => {
-            return !this.ordersDataFilter
+            return !this.orders
               .map((item) => item.OrderId)
               .includes(ele);
           });
@@ -491,7 +491,7 @@ export default {
      * @param {number} index
      *@author LQHUY(19/04/2024)
      */
-    async getOrdersDataFilter() {
+    async getOrders() {
       try {
         this.onToggleLoadingTable(true);
         let params = {
@@ -504,7 +504,7 @@ export default {
         const res = await orderService.filter(params);
         if (res.status === 200) {
           this.onToggleLoadingTable(false, 300);
-          this.ordersDataFilter = res.data.Data;
+          this.orders = res.data.Data;
           this.totalPage = res.data.TotalPage;
           this.totalRecord = res.data.TotalRecord;
         }
@@ -560,7 +560,7 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.isShowActionRowTable[index] = false;
-          this.getOrdersDataFilter(null, this.selectedFilterIndex);
+          this.getOrders(null, this.selectedFilterIndex);
           this.$emitter.emit("toggleShowLoading", false);
         }
       } catch (error) {
@@ -673,7 +673,7 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
           this.isShowDialog = false;
-          this.getOrdersDataFilter();
+          this.getOrders();
           this.btnRemoveRowSelected();
         }
       } catch (error) {
@@ -685,7 +685,7 @@ export default {
       this.orderStatusSelected = {};
       this.paymentStatusSelected = {};
       this.deliveryStatusSelected = {};
-      this.getOrdersDataFilter();
+      this.getOrders();
     },
     async handleSelectAllPage() {
       try {

@@ -25,7 +25,8 @@ namespace BookShopOnline.Core.Excel
             var data = await _baseRepository.GetAllAsync();
             var dataEnities = data.Select(item => MapEntityToDto(item));
             var columns = GetColumns();
-            var bytes = ExportExcelAsync(dataEnities, columns);
+            var title = GetTitle();
+            var bytes = ExportExcelAsync(dataEnities,title, columns);
             return bytes;
         }
 
@@ -33,8 +34,9 @@ namespace BookShopOnline.Core.Excel
         {
             var data = await _baseRepository.GetByIdsAsync(ids);
             var columns = GetColumns();
+            var title = GetTitle();
             var dataEnities = data.Select(item => MapEntityToDto(item));
-            var bytes = ExportExcelAsync(dataEnities, columns);
+            var bytes = ExportExcelAsync(dataEnities, title, columns);
             return bytes;
         }
 
@@ -44,5 +46,6 @@ namespace BookShopOnline.Core.Excel
             return entityDto;
         }
         public abstract List<String> GetColumns();
+        public abstract string GetTitle();
     }
 }

@@ -39,7 +39,7 @@ namespace BookShopOnline.Api.Controllers
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(12/04/2024)
         [HttpGet("GetByUserId/{id}")]
-        public async Task<IActionResult> CheckoutAsync(Guid id)
+        public async Task<IActionResult> GetByUserId(Guid id)
         {
             var res = await _orderService.GetByUserId(id);
             return StatusCode(200, res);
@@ -54,9 +54,9 @@ namespace BookShopOnline.Api.Controllers
         /// </returns>
         /// Created By: LQHUY(13/04/2024)
         [HttpPut("CancelOrder")]
-        public async Task<IActionResult> CancelOrderAsync(Order order)
+        public async Task<IActionResult> CancelOrderAsync(OrderData orderData)
         {
-            var res = await _orderService.CancelOrderAsync(order);
+            var res = await _orderService.CancelOrderAsync(orderData);
             return Ok(res);
         }
 

@@ -124,7 +124,8 @@ namespace BookShopOnline.Core.Excel
             columns.Add("ShippingFee");
             columns.Add("TotalProductCost");
             columns.Add("TotalAmount");
-            var res = ExportExcelAsync(ordersDto.ToList(), columns);
+            var title = "Báo cáo doanh thu";
+            var res = ExportExcelAsync(ordersDto.ToList(), title, columns);
             return res;
         }
 
@@ -137,7 +138,9 @@ namespace BookShopOnline.Core.Excel
             columns.Add("PhoneNumber");
             columns.Add("OrderStatus");
             columns.Add("DeliveryStatus");
+            columns.Add("DeliveryMethod");
             columns.Add("PaymentStatus");
+            columns.Add("PaymentMethod");
             columns.Add("ShippingFee");
             columns.Add("TotalProductCost");
             columns.Add("TotalAmount");
@@ -145,6 +148,9 @@ namespace BookShopOnline.Core.Excel
 
         }
 
-
+        public override string GetTitle()
+        {
+            return "Danh sách đơn hàng";
+        }
     }
 }

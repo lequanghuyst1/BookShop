@@ -439,6 +439,7 @@ export default {
       }
     },
     "rangeYear.startYear": function (newValue) {
+
       if (this.selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.YEAR) {
         this.fromDate = this.$helper.formatDate(newValue, true);
       }

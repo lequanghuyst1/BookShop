@@ -37,7 +37,7 @@ namespace BookShopOnline.Core.Interfaces.Services
         /// 1 - hủy thành công
         /// </returns>
         /// Created By: LQHUY(13/02/2024)
-        Task<int> CancelOrderAsync(Order order);
+        Task<int> CancelOrderAsync(OrderData orderData);
 
         /// <summary>
         /// Hàm thực hiện xác nhận tất cả các đơn hàng chưa được xác nhận

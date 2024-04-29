@@ -670,10 +670,12 @@ export default {
     async cancelOrder() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        this.order.OrderStatus = this.$Enum.ORDER_STATUS.CANCELLED;
-        const formData = new FormData();
-        formData.append("dataJson", JSON.stringify(this.order));
-        const res = await orderService.put(this.order.OrderId, formData);
+        const orderData = {
+          Order : this.order,
+          OrderDetails: this.orderDetails
+        }
+       
+        const res = await orderService.CancelOrder(orderData);
         if (res.status === 200) {
           this.$emitter.emit(
             "onShowToastMessage",

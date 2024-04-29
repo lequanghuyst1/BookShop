@@ -31,12 +31,15 @@ namespace BookShopOnline.Core.Dto.Order
         [DisplayName("Tiền ship")]
         public double? ShippingFee { get; set; }
         [DisplayName("Trạng thái")]
-
         public OrderStatus OrderStatus { get; set; }
-        [DisplayName("Vận chuyển")]
 
+        [DisplayName("Vận chuyển")]
         public DeliveryStatus DeliveryStatus { get; set; }
+
+        [DisplayName("Phương thức vận chuyển")]
         public DeliveryMethod DeliveryMethod { get; set; }
+
+        [DisplayName("Phương thức thanh toán")]
         public PaymentMethod PaymentMethod { get; set; }
 
         [DisplayName("Thanh toán")]

@@ -570,12 +570,14 @@
               ></div>
             </div>
             <div class="order-view-icon-content">
-              <p>{{
-              this.$helper.hanldeValueTypeEnum(
-                "ORDER_STATUS",
-                order.OrderStatus
-              )
-            }}</p>
+              <p>
+                {{
+                  this.$helper.hanldeValueTypeEnum(
+                    "ORDER_STATUS",
+                    order.OrderStatus
+                  )
+                }}
+              </p>
               <p>10/04/2024 - 13:26</p>
             </div>
           </div>
@@ -822,9 +824,7 @@ export default {
     this.getOrderDetailsData();
     this.getOrderData();
   },
-  mounted() {
-    
-  },
+  mounted() {},
   computed: {
     resource: function () {
       return this.$Resource[this.$languageCode];
@@ -885,7 +885,11 @@ export default {
     async handleCancelOrder() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        const res = await orderService.CancelOrder(this.order);
+        const orderData = {
+          Order: this.order,
+          OrderDetails: this.orderDetails,
+        };
+        const res = await orderService.CancelOrder(orderData);
         if (res.status === 200) {
           this.$emitter.emit(
             "onShowToastMessage",
@@ -902,7 +906,6 @@ export default {
         console.log(error);
       }
     },
-
 
     /**
      * Thực hiện đặt lại hàng khi nhấn btn đặt lại hàng

@@ -1,10 +1,13 @@
-﻿using BookShopOnline.Core.Interfaces.Excel;
+﻿using BookShopOnline.Core.Enums;
+using BookShopOnline.Core.Helper;
+using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Resources;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,7 +17,7 @@ namespace BookShopOnline.Core.Excel
 {
     public abstract class ExcelService<TDto> : IExcelService<TDto>
     {
-        public byte[] ExportExcelAsync(IEnumerable<TDto> data, List<string>? columns)
+        public byte[] ExportExcelAsync(IEnumerable<TDto> data,string tilte, List<string>? columns)
         {
             var properties = typeof(TDto).GetProperties();
             var stream = new MemoryStream();
@@ -23,7 +26,7 @@ namespace BookShopOnline.Core.Excel
                 // đặt tên người tạo file
                 excelPackage.Workbook.Properties.Author = "LQHUY";
 
-                var worksheet = excelPackage.Workbook.Worksheets.Add("Báo cáo doanh thu");
+                var worksheet = excelPackage.Workbook.Worksheets.Add(tilte);
 
                 // set style mặc định cho toàn bộ file
                 worksheet.Cells.Style.Font.Size = 14;
@@ -33,7 +36,7 @@ namespace BookShopOnline.Core.Excel
                 var countColHeader = columns.Count();
 
                 // gán giá trị cho cell vừa merge
-                worksheet.Cells[1, 1].Value = string.Format("Báo cáo doanh thu");
+                worksheet.Cells[1, 1].Value = tilte;
                 // merge các column lại từ column 1 đến số column header và set style
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Merge = true;
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Style.Font.Bold = true;
@@ -86,23 +89,24 @@ namespace BookShopOnline.Core.Excel
             }
         }
 
-
-
         private void SetCellValueEnterFileExcel(IEnumerable<TDto> data, List<string> columns, ExcelWorksheet worksheet, PropertyInfo[] properties)
         {
             var currentRow = 4;
             var colSTT = 1;
-            var totalCol = properties.ToList().Count;
+            var totalCol = columns.Count();
+            double totalAmount = 0;
             //gán giá trị cho từng dòng và cột
+            
             foreach (var item in data)
             {
                 worksheet.Cells[currentRow, 1].Value = colSTT;
                 var currentCol = 2;
-
+                worksheet.Cells[currentRow, 1, currentRow, totalCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 foreach (var column in columns)
                 {
                     foreach (var property in properties)
                     {
+                       
                         if (column.ToLower() == property.Name.ToLower())
                         {
                             var cellValue = property.GetValue(item);
@@ -128,9 +132,35 @@ namespace BookShopOnline.Core.Excel
                             {
                                 if (property.PropertyType == typeof(double) || property.PropertyType == typeof(double?))
                                 {
+                                    if (column == "TotalAmount")
+                                    {
+                                        totalAmount += (double)cellValue;
+                                    }
                                     // Kiểm tra nếu kiểu dữ liệu là double hoặc double?
                                     cellValue = ((double)cellValue).ToString("#,##0.00 đ"); // Hoặc cellValue = Convert.ToDouble(cellValue).ToString("#,##0.00 đ");
+                                    //thiết lập giá trị tiền nằm bên phải
+                                    worksheet.Cells[currentRow, currentCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                                 }
+                            }
+                            if(property.PropertyType == typeof(OrderStatus) || property.PropertyType == typeof(OrderStatus?))
+                            {
+                                cellValue = ValueFormat.GetOrderStatusFormat((OrderStatus)cellValue);
+                            }
+                            if (property.PropertyType == typeof(DeliveryStatus) || property.PropertyType == typeof(DeliveryStatus?))
+                            {
+                                cellValue = ValueFormat.GetDeliveryStatusFormat((DeliveryStatus)cellValue);
+                            }
+                            if (property.PropertyType == typeof(PaymentStatus) || property.PropertyType == typeof(PaymentStatus?))
+                            {
+                                cellValue = ValueFormat.GetPaymentStatusFormat((PaymentStatus)cellValue);
+                            }
+                            if (property.PropertyType == typeof(PaymentMethod) || property.PropertyType == typeof(PaymentMethod?))
+                            {
+                                cellValue = ValueFormat.GetPaymentMethodFormat((PaymentMethod)cellValue);
+                            }
+                            if (property.PropertyType == typeof(DeliveryMethod) || property.PropertyType == typeof(DeliveryMethod?))
+                            {
+                                cellValue = ValueFormat.GetDeliveryMethodFormat((DeliveryMethod)cellValue);
                             }
 
                             //gán giá trị cho từng cell                      
@@ -140,13 +170,34 @@ namespace BookShopOnline.Core.Excel
                         }
                     }
                 }
+
+
+                
                 //set style cho từng ô giá trị
-                worksheet.Cells[currentRow, 1, currentRow, totalCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+               
                 worksheet.Cells.AutoFitColumns();
                 worksheet.Rows[currentRow].Height = 20;
 
                 colSTT++;
                 currentRow++;
+                
+            }
+            var propertyExist = properties.FirstOrDefault(p => p.Name == "TotalAmount");
+            if (propertyExist != null)
+            {
+                // merge các column lại từ column 1 đến số column header và set style
+                worksheet.Cells[currentRow, 1, currentRow, totalCol ].Merge = true;
+                worksheet.Cells[currentRow, 1, currentRow, totalCol ].Style.Font.Bold = true;
+                worksheet.Cells[currentRow, 1, currentRow, totalCol ].Style.Font.Size = 14;
+                worksheet.Cells[currentRow, 1, currentRow, totalCol ].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                worksheet.Cells[currentRow, 1].Value = string.Format("Tổng cộng: ");
+                worksheet.Cells[currentRow, 1, currentRow, totalCol + 1 ].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[currentRow, 1, currentRow, totalCol +1 ].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                worksheet.Cells[currentRow, 1, currentRow, totalCol + 1].Style.Font.Bold = true;
+
+                var startCellAddress = worksheet.Cells[4, totalCol + 1].Address;
+                var endCellAddress = worksheet.Cells[currentRow - 1, totalCol + 1].Address;
+                worksheet.Cells[currentRow, totalCol + 1].Value = ((double)totalAmount).ToString("#,##0.00 đ");
             }
         }
     }

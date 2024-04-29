@@ -45,7 +45,7 @@
             </div>
             <div class="col l-10">
               <div class="row">
-                <div class="col l-3">
+                <div class="col-2">
                   <MInput
                     :ref="textFields.bookCode.ref"
                     :label="textFields.bookCode.label"
@@ -53,7 +53,7 @@
                     v-model="book.BookCode"
                   ></MInput>
                 </div>
-                <div class="col l-5">
+                <div class="col-6">
                   <MInput
                     :ref="textFields.bookName.ref"
                     :label="textFields.bookName.label"
@@ -61,7 +61,7 @@
                     v-model="book.BookName"
                   ></MInput>
                 </div>
-                <div class="col l-4">
+                <div class="col-4">
                   <MInput
                     :ref="textFields.author.ref"
                     :label="textFields.author.label"
@@ -224,7 +224,6 @@ export default {
   },
   mounted() {
     this.$refs[this.textFields.bookCode.ref].setFocus();
-    
   },
   computed: {
     textFields() {
@@ -323,8 +322,8 @@ export default {
      */
     async editBook() {
       try {
+        this.book.QuantityInStock += this.book.QuantityImported;
         var formData = new FormData();
-        console.log(this.book);
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));
         const res = await bookService.put(this.bookIdSelected, formData);

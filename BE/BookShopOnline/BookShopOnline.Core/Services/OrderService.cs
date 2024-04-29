@@ -49,12 +49,12 @@ namespace BookShopOnline.Core.Services
                     item.OrderId = orderId;
                     var result = await _unitOfWork.OrderDetail.InsertAsync(item);
                     var book = await _unitOfWork.Book.GetByIdAsync(item.BookId);
-                    book.QuantityInStock = book.QuantityInStock - item.Quantity;
+                    book.QuantityInStock -= item.Quantity;
                     if(book.QuantitySold == null)
                     {
                         book.QuantitySold = 0;
                     }
-                    book.QuantitySold = book.QuantitySold + item.Quantity;
+                    book.QuantitySold += item.Quantity;
                     await _unitOfWork.Book.UpdateAsync(book.BookId, book);
                     if (result > 0)
                     {
@@ -85,14 +85,24 @@ namespace BookShopOnline.Core.Services
             return ordersDto;
         }
 
-        public async Task<int> CancelOrderAsync(Order order)
+        public async Task<int> CancelOrderAsync(OrderData orderData)
         {
+            var order = orderData.Order;
+            var ordersDetail = orderData.OrderDetails;
             order.OrderStatus = OrderStatus.CANCELLED;
             order.CancellationDate = DateTime.Now;
             _unitOfWork.BeginTransaction();
             var res = await _unitOfWork.Order.UpdateAsync(order.OrderId, order);
             if(res > 0)
             {
+                //cập nhật lại số lượng tồn tại trong kho và số lương bán của từng sản phẩm
+                foreach(var item in ordersDetail)
+                {
+                    var book = await _unitOfWork.Book.GetByIdAsync(item.BookId);
+                    book.QuantityInStock += item.Quantity;
+                    book.QuantitySold -= item.Quantity;
+                    var resUpdate = await _unitOfWork.Book.UpdateAsync(book.BookId, book);
+                }
                 _unitOfWork.Commit();
                 return res;
             }
