@@ -3,6 +3,7 @@ using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Entitites;
 using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Core.Model.Excel;
 using BookShopOnline.Core.Model.Revenue;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -23,7 +24,7 @@ namespace BookShopOnline.Core.Excel
 
         }
 
-        public byte[] ExportRevenueByProduct(List<RevenueProduct> data)
+        public byte[] ExportRevenueByProduct(ExcelRequest<RevenueProduct> excelRequest)
         {
             var stream = new MemoryStream();
             var columns = new string[] { "Tên sách", "Số lượng bán", "Doanh thu" };
@@ -79,6 +80,7 @@ namespace BookShopOnline.Core.Excel
 
                 var properties = typeof(RevenueProduct).GetProperties();
                 var totalCol = properties.ToList().Count;
+                var data = excelRequest.Data;
                 foreach (var item in data)
                 {
                     worksheet.Cells[currentRow, 1].Value = colSTT;
@@ -113,9 +115,9 @@ namespace BookShopOnline.Core.Excel
         }
 
 
-        public byte[] ExportRevenueByTime(List<Order> orders)
+        public byte[] ExportRevenueByTime(ExcelRequest<Order> excelRequest)
         {
-            var ordersDto = orders.Select(item => MapEntityToDto(item));
+            var ordersDto = excelRequest.Data.Select(item => MapEntityToDto(item));
             var columns = new List<string>();
             columns.Add("OrderCode");
             columns.Add("Fullname");
@@ -124,8 +126,8 @@ namespace BookShopOnline.Core.Excel
             columns.Add("ShippingFee");
             columns.Add("TotalProductCost");
             columns.Add("TotalAmount");
-            var title = "Báo cáo doanh thu";
-            var res = ExportExcelAsync(ordersDto.ToList(), title, columns);
+            excelRequest.Columns = columns;
+            var res = ExportExcelAsync(ordersDto.ToList(), excelRequest);
             return res;
         }
 
@@ -146,11 +148,6 @@ namespace BookShopOnline.Core.Excel
             columns.Add("TotalAmount");
             return columns;
 
-        }
-
-        public override string GetTitle()
-        {
-            return "Danh sách đơn hàng";
         }
     }
 }

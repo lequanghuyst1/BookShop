@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="col-3">
-        <div class="notification">
+        <!-- <div class="notification">
           <div class="content__header">
             <div class="content__header-title">
               <h3>Thông báo</h3>
@@ -127,6 +127,21 @@
                 <p class="time">3 phút trước</p>
               </div>
             </div>
+          </div>
+        </div> -->
+        <div class="revenue-product">
+          <div class="content__header">
+            <div class="content__header-title">
+              <h3>Sản phẩm bán chạy nhất</h3>
+            </div>
+          </div>
+          <div class="wrap-chart">
+            <Chart
+              type="doughnut"
+              :data="chartDataPie"
+              :options="chartOptionsPie"
+              style="width: 93%"
+            />
           </div>
         </div>
         <div class="sales-analytis">
@@ -197,9 +212,11 @@ import LineChart from "./LineChart.vue";
 import orderService from "@/utils/OrderService";
 import userService from "@/utils/UserService";
 import { mapGetters } from "vuex";
+import Chart from "primevue/chart";
+
 export default {
   name: "HomeAdminPage",
-  components: { LineChart },
+  components: { LineChart, Chart },
   created() {
     const now = new Date();
     this.year = now;
@@ -212,6 +229,8 @@ export default {
     this.getTotalConfirmedNewOrder();
     this.getTotalNewCustomer();
     this.getCalculateTotalSalesPerMonth();
+    this.getBestSellingProduct();
+    this.chartOptionsPie = this.setChartOptionsPie();
     document.title = "Tổng quan";
   },
   data() {
@@ -231,6 +250,8 @@ export default {
       year: null,
       chartData: {},
       totalRevenue: 0,
+      chartDataPie: null,
+      chartOptionsPie: null,
     };
   },
   computed: {
@@ -242,6 +263,101 @@ export default {
     },
   },
   methods: {
+    async getBestSellingProduct() {
+      try {
+        const params = {
+          typeOfTime: 2,
+          fromDate: this.year,
+          toDate: this.year,
+          quantityFilter: 5,
+        };
+        const res = await orderService.getRevenueByProduct({
+          params,
+        });
+        if (res.status === 200) {
+          const label = res.data.map((item) => item.BookName);
+          var totalProductBestselling = res.data.reduce(
+            (currentValue, item) => currentValue + item.Profit,
+            0
+          );
+          const data = res.data.map((item) => {
+            let percent = (item.Profit / totalProductBestselling) * 100;
+            percent = percent.toFixed(2);
+            return percent;
+          });
+
+          this.totalRevenueByCondition = data.reduce(
+            (previousValue, currentValue) => previousValue + currentValue,
+            0
+          );
+
+          this.chartDataPie = {
+            labels: label,
+            datasets: [
+              {
+                data: data,
+                backgroundColor: [
+                  "#9370DB",
+                  "#87CEEB",
+                  "#FF69B4",
+                  "#4682B4",
+                  "#D2691E",
+                ],
+                hoverBackgroundColor: [
+                  "#9370DB",
+                  "#87CEEB",
+                  "#FF69B4",
+                  "#4682B4",
+                  "#D2691E",
+                ],
+              },
+            ],
+          };
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    setChartOptionsPie() {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue("--text-color");
+
+      return {
+        // plugins: {
+        //   legend: {
+        //     labels: {
+        //       cutout: "60%",
+        //       color: textColor,
+        //     },
+        //   },
+        // },
+        plugins: {
+          labels: {
+            cutout: "10%",
+            color: textColor,
+          },
+          legend: {
+            display: true,
+          },
+          tooltip: {
+            enabled: true,
+          },
+          datalabels: {
+            color: textColor,
+            font: {
+              size: 10,
+            },
+            formatter: (value, context) => {
+              const label = context.chart.data.labels[context.dataIndex];
+              const percentage =
+                (value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100;
+              return `${label}: ${percentage.toFixed(1)}%`;
+            },
+          },
+        },
+      };
+    },
     async getCalculateTotalSalesPerMonth() {
       try {
         const params = {
@@ -364,7 +480,7 @@ export default {
      */
     async getTotalNewCustomer() {
       try {
-        const res = await userService.getTotalCustomer();
+        const res = await userService.getTotalCustomerNewBy24Hours();
         if (res.status === 200) {
           this.totalNewCustomer = res.data;
         }

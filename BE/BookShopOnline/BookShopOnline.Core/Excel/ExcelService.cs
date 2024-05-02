@@ -1,6 +1,7 @@
 ﻿using BookShopOnline.Core.Enums;
 using BookShopOnline.Core.Helper;
 using BookShopOnline.Core.Interfaces.Excel;
+using BookShopOnline.Core.Model.Excel;
 using BookShopOnline.Core.Resources;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -15,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Excel
 {
-    public abstract class ExcelService<TDto> : IExcelService<TDto>
+    public abstract class ExcelService<TDto, TEntity> : IExcelService<TDto, TEntity>
     {
-        public byte[] ExportExcelAsync(IEnumerable<TDto> data,string tilte, List<string>? columns)
+        public byte[] ExportExcelAsync(IEnumerable<TDto> data, ExcelRequest<TEntity> excelRequest)
         {
             var properties = typeof(TDto).GetProperties();
             var stream = new MemoryStream();
@@ -26,17 +27,17 @@ namespace BookShopOnline.Core.Excel
                 // đặt tên người tạo file
                 excelPackage.Workbook.Properties.Author = "LQHUY";
 
-                var worksheet = excelPackage.Workbook.Worksheets.Add(tilte);
+                var worksheet = excelPackage.Workbook.Worksheets.Add(excelRequest.WorksheetName);
 
                 // set style mặc định cho toàn bộ file
                 worksheet.Cells.Style.Font.Size = 14;
                 worksheet.Cells.Style.Font.Name = "Times New Roman";
 
                 // lấy ra số lượng cột cần dùng dựa vào số lượng header
-                var countColHeader = columns.Count();
+                var countColHeader = excelRequest.Columns.Count();
 
                 // gán giá trị cho cell vừa merge
-                worksheet.Cells[1, 1].Value = tilte;
+                worksheet.Cells[1, 1].Value = excelRequest.TitleHeader;
                 // merge các column lại từ column 1 đến số column header và set style
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Merge = true;
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Style.Font.Bold = true;
@@ -49,7 +50,7 @@ namespace BookShopOnline.Core.Excel
                 worksheet.Cells[headerRow, 1].Value = "STT";
 
                 //tạo các header từ column header đã tạo từ bên trên
-                foreach (var column in columns)
+                foreach (var column in excelRequest.Columns)
                 {
                     foreach (var property in properties)
                     {
@@ -78,7 +79,7 @@ namespace BookShopOnline.Core.Excel
                     border.Left.Style =
                     border.Right.Style = ExcelBorderStyle.Thin;
 
-                SetCellValueEnterFileExcel(data, columns, worksheet, properties);
+                SetCellValueEnterFileExcel(data, excelRequest.Columns, worksheet, properties);
 
                 excelPackage.Save();
 

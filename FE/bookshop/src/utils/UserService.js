@@ -37,7 +37,7 @@ class UserService extends BaseService {
     return res;
   }
 
-  async GetTotalCustomerNewBy24Hours() {
+  async getTotalCustomerNewBy24Hours() {
     var res = await this.baseAxios.get(`${this.baseUrl}/TotalNewCustomer`);
     return res;
   }

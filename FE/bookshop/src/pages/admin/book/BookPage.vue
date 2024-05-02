@@ -136,7 +136,6 @@ export default {
     this.loadData();
     this.loadDataImage();
     document.title = "Quản lý sách";
-
   },
   beforeUnmount() {
     this.$emitter.off("updatePageSize", this.updatePageSize);
@@ -152,6 +151,7 @@ export default {
     },
     //Theo dõi biến searchString
     searchString: function () {
+      this.pageNumber = 1;
       this.loadData();
     },
   },
@@ -190,6 +190,7 @@ export default {
               pageSize: this.pageSize,
               pageNumber: this.pageNumber,
             };
+        console.log(this.pageNumber);
         const res = await bookService.getFilterPaging({ params });
         switch (res.status) {
           case 200:

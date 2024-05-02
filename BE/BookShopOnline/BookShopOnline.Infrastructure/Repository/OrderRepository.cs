@@ -67,8 +67,14 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<IEnumerable<OrderDto>> GetByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
             var procName = "Proc_Order_GetByTimeType";
+
+
+            var now = DateTime.Now;
+
+
             fromDate = fromDate.AddDays(1);
             toDate = toDate.AddDays(1);
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
@@ -80,8 +86,13 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<object> CalculateTotalAmountByTypeOfTime(int typeOfTime, DateTime fromDate, DateTime toDate, Guid? categoryId)
         {
             var procName = "Proc_Order_CalculateTotalAmountByTypeOfTime";
+
+            var now = DateTime.Now;
+
             fromDate = fromDate.AddDays(1);
             toDate = toDate.AddDays(1);
+
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);
@@ -95,8 +106,13 @@ namespace BookShopOnline.Infrastructure.Repository
         public async Task<IEnumerable<object>> GetRevenueByProduct(int typeOfTime, DateTime fromDate, DateTime toDate, int quantityFilter, Guid? categoryId)
         {
             var procName = "Proc_Order_CalculateRevenueByProduct";
+
+            var now = DateTime.Now;
+
+
             fromDate = fromDate.AddDays(1);
             toDate = toDate.AddDays(1);
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("typeOfTime", typeOfTime);
             parameters.Add("fromDate", fromDate);

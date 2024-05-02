@@ -41,9 +41,8 @@ export default {
     this.chartOptions = this.setChartOptions();
     this.chartOptionsBar = this.setChartOptionsBar();
     const canvas = document.querySelectorAll(".p-chart canvas");
-    console.log(canvas);
     canvas.forEach((item) => {
-      item.style.width = "650px";
+      item.style.width = "680px";
     });
   },
   methods: {

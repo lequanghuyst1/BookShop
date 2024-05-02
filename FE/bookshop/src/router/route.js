@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LayoutAdmin from "@/components/admin/layout/layout-default/LayoutAdmin.vue";
 import BookPage from "../pages/admin/book/BookPage.vue";
 import CategoryPage from "../pages/admin/category/CategoryPage.vue";
-import PulisherPage from "../pages/admin/publisher/PublisherPage.vue";
+import PulisherPage from "@/pages/admin/publisher/PublisherPage.vue";
 import LoginAdminPage from "../pages/admin/login/Thelogin.vue";
 import OverviewPage from "../pages/admin/home/OverviewPage.vue";
 import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
@@ -26,6 +26,7 @@ import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
 import PayUserPage from "@/pages/user/pay/Pay.vue";
 import OrderPage from "@/pages/user/order/OrderPage.vue";
 import OrderDatail from "@/pages/user/order/OrderDetail.vue";
+import SearchEnginePage from "@/pages/user/search-engine/SearchEngine.vue";
 
 import { checkInfoTokensInStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
@@ -113,6 +114,13 @@ const routes = [
           ViewRouterContainer: PaymentSuccess,
         },
         props: true,
+      },
+      {
+        path: "search-engine/:searchString",
+        name: "search-engine",
+        components: {
+          ViewRouterContainer: SearchEnginePage,
+        },
       },
     ],
   },
@@ -209,8 +217,8 @@ router.beforeEach((to, from, next) => {
   // }
   // else if (to.meta.requiresAuth && user?.RoleName === "Admin") {
   //   next();
-  // } 
-   else {
+  // }
+  else {
     next();
   }
 });

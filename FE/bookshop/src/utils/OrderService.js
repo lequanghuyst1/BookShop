@@ -64,8 +64,8 @@ class OrderService extends BaseService {
     return res;
   }
 
-  async exportRecord(ids) {
-    const res = await this.baseAxios.post(`${this.baseUrl}/Export`, ids, {
+  async exportRecord(data) {
+    const res = await this.baseAxios.post(`${this.baseUrl}/Export`, data, {
       responseType: "blob",
       headers: {
         "Content-Type": "application/json",

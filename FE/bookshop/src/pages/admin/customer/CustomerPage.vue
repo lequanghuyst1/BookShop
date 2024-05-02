@@ -151,6 +151,7 @@ export default {
     },
     //Theo dõi biến searchString
     searchString: function () {
+      this.pageNumber = 1;
       this.loadData();
     },
   },

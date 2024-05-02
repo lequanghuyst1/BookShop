@@ -1,7 +1,7 @@
 <template>
   <div class="content__header">
     <div class="content__header-title">
-      <h3>Quản lý sách</h3>
+      <h3>Quản lý nhà xuất bản</h3>
     </div>
     <div class="content__header-group-button">
       <tippy content="Thêm mới" placement="bottom" animation="scale">
@@ -151,6 +151,7 @@ export default {
     },
     //Theo dõi biến searchString
     searchString: function () {
+      this.pageNumber = 1;
       this.loadData();
     },
   },

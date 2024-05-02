@@ -1,5 +1,8 @@
 <template>
-  <div class="topbar" >
+  <div v-if="isShowOverlay" class="m-dialog">
+    <div class="m-dialog__overlay"></div>
+  </div>
+  <div class="topbar">
     <div class="container">
       <div
         v-if="this.isHeaderFixed === false"
@@ -70,13 +73,21 @@
         <div class="header__search">
           <div class="header__search-box d-flex">
             <input
+              ref="inputIcon"
               class="header__search-input"
               type="text"
               placeholder="Tìm kiếm sản phẩm"
               name=""
+              v-model="searchString"
               id=""
+              @click="
+                () => {
+                  this.isShowOverlay = true;
+                  this.isShowSearchResult = true;
+                }
+              "
             />
-            <div class="header__search-button">
+            <div @click="goToSearchEnginePage" class="header__search-button">
               <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <div
@@ -94,123 +105,45 @@
             </div>
           </div>
           <div v-if="isShowSearchResult" class="header__search-result">
-            <div class="header__search-result-item d-flex">
+            <a
+              v-for="book in booksFilter"
+              :key="book.BookId"
+              class="header__search-result-item d-flex"
+              :href="'http://localhost:8080/' + book.BookSlug"
+              @click="
+                () => {
+                  this.isShowOverlay = false;
+                  this.isShowSearchResult = false;
+                }
+              "
+            >
               <div class="header__search-result-item-image">
-                <img
-                  style="height: 100%"
-                  src="../../../assets/img/anh-mau.jpg"
-                  alt=""
-                />
+                <img style="height: 100%" :src="book.ImagePath" alt="" />
               </div>
               <div
                 class="header__search-result-item-info ms-2 w-100 text-start"
               >
                 <div class="item-name">
-                  <h5>Sự ỷ lại nguy hiểm</h5>
+                  <h5>{{ book.BookName }}</h5>
                 </div>
                 <div class="item-price d-flex">
-                  <span class="item-price--discount">46.000đ</span>
+                  <span class="item-price--discount">
+                    {{ this.$helper.formatMoney(book.OriginalPrice) }} đ</span
+                  >
                   <span
                     class="item-price--original ms-3 text-decoration-line-through"
-                    >79.000đ</span
+                    >{{ this.$helper.formatMoney(book.Price) }} đ</span
                   >
                 </div>
               </div>
-            </div>
-            <div class="header__search-result-item d-flex">
-              <div class="header__search-result-item-image">
-                <img
-                  style="height: 100%"
-                  src="../../../assets/img/anh-mau.jpg"
-                  alt=""
-                />
-              </div>
-              <div
-                class="header__search-result-item-info ms-2 w-100 text-start"
-              >
-                <div class="item-name">
-                  <h5>Sự ỷ lại nguy hiểm</h5>
-                </div>
-                <div class="item-price d-flex">
-                  <span class="item-price--discount">46.000đ</span>
-                  <span
-                    class="item-price--original ms-3 text-decoration-line-through"
-                    >79.000đ</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="header__search-result-item d-flex">
-              <div class="header__search-result-item-image">
-                <img
-                  style="height: 100%"
-                  src="../../../assets/img/anh-mau.jpg"
-                  alt=""
-                />
-              </div>
-              <div
-                class="header__search-result-item-info ms-2 w-100 text-start"
-              >
-                <div class="item-name">
-                  <h5>Sự ỷ lại nguy hiểm</h5>
-                </div>
-                <div class="item-price d-flex">
-                  <span class="item-price--discount">46.000đ</span>
-                  <span
-                    class="item-price--original ms-3 text-decoration-line-through"
-                    >79.000đ</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="header__search-result-item d-flex">
-              <div class="header__search-result-item-image">
-                <img
-                  style="height: 100%"
-                  src="../../../assets/img/anh-mau.jpg"
-                  alt=""
-                />
-              </div>
-              <div
-                class="header__search-result-item-info ms-2 w-100 text-start"
-              >
-                <div class="item-name">
-                  <h5>Sự ỷ lại nguy hiểm</h5>
-                </div>
-                <div class="item-price d-flex">
-                  <span class="item-price--discount">46.000đ</span>
-                  <span
-                    class="item-price--original ms-3 text-decoration-line-through"
-                    >79.000đ</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="header__search-result-item d-flex">
-              <div class="header__search-result-item-image">
-                <img
-                  style="height: 100%"
-                  src="../../../assets/img/anh-mau.jpg"
-                  alt=""
-                />
-              </div>
-              <div
-                class="header__search-result-item-info ms-2 w-100 text-start"
-              >
-                <div class="item-name">
-                  <h5>Sự ỷ lại nguy hiểm</h5>
-                </div>
-                <div class="item-price d-flex">
-                  <span class="item-price--discount">46.000đ</span>
-                  <span
-                    class="item-price--original ms-3 text-decoration-line-through"
-                    >79.000đ</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="header__search-result-footer">
-              Xem thêm 200 sản phẩm
+            </a>
+
+            <div
+              v-if="totalRecord > this.paramFilter.pageSize"
+              class="header__search-result-footer"
+              @click="goToSearchEnginePage"
+            >
+              Xem thêm {{ totalRecord }} sản phẩm
             </div>
           </div>
         </div>
@@ -441,17 +374,46 @@ import { removeAllInfoTokenToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 import userService from "@/utils/UserService";
 import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import bookService from "@/utils/BookService";
+import { mapActions } from "vuex";
 export default {
   name: "TheHeaderUser",
   components: { TheLogin },
+  data() {
+    return {
+      isShowLoadingInput: false,
+      isShowIconClose: false,
+      isShowSearchResult: false,
+      isShowOverlay: false,
+      formAccount: this.$Enum.FormAccount.Login,
+      isShowFormLoginOrRegister: false,
+      isShowDropDownAccount: false,
+      isShowWaringLogin: false,
+      quantityOfCart: 0,
+      isHeaderFixed: false,
+      searchString: null,
+      booksFilter: [],
+      paramFilter: {
+        pageSize: 4,
+        pageNumber: 1,
+        searchString: null,
+      },
+      totalRecord: 0,
+    };
+  },
   created() {
     this.$emitter.on("getQuantityOfCart", this.getQuantityOfCart);
     this.getQuantityOfCart();
   },
   mounted() {
+    this.getBooksFilterData();
     document.addEventListener("click", (e) => {
       if (!e.target.closest("#btn-account")) {
         this.isShowDropDownAccount = false;
+      }
+      if (!e.target.closest(".header__search")) {
+        this.isShowSearchResult = false;
+        this.isShowOverlay = false;
       }
     });
     document.addEventListener("scroll", () => {
@@ -476,8 +438,56 @@ export default {
       return localStorageService.getItemFromLocalStorage("userInfo");
     },
   },
-  watch: {},
+  watch: {
+    /**
+     * Gán lại cho giá trị truyền vào
+     * @param {string} newValue
+     * Author: (03/01/2024)
+     */
+    searchString: function (newValue) {
+      this.isShowLoadingInput = true;
+      this.isShowIconClose = false;
+      clearTimeout(this.timeoutHandler);
+      this.timeoutHandler = setTimeout(() => {
+        this.isShowLoadingInput = false;
+        if (newValue === null || newValue === "") {
+          this.isShowIconClose = false;
+        } else {
+          this.isShowIconClose = true;
+        }
+        this.getBooksFilterData();
+        this.setSearchString(newValue);
+      }, 500);
+    },
+  },
   methods: {
+    ...mapActions(["setSearchString"]),
+
+    /**
+     * Xóa bỏ dữ liệu trên ô tìm kiếm
+     * Author: Author: (03/01/2024)
+     */
+    clearValueInput() {
+      this.searchString = "";
+      this.isShowIconClose = false;
+      this.$refs["inputIcon"].focus();
+    },
+    async getBooksFilterData() {
+      try {
+        const params = {
+          pageSize: 5,
+          pageNumber: 1,
+          searchString: this.searchString,
+        };
+        const res = await bookService.getFilterPaging({ params });
+        if (res.status === 200) {
+          this.booksFilter = res.data.Data;
+          this.totalRecord = res.data.TotalRecord;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     /**
      * Thực hiện lẩy ra tổng số lượng sản phẩm trong cart
      * @author LQHUY(09/04/2024)
@@ -544,19 +554,10 @@ export default {
         this.isShowWaringLogin = true;
       }
     },
-  },
-  data() {
-    return {
-      isShowLoadingInput: false,
-      isShowIconClose: false,
-      isShowSearchResult: false,
-      formAccount: this.$Enum.FormAccount.Login,
-      isShowFormLoginOrRegister: false,
-      isShowDropDownAccount: false,
-      isShowWaringLogin: false,
-      quantityOfCart: 0,
-      isHeaderFixed: false,
-    };
+    goToSearchEnginePage() {
+      location.href =
+        "http://localhost:8080/search-engine/" + this.searchString;
+    },
   },
 };
 </script>
@@ -568,6 +569,7 @@ export default {
   color: #fff;
   min-height: 40px;
   background-color: #ff5653;
+  z-index: 10;
 }
 .item {
   margin-right: 30px;
@@ -847,6 +849,9 @@ export default {
   border-radius: 50%;
   border: 1px solid #fff;
 }
+.header {
+  z-index: 10;
+}
 .header__logo {
   flex-shrink: 0;
 }
@@ -918,29 +923,34 @@ export default {
   top: calc(100% + 5px);
   width: 100%;
   overflow: hidden;
-  max-height: 365px;
+  max-height: 450px;
   border-radius: 4px;
   box-shadow: 0 2px 5px #bbb9b9;
+  z-index: 2;
 }
 .header__search-result-footer {
-  position: absolute;
   font-size: 14px;
   background-color: #fff;
   padding: 10px 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  cursor: pointer;
+}
+.header__search-result-footer:hover{
+  background-color: #ecebeb;
 }
 .header__search-result-item {
   padding: 10px;
   border-bottom: 1px dashed #ccc;
+}
+.header__search-result-item:hover {
+  background-color: #ecebeb;
+  cursor: pointer;
 }
 .header__search-result-item-image {
   width: 70px;
   height: 60px;
 }
 .item-name h5 {
-  font-size: 16px;
+  font-size: 15px;
   color: #333;
   margin-bottom: 4px !important;
 }
@@ -949,6 +959,7 @@ export default {
 }
 .item-price--discount {
   font-weight: 600;
+  color: #333;
 }
 .item-price--original {
   color: #797979;

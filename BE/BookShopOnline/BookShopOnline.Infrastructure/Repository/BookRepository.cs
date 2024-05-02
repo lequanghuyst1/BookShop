@@ -29,6 +29,7 @@ namespace BookShopOnline.Infrastructure.Repository
             var priceRangesConditions = new List<string>();
             var filterConditions = new List<string>();
             var publisherConditions = new List<string>();
+            var categorySlugConditions = new List<string>();
             var parameters = new DynamicParameters();
             var rangeColumn = filter.RangeColumn;
             var filterInput = filter.FilterInput;
@@ -46,6 +47,12 @@ namespace BookShopOnline.Infrastructure.Repository
             {
                 query = @"Select * from view_book where CategorySlug = @CategorySlug ";
                 parameters.Add("CategorySlug", filter.Slug);
+            }
+
+            if (!string.IsNullOrEmpty(filter.SearchString))
+            {
+                query += "AND BookName LIKE CONCAT ('%',@searchString,'%')";
+                parameters.Add("searchString", filter.SearchString);
             }
 
             //kiểm tra xem có lọc theo giá tiền hay k
@@ -74,15 +81,24 @@ namespace BookShopOnline.Infrastructure.Repository
                         filterConditions.Add($"{filterInput[i].ColumnName} = @{paramInput}");
                         parameters.Add(paramInput, filterInput[i].Value);
                     }
-                    else if (filterInput[i].ColumnName == "PublisherName")
+                    if (filterInput[i].ColumnName == "PublisherName")
                     {
                         var paramInput = $"value{i}";
                         publisherConditions.Add($"{filterInput[i].ColumnName} = @{paramInput}");
                         parameters.Add(paramInput, filterInput[i].Value);
                     }
+                    if (filterInput[i].ColumnName == "CategoryName")
+                    {
+                        var paramInput = $"value{i}";
+                        categorySlugConditions.Add($"{filterInput[i].ColumnName} = @{paramInput}");
+                        parameters.Add(paramInput, filterInput[i].Value);
+                    }
+
                 }
                 string filterConditionString = string.Join(" OR ", filterConditions);
                 string publisherConditionsString = string.Join(" OR ", publisherConditions);
+                string categorySlugConditonsString = string.Join(" OR ", categorySlugConditions);
+
                 if (!string.IsNullOrEmpty(filterConditionString))
                 {
                     query += $" AND ({filterConditionString}) ";
@@ -90,6 +106,10 @@ namespace BookShopOnline.Infrastructure.Repository
                 if (!string.IsNullOrEmpty(publisherConditionsString))
                 {
                     query += $" AND ({publisherConditionsString}) ";
+                }
+                if (!string.IsNullOrEmpty(categorySlugConditonsString))
+                {
+                    query += $" AND ({categorySlugConditonsString}) ";
                 }
             }
 
@@ -135,17 +155,20 @@ namespace BookShopOnline.Infrastructure.Repository
             return pagingEntity;
         }
 
-        public async Task<List<string>> GetAuthorByCategorySlugAsync(string categorySlug)
+        public async Task<List<string>> GetAuthorByCategorySlugAsync(string? categorySlug)
         {
-            var sqlCommand = "Select DISTINCT Author From view_book where CategorySlug = @CategorySlug";
+            var sqlCommand = "Select DISTINCT Author From view_book where @CategorySlug IS NULL OR CategorySlug = @CategorySlug";
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("CategorySlug", categorySlug);
             var res = await _dbContext.Connection.QueryAsync<string>(sqlCommand, parameters);
             return res.ToList();
         }
-        public async Task<List<string>> GetPublisherByCategorySlugAsync(string categorySlug)
+        public async Task<List<string>> GetPublisherByCategorySlugAsync(string? categorySlug)
         {
-            var sqlCommand = "Select DISTINCT PublisherName From view_book where CategorySlug = @CategorySlug";
+
+            var sqlCommand = "Select DISTINCT PublisherName From view_book where @CategorySlug IS NULL OR CategorySlug = @CategorySlug";
+            
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("CategorySlug", categorySlug);
             var res = await _dbContext.Connection.QueryAsync<string>(sqlCommand, parameters);

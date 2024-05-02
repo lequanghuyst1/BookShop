@@ -1,6 +1,11 @@
 <template>
   <div class="chart-container ms-3">
-    <Chart type="line" :data="chartData" :options="chartOptions" />
+    <Chart
+      type="line"
+      :data="chartData"
+      :options="chartOptions"
+      style="width: 100%"
+    />
   </div>
 </template>
 
@@ -12,7 +17,7 @@ export default {
     chartData: {
       type: Object,
       required: true,
-    }
+    },
   },
   data() {
     return {

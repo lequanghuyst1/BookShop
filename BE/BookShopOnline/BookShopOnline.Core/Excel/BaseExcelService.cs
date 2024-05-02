@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookShopOnline.Core.Interfaces.Excel;
 using BookShopOnline.Core.Interfaces.Infrastructures;
+using BookShopOnline.Core.Model.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Excel
 {
-    public abstract class BaseExcelService<TEntity, TDto> : ExcelService<TDto>, IBaseExcelService<TEntity>
+    public abstract class BaseExcelService<TEntity, TDto> : ExcelService<TDto, TEntity>, IBaseExcelService<TEntity>
     {
-         IBaseRepository<TEntity> _baseRepository;
+        IBaseRepository<TEntity> _baseRepository;
         protected IMapper _mapper;
 
         public BaseExcelService(IBaseRepository<TEntity> baseRepository, IMapper mapper)
@@ -20,23 +21,21 @@ namespace BookShopOnline.Core.Excel
             _mapper = mapper;
         }
 
-        public async Task<byte[]> ExportAllAsync()
+        public async Task<byte[]> ExportAllAsync(ExcelRequest<TEntity> excelRequest)
         {
             var data = await _baseRepository.GetAllAsync();
             var dataEnities = data.Select(item => MapEntityToDto(item));
-            var columns = GetColumns();
-            var title = GetTitle();
-            var bytes = ExportExcelAsync(dataEnities,title, columns);
+            excelRequest.Columns = GetColumns();
+            var bytes = ExportExcelAsync(dataEnities, excelRequest);
             return bytes;
         }
 
-        public async Task<byte[]> ExportListAsync(List<Guid> ids)
+        public async Task<byte[]> ExportListAsync(ExcelRequest<TEntity> excelRequest)
         {
-            var data = await _baseRepository.GetByIdsAsync(ids);
-            var columns = GetColumns();
-            var title = GetTitle();
+            var data = await _baseRepository.GetByIdsAsync(excelRequest.EntityIds);
+            excelRequest.Columns = GetColumns();
             var dataEnities = data.Select(item => MapEntityToDto(item));
-            var bytes = ExportExcelAsync(dataEnities, title, columns);
+            var bytes = ExportExcelAsync(dataEnities, excelRequest);
             return bytes;
         }
 
@@ -46,6 +45,6 @@ namespace BookShopOnline.Core.Excel
             return entityDto;
         }
         public abstract List<String> GetColumns();
-        public abstract string GetTitle();
+
     }
 }

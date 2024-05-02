@@ -59,7 +59,7 @@ namespace BookShopOnline.Api.Controllers
         /// </returns>
         /// Created By: LQHUY(16/04/2024)
         [HttpGet("GetAuthor")]
-        public async Task<IActionResult> GetAuthorAsync(string categorySlug)
+        public async Task<IActionResult> GetAuthorAsync(string? categorySlug)
         {
             var res = await _bookRepository.GetAuthorByCategorySlugAsync(categorySlug);
             return Ok(res);
@@ -74,7 +74,7 @@ namespace BookShopOnline.Api.Controllers
         /// </returns>
         /// Created By: LQHUY(16/04/2024)
         [HttpGet("GetPublisher")]
-        public async Task<IActionResult> GetPublisherAsync(string categorySlug)
+        public async Task<IActionResult> GetPublisherAsync(string? categorySlug)
         {
             var res = await _bookRepository.GetPublisherByCategorySlugAsync(categorySlug);
             return Ok(res);

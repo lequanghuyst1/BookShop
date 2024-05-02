@@ -50,7 +50,7 @@
         />
       </div>
       <button
-        @click="this.getOrdersData"
+        @click="handleOnFilter"
         data-v-208e19d7=""
         class="search m-button"
         style="background-color: rgb(0, 81, 200)"
@@ -384,6 +384,7 @@ export default {
     },
     //Theo dõi biến searchString
     "filterData.searchString": function () {
+      this.filterData.pageNumber = 1;
       this.getOrdersData();
     },
   },
@@ -718,8 +719,12 @@ export default {
     async exportAllRecord() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-
-        let res = await orderService.exportRecord([]);
+        const excelRequest = {
+          TitleHeader: "Danh sách đơn hàng",
+          EntityIds: [],
+          WorksheetName: "Danh sách đơn hàng",
+        };
+        let res = await orderService.exportRecord(excelRequest);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
@@ -742,7 +747,12 @@ export default {
      */
     async exportListRecord() {
       try {
-        let res = await orderService.exportRecord(this.orderIdsSelected);
+        const excelRequest = {
+          TitleHeader: "Danh sách đơn hàng",
+          EntityIds: this.orderIdsSelected,
+          WorksheetName: "Danh sách đơn hàng",
+        };
+        let res = await orderService.exportRecord(excelRequest);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
@@ -756,6 +766,10 @@ export default {
         this.$emitter.emit("handleApiError", error);
         this.$emitter.emit("toggleShowLoading", false);
       }
+    },
+    handleOnFilter() {
+      this.filterData.pageNumber = 1;
+      this.getOrdersData();
     },
   },
 };

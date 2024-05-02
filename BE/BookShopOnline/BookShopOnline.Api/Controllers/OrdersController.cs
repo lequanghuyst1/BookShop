@@ -6,6 +6,7 @@ using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using BookShopOnline.Core.Interfaces.Services.Base;
 using BookShopOnline.Core.Model;
+using BookShopOnline.Core.Model.Excel;
 using BookShopOnline.Core.Model.Revenue;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -141,41 +142,41 @@ namespace BookShopOnline.Api.Controllers
         /// </returns>
         /// Created by: LQHUY(06/01/2024)
         [HttpPost("Export")]
-        public async Task<IActionResult> ExportToExcel([FromBody] List<Guid>? ids)
+        public async Task<IActionResult> ExportToExcel([FromBody] ExcelRequest<Order> excelRequest)
         {
             var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             var fileName = "Danh sách đơn hàng";
-            if (ids?.Count() > 0)
+            if (excelRequest.EntityIds?.Count() > 0)
             {
-                var bytes = await _orderExcelService.ExportListAsync(ids);
+                var bytes = await _orderExcelService.ExportListAsync(excelRequest);
                 return File(bytes, contenType, fileName);
             }
-            var res = await _orderExcelService.ExportAllAsync();
+            var res = await _orderExcelService.ExportAllAsync(excelRequest);
 
             return File(res, contenType, fileName);
         }
 
         [HttpPost("Export/[action]")]
-        public IActionResult ExportRevenueByTime(List<Order> orders)
+        public IActionResult ExportRevenueByTime(ExcelRequest<Order> excelRequest)
         {
             var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             var fileName = "Thống kê doanh thu";
 
-            var res = _orderExcelService.ExportRevenueByTime(orders);
+            var res = _orderExcelService.ExportRevenueByTime(excelRequest);
 
             return File(res, contenType, fileName);
         }
 
         [HttpPost("Export/[action]")]
-        public IActionResult ExportRevenueByProduct(List<RevenueProduct> data)
+        public IActionResult ExportRevenueByProduct(ExcelRequest<RevenueProduct> excelRequest)
         {
             var contenType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
             var fileName = "Thống kê doanh thu";
 
-            var res = _orderExcelService.ExportRevenueByProduct(data);
+            var res = _orderExcelService.ExportRevenueByProduct(excelRequest);
 
             return File(res, contenType, fileName);
         }

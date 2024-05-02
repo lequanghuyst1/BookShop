@@ -1,6 +1,5 @@
 .filter-wrap {
   display: flex;
-  border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   padding: 8px 0;
 }
@@ -103,7 +102,12 @@
 }
 .data-grid {
   background-color: #fff;
-  height: 380px;
+  height: 390px;
   border-radius: 6px;
   overflow: hidden;
+}
+.wrap-chart {
+  padding: 12px;
+  background-color: #fff;
+  text-align: center;
 }

@@ -227,7 +227,9 @@
                   </p>
                 </div>
                 <div v-if="checkDataIsNotEmpty" class="col-12 mt-1">
-                  <p class="note-msg" style="">Hiện chưa có sản phẩm nào trong danh mục này.</p>
+                  <p class="note-msg" style="">
+                    Hiện chưa có sản phẩm nào trong danh mục này.
+                  </p>
                 </div>
                 <div v-for="item in products" :key="item.BookId" class="col-3">
                   <div class="product-item">
@@ -376,7 +378,8 @@ export default {
           label: "Mới nhất",
         },
         rangeColumn: [],
-        filterInput: [],
+        filterInput: [
+        ],
       },
       //danh sách các điều kiện tăng dần hoặc giảm dần
       sortOptions: [
@@ -547,7 +550,7 @@ export default {
         const res = await categoryService.getBySlug(this.$route.params.slug);
         if (res.status === 200) {
           this.category = res.data;
-          document.title = "Sách " + this.category.CategoryName; 
+          document.title = "Sách " + this.category.CategoryName;
         }
       } catch (error) {
         console.log(error);
@@ -625,6 +628,9 @@ export default {
         if (res.status === 200) {
           this.products = res.data.Data;
           this.totalPage = res.data.TotalPage;
+          // this.filterData.filterInput = this.filterData.filterInput.filter(
+          //   (item) => item.ColumnName !== "CategorySlug"
+          // );
           this.$emitter.emit("toggleShowLoading", false, 300);
         }
       } catch (error) {

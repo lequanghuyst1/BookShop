@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
-import { createStore } from 'vuex'
 //in main.js
 import "primevue/resources/themes/aura-light-green/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -26,9 +25,7 @@ import MCombobox from "./components/base/combobox/MCombobox.vue";
 import MDropdown from "./components/base/dropdown/MDropdown.vue";
 import MTextarea from "./components/base/textarea/MTextarea.vue";
 
-
 import Calendar from "primevue/calendar";
-
 
 import tinyEmitter from "tiny-emitter/instance";
 import Enum from "./js/resource/enum";
@@ -45,8 +42,6 @@ import "tippy.js/animations/scale-extreme.css";
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-
-
 
 const app = createApp(App);
 
@@ -76,27 +71,45 @@ app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$axios = axios;
 
+
+import { createStore } from "vuex";
+
+// import stores from "@/js/store/index.js"
 // Create a new store instance.
 const store = createStore({
-  state () {
+  state() {
     return {
-      count: 1000
-    }
+      count: 1000,
+      seachString: "",
+    };
   },
   getters: {
-    getCount(state){
-      return state.count
-    }
+    getCount(state) {
+      return state.count;
+    },
+    searchString: (state) => state.seachString,
   },
   mutations: {
-    increment (state) {
-      state.count++
-    }
-  }
-})
+    increment(state) {
+      state.count++;
+    },
+    setSearchString(state, string) {
+      state.seachString = string;
+      console.log(state.seachString)
+    },
+  },
+  actions: {
+    setSearchString({ commit }, string) {
+      commit("setSearchString", string);
+    },
+    setSearchStringDefault({ commit }) {
+      commit("setSearchString", "");
+    },
+  },
+});
 
 // Install the store instance as a plugin
-app.use(store)
+app.use(store);
 app.use(
   VueTippy,
   // optional

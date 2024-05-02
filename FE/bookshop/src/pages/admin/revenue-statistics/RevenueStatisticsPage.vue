@@ -1,6 +1,6 @@
 <template>
   <div class="revenue-statistics">
-    <div>Báo cáo doanh thu</div>
+    <!-- <div>Báo cáo doanh thu</div> -->
     <div class="filter-wrap">
       <div
         class="filter-item"
@@ -91,76 +91,6 @@
             </div>
           </div>
         </div>
-        <!-- <div
-          v-if="selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH"
-          class="time wrap-month"
-        >
-          <div class="item">
-            <div class="item-title">Tháng bắt đầu</div>
-            <div class="item-condition">
-              <Calendar
-                placeholder="MM/YYYY"
-                v-model="rangeMonth.startMonth"
-                showIcon
-                view="month"
-                :showOnFocus="false"
-                iconDisplay="input"
-                dateFormat="mm/yy"
-                class="w-100"
-              />
-            </div>
-          </div>
-          <div class="item">
-            <div class="item-title">Tháng kết thúc</div>
-            <div class="item-condition">
-              <Calendar
-                v-model="rangeMonth.endMonth"
-                placeholder="MM/YYYY"
-                showIcon
-                view="month"
-                :showOnFocus="false"
-                iconDisplay="input"
-                dateFormat="mm/yy"
-                class="w-100"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          v-if="selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.YEAR"
-          class="time wrap-year"
-        >
-          <div class="item">
-            <div class="item-title">Năm bắt đầu</div>
-            <div class="item-condition">
-              <Calendar
-                placeholder="YYYY"
-                v-model="rangeYear.startYear"
-                showIcon
-                view="year"
-                :showOnFocus="false"
-                iconDisplay="input"
-                dateFormat="yy"
-                class="w-100"
-              />
-            </div>
-          </div>
-          <div class="item">
-            <div class="item-title">Năm kết thúc</div>
-            <div class="item-condition">
-              <Calendar
-                v-model="rangeYear.endYear"
-                placeholder="YYYY"
-                showIcon
-                view="year"
-                :showOnFocus="false"
-                iconDisplay="input"
-                dateFormat="yy"
-                class="w-100"
-              />
-            </div>
-          </div>
-        </div> -->
         <div class="item">
           <div class="item-condition">
             <button
@@ -197,22 +127,22 @@
         </div>
       </div>
       <div class="revenue-item">
-        <div class="revenue-item__icon">
+        <!-- <div class="revenue-item__icon">
           <i class="fa-solid fa-sack-dollar"></i>
         </div>
         <div class="revenue-item__content">
           <p><b>288.002.111</b></p>
           <p>Doanh thu từ thanh toán Online</p>
-        </div>
+        </div> -->
       </div>
       <div class="revenue-item">
-        <div class="revenue-item__icon">
+        <!-- <div class="revenue-item__icon">
           <i class="fa-solid fa-sack-dollar"></i>
         </div>
         <div class="revenue-item__content">
           <p><b>288.002.111</b></p>
           <p>Doanh thu từ COD</p>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="revenue-chart mt-2">
@@ -241,8 +171,14 @@
           Xuất Excel
         </p>
       </div>
-      <div v-if="this.viewMode === 1" class="wrap-chart">
-        <div class="wrap-chart-title">Doanh thu theo thời gian</div>
+      <div v-if="this.viewMode === 1" class="wrap-chart mt-1">
+        <div class="wrap-chart-title">
+          {{
+            this.selectedTypeRenvenueValue === 0
+              ? "Doanh thu"
+              : "Top sản phẩm bán chạy nhất"
+          }}
+        </div>
         <RevenueChart
           :chartData="chartData"
           :selectedTypeRenvenueValue="selectedTypeRenvenueValue"
@@ -423,9 +359,45 @@ export default {
       this.fromDate = null;
       this.toDate = null;
     },
-   
+
     selectedTypeRenvenueValue: function () {
       this.getDataChartAndGridWithTypeRevenue();
+    },
+  },
+  computed: {
+    titleHeaderFileExcel: function () {
+      if (this.selectedTypeOfTime.value === 0) {
+        if (this.fromDate.getDay() === this.toDate.getDay()) {
+          return `Thống kê doanh thu (ngày ${this.$helper.formatDate(
+            this.fromDate
+          )}`;
+        } else {
+          return `Thống kê doanh thu (${this.$helper.formatDate(
+            this.fromDate
+          )} - ${this.$helper.formatDate(this.toDate)})`;
+        }
+      } else if (this.selectedTypeOfTime.value === 1) {
+        if (
+          this.fromDate.getMonth() === this.toDate.getMonth() &&
+          this.fromDate.getFullYear() === this.toDate.getFullYear()
+        ) {
+          return `Thống kê doanh thu (tháng ${this.fromDate.getMonth() + 1})`;
+        } else {
+          return `Thống kê doanh thu (tháng ${
+            this.fromDate.getMonth() + 1
+          }/${this.fromDate.getFullYear()} - ${
+            this.toDate.getMonth() + 1
+          }/${this.toDate.getFullYear()})`;
+        }
+      } else if (this.selectedTypeOfTime.value === 2) {
+        if (this.fromDate.getFullYear() === this.toDate.getFullYear()) {
+          return `Thống kê doanh thu (năm ${this.toDate.getFullYear()})`;
+        } else {
+          return `Thống kê doanh thu (năm ${this.fromDate.getFullYear()} - ${this.toDate.getFullYear()} )`;
+        }
+      } else {
+        return "Thống kê doanh thu";
+      }
     },
   },
   methods: {
@@ -476,7 +448,7 @@ export default {
             labels: label,
             datasets: [
               {
-                label: "VNĐ",
+                label: "Doanh thu",
                 type: "line",
                 backgroundColor: ["rgba(249, 115, 22, 0.2)"],
                 borderColor: ["rgb(249, 115, 22)"],
@@ -586,7 +558,13 @@ export default {
     async exportRenvenueByTime() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        const res = await orderService.exportRevenueByTime(this.gridData);
+        const excelRequest = {
+          TitleHeader: this.titleHeaderFileExcel,
+          EntityIds: this.orderIdsSelected,
+          Data: this.gridData,
+          WorksheetName: "Thống kê doanh thu",
+        };
+        const res = await orderService.exportRevenueByTime(excelRequest);
         console.log(res);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

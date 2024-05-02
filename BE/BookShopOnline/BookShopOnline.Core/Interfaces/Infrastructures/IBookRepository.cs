@@ -49,7 +49,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// danh sách các tác giả
         /// </returns>
         /// Created By: LQHUY(16/04/2024)
-        Task<List<string>> GetAuthorByCategorySlugAsync(string categorySlug);
+        Task<List<string>> GetAuthorByCategorySlugAsync(string? categorySlug);
 
         /// <summary>
         /// Hàm lấy ra danh sách các nhà xuất bản của sách theo categorySlug
@@ -59,7 +59,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// danh sách các nhà xuất bản
         /// </returns>
         /// Created By: LQHUY(16/04/2024)
-        Task<List<string>> GetPublisherByCategorySlugAsync(string categorySlug);
+        Task<List<string>> GetPublisherByCategorySlugAsync(string? categorySlug);
 
     }
 }

@@ -132,6 +132,7 @@ export default {
       if (newValue === 1) {
         this.startIndex = 1;
         this.endIndex = newValue * this.pageSize;
+        this.pageCurrent = newValue;
       }
     },
   },
