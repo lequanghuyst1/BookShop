@@ -224,7 +224,7 @@ const TEXT_FIELD = {
         placeholder: "Nhập số điện thoại",
         rules: {
           lengthMax: 50,
-          required: false,
+          required: true,
           rule: ['phoneNumber'],
         },
       },

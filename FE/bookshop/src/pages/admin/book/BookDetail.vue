@@ -351,6 +351,7 @@ export default {
           case 200:
             this.book = res.data;
             this.book.QuantityImported = Number(0);
+            this.$emitter.emit("toggleShowLoading", false);
             break;
           default:
             break;
@@ -371,6 +372,8 @@ export default {
         switch (res.status) {
           case 200:
             this.book.BookCode = res.data;
+            this.$emitter.emit("toggleShowLoading", false);
+
             break;
           default:
             break;

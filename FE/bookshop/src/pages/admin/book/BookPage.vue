@@ -233,6 +233,7 @@ export default {
       this.bookIdSelected = null;
       this.isShowForm = true;
       this.formMode = this.$Enum.FormMode.Add;
+      this.$emitter.emit("toggleShowLoading", true);
     },
 
     /**
@@ -244,6 +245,7 @@ export default {
       this.bookIdSelected = id;
       this.isShowForm = true;
       this.formMode = this.$Enum.FormMode.Edit;
+      this.$emitter.emit("toggleShowLoading", true);
     },
 
     /**

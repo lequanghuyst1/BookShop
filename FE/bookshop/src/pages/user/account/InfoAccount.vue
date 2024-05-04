@@ -28,14 +28,38 @@
         :rules="textFields.email.rules"
         v-model="user.Email"
       ></InputAccount>
-      <InputAccount
+      <!-- <InputAccount
         id="address"
         :label="textFields.address.label"
         :placeholder="textFields.address.placeholder"
         :ref="textFields.address.ref"
         :rules="textFields.address.rules"
         v-model="user.address"
-      ></InputAccount>
+      ></InputAccount> -->
+
+      <div class="row group-input-account">
+        <div class="input-label">
+          <label for="" class="">Giới tính</label>
+        </div>
+        <div class="col-8 d-flex align-items-center">
+          <label
+            v-for="item in this.$Enum.GENDER"
+            :key="item"
+            class="warrap__input-radio"
+            ><p class="ms-2">
+              {{ this.$helper.hanldeValueTypeEnum("GENDER", item) }}
+            </p>
+            <input
+              type="radio"
+              name="gender"
+              :value="item"
+              v-model="user.Gender"
+            />
+            <span class="checkmark"></span>
+          </label>
+          <span class="m-error-message"></span>
+        </div>
+      </div>
 
       <div class="row group-input-account group-input-dateofbirth">
         <div class="input-label">
@@ -128,23 +152,27 @@ import TEXT_FIELD from "@/js/resource/text-field";
 export default {
   name: "InfoAccountUserPage",
   components: { InputAccount },
-  created() {
-  },
+  created() {},
   mounted() {
     this.$refs[this.textFields.fullname.ref].focusInput();
     this.user = localStorageService.getItemFromLocalStorage("userInfo")
       ? localStorageService.getItemFromLocalStorage("userInfo")
       : {};
-      document.title = "Thông tin tài khoản"
-
+    const dob = this.$helper.formatDate(this.user.DateOfBirth);
+    const parts = dob.split("/");
+    this.date = parts[1];
+    this.month = parts[0];
+    this.year = parts[2];
+    console.log(parts)
+    document.title = "Thông tin tài khoản";
   },
   watch: {
     date(newValue) {
       if (newValue > 31) {
         this.date = 31;
       }
-      if (newValue < 1) {
-        this.date = 1;
+      if (newValue < 0) {
+        this.date = 0;
       }
     },
     month(newValue) {
@@ -174,11 +202,6 @@ export default {
     },
   },
   methods: {
-    onShowBlockChangePassword() {
-      // console.log(this.$refs[this.textFields.currentPassword.ref])
-      // this.$refs[this.textFields.currentPassword.ref].focusInput();
-    },
-
     /**
      * Thực hiện save khi click vào btn lưu thông tin
      * Author: LQHUY(08/04/2024)
@@ -250,7 +273,7 @@ export default {
       try {
         this.$emitter.emit("toggleShowLoading", true);
 
-        //this.user.DateOfBirth = this.date + "/" + this.month + "/" + this.year;
+        this.user.DateOfBirth = this.date + "/" + this.month + "/" + this.year;
         var formData = new FormData();
         formData.append("dataJson", JSON.stringify(this.user));
 
@@ -274,10 +297,7 @@ export default {
           //Lấy lại thông tin người dùng lưu vào local storage
           const res = await userService.getById(this.user.UserId);
           if (res.status === 200) {
-            localStorageService.setItemEncodeToLocalStorage(
-              "userInfo",
-              res.data
-            );
+            localStorageService.setItemToLocalStorage("userInfo", res.data);
           }
         }
       } catch (error) {
@@ -352,7 +372,7 @@ input[type="checkbox"]:checked::after {
 }
 .group-input-account .input-label {
   width: 186px;
-  height: 32px;
+  height: 36px;
   transform: translateY(0px);
 }
 .group-input-account label {
@@ -398,5 +418,59 @@ input[type="checkbox"]:checked::after {
   border-radius: 8px;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
+}
+
+/* input radio */
+.warrap__input-radio {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  margin-top: -4px;
+}
+.warrap__input-radio + .warrap__input-radio {
+  margin-left: 24px;
+}
+.warrap__input-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 6px;
+  margin-right: 10px;
+  left: 0;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: solid 2px #ccc;
+  border-radius: 50%;
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.warrap__input-radio .checkmark:after {
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #c92127;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.warrap__input-radio input:checked ~ .checkmark {
+  background: #fff;
+  border: solid 2px #c92127;
+}
+.warrap__input-radio input:checked ~ .checkmark:after {
+  display: block;
 }
 </style>

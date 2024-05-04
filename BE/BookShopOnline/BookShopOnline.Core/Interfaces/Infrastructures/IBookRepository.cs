@@ -60,6 +60,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// </returns>
         /// Created By: LQHUY(16/04/2024)
         Task<List<string>> GetPublisherByCategorySlugAsync(string? categorySlug);
+        //Task<List<string>> GetCategoryBySearchStringAsync(string? searchString);
 
     }
 }

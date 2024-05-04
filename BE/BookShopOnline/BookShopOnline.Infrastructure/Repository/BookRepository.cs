@@ -41,7 +41,6 @@ namespace BookShopOnline.Infrastructure.Repository
             if (string.IsNullOrEmpty(filter.Slug))
             {
                 query = @"Select * from view_book where 1 = 1 ";
-
             }
             else
             {
@@ -186,5 +185,15 @@ namespace BookShopOnline.Infrastructure.Repository
             var res = await _dbContext.Connection.QueryAsync<Book>(sqlCommand, new { Slug = categorySlug });
             return res;
         }
+
+        //public Task<List<string>> GetCategoryBySearchStringAsync(string? categorySlug)
+        //{
+        //    var sqlCommand = "Select DISTINCT PublisherName From view_book where @CategorySlug IS NULL OR CategorySlug = @CategorySlug";
+
+        //    DynamicParameters parameters = new DynamicParameters();
+        //    parameters.Add("CategorySlug", categorySlug);
+        //    var res = await _dbContext.Connection.QueryAsync<string>(sqlCommand, parameters);
+        //    return res.ToList();
+        //}
     }
 }

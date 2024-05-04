@@ -68,23 +68,6 @@
               <div class="tab-history-item-border"></div>
             </div>
 
-            <!-- <div
-              class="tab-history-item swiper-slide"
-              @click="
-                getOrdersData(
-                  'DELIVERY_STATUS',
-                  this.$Enum.DELIVERY_STATUS.DELIVERIED
-                )
-              "
-              style="width: 150px"
-            >
-              <div class="tab-history-item-number">
-                {{ quantityOrderDelivered }}
-              </div>
-              <div class="tab-history-item-text">Đã vận chuyển</div>
-              <div class="tab-history-item-border"></div>
-            </div> -->
-
             <div
               class="tab-history-item swiper-slide"
               @click="
@@ -143,8 +126,10 @@
     <div class="my-account">
       <div class="table-order-container">
         <div class="table-order-row table-order-header">
-          <div class="table-order-cell" style="width: 120px;">Mã đơn hàng</div>
-          <div class="table-order-cell" style="text-align: center;">Ngày mua</div>
+          <div class="table-order-cell" style="width: 120px">Mã đơn hàng</div>
+          <div class="table-order-cell" style="text-align: center">
+            Ngày mua
+          </div>
           <div class="table-order-cell">Người nhận</div>
           <div class="table-order-cell">Tổng Tiền</div>
           <div class="table-order-cell">Trạng thái</div>
@@ -175,7 +160,9 @@
           <div class="table-order-cell">
             <div class="table-order-cell-content">
               <div class="order-history-date-mobile">Ngày mua:</div>
-              <div style="text-align: center;">{{ this.$helper.formatOrderDate(order.OrderDate) }}</div>
+              <div style="text-align: center">
+                {{ this.$helper.formatOrderDate(order.OrderDate) }}
+              </div>
             </div>
           </div>
           <div class="table-order-cell" style="max-width: 250px">
@@ -237,8 +224,7 @@ export default {
         });
       }
     });
-    document.title = "Đơn hàng của tôi"
-
+    document.title = "Đơn hàng của tôi";
   },
   data() {
     return {
@@ -311,7 +297,6 @@ export default {
                     this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED
                 );
               }
-
               if (value === this.$Enum.DELIVERY_STATUS.DELIVERIED) {
                 this.orders = res.data.filter(
                   (item) =>
@@ -320,7 +305,6 @@ export default {
                 );
               }
               break;
-
             default:
               this.orders = res.data;
               this.quantityOrder = this.orders.length;
