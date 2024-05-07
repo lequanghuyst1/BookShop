@@ -14,7 +14,7 @@
               itemtype="http://schema.org/ListItem"
               class="d-flex align-items-center"
             >
-              <i style="color: #417505" class="fa-solid fa-house me-1"></i>
+              <i style="color: #c92127" class="fa-solid fa-house me-1"></i>
               <a href="/" target="_self" itemprop="item"
                 ><span itemprop="name">Trang chủ</span></a
               >
@@ -26,14 +26,17 @@
               itemscope=""
               itemtype="http://schema.org/ListItem"
             >
-              <a href="/collections" target="_self" itemprop="item">
-                <span itemprop="name">Danh mục</span>
+              <a
+                :href="'/collections/' + productInfo.CategorySlug"
+                target="_self"
+                itemprop="item"
+              >
+                <span itemprop="name">{{ productInfo.CategoryName }}</span>
               </a>
               <meta itemprop="position" content="2" />
             </li>
 
             <li
-              class="active"
               itemprop="itemListElement"
               itemscope=""
               itemtype="http://schema.org/ListItem"
@@ -41,7 +44,7 @@
               <span
                 itemprop="item"
                 content="https://www.vinabook.com/collections/sach-van-hoc-nuoc-ngoai"
-                ><span itemprop="name">{{ productInfo.Category }}</span></span
+                ><span itemprop="name">{{ productInfo.BookName }}</span></span
               >
               <meta itemprop="position" content="3" />
             </li>
@@ -103,6 +106,24 @@
                     >
                   </div>
                   <div class="policy-return d-flex">
+                    <p>Thời gian giao hàng</p>
+                    <div class="">
+                      <p>
+                        Giao hàng đến
+                        <b
+                          >{{ deliveryAddress?.Ward }},
+                          {{ deliveryAddress.District }},
+                          {{ deliveryAddress.Province }}</b
+                        >
+                      </p>
+                      <p class="mt-2">
+                        Dự kiến giao
+                        <b>{{ dateDelivery }}</b>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="policy-return d-flex">
                     <p>Chính sách đổi trả</p>
                     <div class="d-flex">
                       <p>Đổi trả sản phẩm trong 30 ngày</p>
@@ -158,7 +179,7 @@
         </div>
         <div class="col-3">
           <div class="pro-service">
-            <div class="pro-service-title">Chỉ có ở Fahasa</div>
+            <div class="pro-service-title">Chỉ có ở WanderBook</div>
 
             <div class="pro-service-item">
               <div class="pro-service-icon">
@@ -410,78 +431,10 @@
         class="product__tabs-description mt-3"
       >
         <div id="desc_content" class="std">
-          <p style="text-align: justify">
-            <strong>Tô Bình Yên Vẽ Hạnh Phúc (Tái Bản 2022)</strong>
+          <p>
+            <b>{{ productInfo.BookName }}</b>
           </p>
-
-          <p style="text-align: justify">
-            Sau thành công của cuốn sách đầu tay “Phải lòng với cô đơn” chàng
-            họa sĩ nổi tiếng và tài năng Kulzsc đã trở lại với một cuốn sách vô
-            cùng đặc biệt mang tên: "Tô bình yên - vẽ hạnh phúc” – sắc nét phong
-            cách cá nhân với một chút “thơ thẩn, rất hiền”.
-          </p>
-
-          <p style="text-align: justify">
-            Không giống với những cuốn sách chỉ để đọc, “Tô bình yên – vẽ hạnh
-            phúc” là một cuốn sách mà độc giả vừa tìm được “Hạnh phúc to to từ
-            những điều nho nhỏ” vừa được thực hành ngay lập tức. Một sự kết hợp
-            mới lạ đầy thú vị giữa thể loại sách tản văn và sách tô màu. Lật mở
-            cuốn sách này, bạn sẽ thấy vô vàn những điều nhỏ bé dễ thương lan
-            tòa nguồn năng lượng tích cực. Và kèm theo một list những điều tuyệt
-            vời khiến bạn không thể bỏ lỡ:
-          </p>
-
-          <p style="text-align: justify">
-            - Tận tình chỉ dẫn: 8 hướng dẫn tô màu đầy hứng thú từ Kulzsc
-          </p>
-
-          <p style="text-align: justify">
-            - Tranh vẽ đơn giản, gần gũi. Nét vẽ đáng yêu, dễ thương
-          </p>
-
-          <p style="text-align: justify">
-            - Chủ đề xoay quanh những điều bình yên trong cuộc sống: Đọc sách,
-            đi dạo, dọn dẹp nhà cửa, trồng cây, ăn cơm mẹ nấu, nghe một bản nhạc
-            hay, và nghĩ về nụ cười của một ai đó…
-          </p>
-
-          <p style="text-align: justify">
-            - Mỗi bức tranh lại là những lời thủ thỉ, tâm tình của tác giả. Là
-            những điều nhắn gửi nho nhỏ mong bạn bớt đi những xao động:
-          </p>
-
-          <p style="text-align: justify">“Em chọn hạnh phúc</p>
-
-          <p style="text-align: justify">Em chọn bình yên</p>
-
-          <p style="text-align: justify">Em chọn bên cạnh</p>
-
-          <p style="text-align: justify">Những điều an yên”</p>
-
-          <p style="text-align: justify">
-            Hay đơn giản là những giãi bày ngắn gọn, thay nỗi lòng của một ai
-            đó: "Tớ biết cậu một mình vẫn ổn, nhưng có những chuyện, có ai đó
-            cùng làm, vẫn hơn."
-          </p>
-
-          <p style="text-align: justify">
-            Thông qua những hình vẽ đang đợi được lấp đầy bằng muôn vàn sắc màu
-            ấy, Kulzsc sẽ giúp bạn - những người lớn cô đơn, những ai đang cần
-            bổ sung vitamin hạnh phúc “truy tìm” những niềm vui bị bỏ quên hay
-            tuyệt chiêu để đối phó với stress.
-          </p>
-
-          <p style="text-align: justify">
-            Bởi tô màu là một hình thức chữa lành đơn giản mà hiệu quả, nên mỗi
-            khi thấy bực dọc, chán nản, hay khiến mình bận rộn hơn hãy thử tìm
-            tới “Tô bình yên - vẽ hạnh phúc” cùng hộp màu đã cất lâu trong tủ
-            và... Sao không thể là một đám mây màu tím, một mái tóc vàng tươi
-            hay một nụ hoa màu xanh biển nhỉ? Không cần phải đắn đo đâu, bạn cứ
-            thoải mái xóa đi căng thẳng, xóa đi những gam màu u ám, tự tay mình
-            điểm tô những màu sắc tươi sáng lấp lánh, đầy ắp hy vọng theo ý
-            thích, tận hưởng những phút thư giãn thật bình yên không muộn phiền
-            thôi nào.
-          </p>
+          <p v-html="productDesc"></p>
           <div class="clear"></div>
         </div>
       </div>
@@ -699,6 +652,7 @@ import "swiper/css/scrollbar";
 
 // Import Swiper styles
 import "swiper/css";
+import deliveryAddressService from "@/utils/DeliveryAddressService";
 // import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 export default {
   name: "ProductPage",
@@ -713,6 +667,7 @@ export default {
   },
   mounted() {
     this.loadDataBooksOutStanding();
+    this.getDeliveryAddressDefault();
   },
   data() {
     return {
@@ -738,6 +693,10 @@ export default {
       booksOutStanding: [],
       startIndex: 0,
       endIndex: 10,
+      productDesc: "",
+      category: {},
+      deliveryAddress: {},
+      dateDelivery: null,
     };
   },
   watch: {
@@ -756,6 +715,12 @@ export default {
     },
   },
   methods: {
+    formatContent(desc) {
+      let content = desc
+        ? desc.replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>")
+        : "";
+      return content;
+    },
     async loadDataBooksOutStanding() {
       try {
         const params = {
@@ -783,6 +748,7 @@ export default {
           this.cartItem = res.data;
           this.cartItem.Quantity = this.productInfo.QuantityInStock > 0 ? 1 : 0;
           this.getReviewProductData();
+          this.productDesc = this.formatContent(this.productInfo.Description);
           document.title = this.productInfo.BookName;
         }
       } catch (error) {
@@ -854,6 +820,10 @@ export default {
         this.$emitter.emit("getQuantityOfCart");
       }
     },
+    /**
+     * Thực hiện mua ngay khi click Mua ngay
+     * @author LQHUY
+     */
     async handleOnPurchase() {
       try {
         if (
@@ -975,6 +945,58 @@ export default {
     onPrevSlide() {
       this.startIndex -= 2;
       this.endInd;
+    },
+
+    async getDeliveryAddressDefault() {
+      try {
+        const res = await deliveryAddressService.getAllByUserId(
+          this.userInfo.UserId
+        );
+        if (res.status === 200) {
+          this.deliveryAddress = res.data.filter(
+            (item) => item.DeliveryAddressDefault === true
+          )[0];
+          // Lấy ra ngày hiện tại
+          var today = new Date();
+
+          // Cộng thêm 3 ngày
+          var nextDate = new Date(today);
+          if (this.deliveryAddress.Province === "Thành phố Hà Nội") {
+            nextDate.setDate(today.getDate() + 3);
+          } else {
+            nextDate.setDate(today.getDate() + 5);
+          }
+
+          // Danh sách các ngày trong tuần
+          var daysOfWeek = [
+            "Chủ Nhật",
+            "Thứ Hai",
+            "Thứ Ba",
+            "Thứ Tư",
+            "Thứ Năm",
+            "Thứ Sáu",
+            "Thứ Bảy",
+          ];
+
+          // Lấy ra thứ của ngày kế tiếp
+          var nextDayOfWeek = daysOfWeek[nextDate.getDay()];
+
+          // Lấy ra ngày và tháng của ngày kế tiếp
+          var nextDay = nextDate.getDate();
+          var nextMonth = nextDate.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+
+          // Hiển thị kết quả
+
+          this.dateDelivery =
+            nextDayOfWeek +
+            " - " +
+            (nextDay < 10 ? "0" + nextDay : nextDay) +
+            "/" +
+            (nextMonth < 10 ? "0" + nextMonth : nextMonth);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

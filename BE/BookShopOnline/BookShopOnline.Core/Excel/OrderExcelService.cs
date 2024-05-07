@@ -43,7 +43,7 @@ namespace BookShopOnline.Core.Excel
                 var countColHeader = columns.Count();
 
                 // gán giá trị cho cell vừa merge
-                worksheet.Cells[1, 1].Value = string.Format("Báo cáo doanh thu");
+                worksheet.Cells[1, 1].Value = excelRequest.TitleHeader;
                 // merge các column lại từ column 1 đến số column header và set style
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Merge = true;
                 worksheet.Cells[1, 1, 2, countColHeader + 1].Style.Font.Bold = true;
@@ -85,6 +85,8 @@ namespace BookShopOnline.Core.Excel
                 {
                     worksheet.Cells[currentRow, 1].Value = colSTT;
                     var currentCol = 2;
+                    //set style cho từng ô giá trị
+                    worksheet.Cells[currentRow, currentCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                     foreach (var property in properties)
                     {
                         var cellValue = property.GetValue(item);
@@ -94,13 +96,14 @@ namespace BookShopOnline.Core.Excel
                             {
                                 // Kiểm tra nếu kiểu dữ liệu là double hoặc double?
                                 cellValue = ((double)cellValue).ToString("#,##0.00 đ"); // Hoặc cellValue = Convert.ToDouble(cellValue).ToString("#,##0.00 đ");
+                                                                                        //set style cho từng ô giá trị
+                                worksheet.Cells[currentRow, currentCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                             }
                         }
                         worksheet.Cells[currentRow, currentCol].Value = cellValue;
                         currentCol++;
                     }
-                    //set style cho từng ô giá trị
-                    worksheet.Cells[currentRow, 1, currentRow, totalCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    
                     worksheet.Cells.AutoFitColumns();
                     worksheet.Rows[currentRow].Height = 20;
                     currentRow++;

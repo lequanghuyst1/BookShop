@@ -45,7 +45,7 @@
           <p>
             <a href="https://www.fahasa.com/minh-long?fhs_campaign=topbanner"
               ><img
-                src="https://cdn0.fahasa.com/media/wysiwyg/Thang-04-2024/MinhLongT4_Header_1263x60.jpg"
+                src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/SieeuSale_Week2_T524_Banner_Header_1263x60.jpg"
                 alt=""
             /></a>
           </p>
@@ -61,12 +61,12 @@
           <div
             class="fhs_mouse_point"
             onclick="location.href = '/';"
-            title="FAHASA.COM"
+            title="WonderBook"
           >
             <img
-              src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/fahasa-logo.png"
+              src="../../../assets/logo2.png"
               alt=""
-              style="width: 220px; vertical-align: middle"
+              style="width: 180px; vertical-align: middle"
             />
           </div>
         </div>
@@ -239,7 +239,7 @@
                         "
                       ></div>
                       <div class="fhs_center_left" style="height: 22px">
-                        Thành viên Fahasa
+                        Thành viên WanderBook
                       </div>
                     </div>
                   </div>
@@ -250,9 +250,7 @@
                 ></a>
               </div>
               <div style="border-top: 1px solid #f2f4f5">
-                <a
-                  class="fhs_center_left"
-                  href="http://localhost:8080/customer/order"
+                <a class="fhs_center_left" href="customer/order"
                   ><span class="icon_bill_gray" style="margin-right: 8px"></span
                   ><span>Đơn hàng của tôi</span></a
                 >
@@ -264,15 +262,15 @@
                 >
               </div>
               <div style="border-top: 1px solid #f2f4f5">
-                <a class="fhs_center_left" href="/tryout/voucher/"
+                <a class="fhs_center_left" href="/customer/address-info"
                   ><span
                     class="ico_voucher_gray"
                     style="margin-right: 8px"
                   ></span
-                  ><span>Wallet Voucher</span></a
+                  ><span>Sổ địa chỉ</span></a
                 >
               </div>
-              <div
+              <!-- <div
                 class="fhs_center_space"
                 style="border-top: 1px solid #f2f4f5"
               >
@@ -287,7 +285,7 @@
                     ><span>Tài khoản F-point</span></a
                   >
                 </div>
-              </div>
+              </div> -->
               <div
                 class="fhs_center_left fhs_mouse_point"
                 style="cursor: pointer; border-top: 1px solid #f2f4f5"
@@ -536,7 +534,7 @@ export default {
           );
           removeAllInfoTokenToStorage();
           localStorageService.removeItemLocalStorage("cart");
-          location.reload();
+          location.href = "http://localhost:8080/";
         }
       } catch (error) {
         console.log(error);
@@ -568,7 +566,7 @@ export default {
   position: relative;
   color: #fff;
   min-height: 40px;
-  background-color: #ff5653;
+  background-color: #FF94CA;
   z-index: 10;
 }
 .item {
@@ -934,7 +932,7 @@ export default {
   padding: 10px 0;
   cursor: pointer;
 }
-.header__search-result-footer:hover{
+.header__search-result-footer:hover {
   background-color: #ecebeb;
 }
 .header__search-result-item {

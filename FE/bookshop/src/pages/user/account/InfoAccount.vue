@@ -163,7 +163,8 @@ export default {
     this.date = parts[1];
     this.month = parts[0];
     this.year = parts[2];
-    console.log(parts)
+    this.$emitter.emit("toggleShowLoading", true);
+    this.$emitter.emit("toggleShowLoading", false, 400);
     document.title = "Thông tin tài khoản";
   },
   watch: {
@@ -195,6 +196,7 @@ export default {
   computed: {
     yearNow() {
       let date = new Date();
+
       return date.getFullYear();
     },
     textFields: function () {

@@ -8,8 +8,8 @@ class OrderService extends BaseService {
     const res = await this.baseAxios.post(`${this.baseUrl}/Checkout`, data);
     return res;
   }
-  async GetByUserId(id) {
-    const res = await this.baseAxios.get(`${this.baseUrl}/GetByUserId/${id}`);
+  async GetByUserId(data) {
+    const res = await this.baseAxios.get(`${this.baseUrl}/GetByUserId/`, data);
     return res;
   }
   async CancelOrder(data) {
@@ -73,7 +73,7 @@ class OrderService extends BaseService {
     });
     return res;
   }
-  
+
   async exportRevenueByTime(data) {
     const res = await this.baseAxios.post(
       `${this.baseUrl}/Export/ExportRevenueByTime`,

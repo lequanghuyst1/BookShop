@@ -60,11 +60,9 @@ export default {
       console.log("slide change");
     };
     const slides = [
+      { image: require("@/assets/banner/slider_6.jpg") },
+      { image: require("@/assets/banner/slider_7.jpg") },
       { image: require("@/assets/banner/slider_1.jpg") },
-      { image: require("@/assets/banner/slider_2.jpg") },
-      { image: require("@/assets/banner/slider_3.jpg") },
-      { image: require("@/assets/banner/slider_4.jpg") },
-      { image: require("@/assets/banner/slider_5.jpg") },
       // Add more slides as needed
     ];
     return {
@@ -105,7 +103,7 @@ export default {
 
 .slide-image {
   width: 100%;
-  height: 100%;
+  height: 447px;
   background-size: cover; /* Đảm bảo ảnh vừa khít với kích thước của slide */
 }
 

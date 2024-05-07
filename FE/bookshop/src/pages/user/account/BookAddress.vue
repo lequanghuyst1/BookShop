@@ -311,17 +311,20 @@ export default {
     async handleLoadData() {
       try {
         //gọi API
+        this.$emitter.emit("toggleShowLoading", true);
         const res = await deliveryAddressService.getAllByUserId(
           this.userInfo.UserId
         );
         if (res.status === 200) {
           this.lstAddress = res.data;
+          this.$emitter.emit("toggleShowLoading", false, 400);
         }
         //set địa chỉ mặc định vào local storage
         // const addressDefault = this.lstAddress.filter(
         //   (item) => item.DeliveryAddressDefault === true
         // )[0];
       } catch (error) {
+        this.$emitter.emit("toggleShowLoading", false, 400);
         console.log(error);
       }
     },

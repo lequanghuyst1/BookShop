@@ -128,7 +128,6 @@
                       </li>
                     </ul>
                     <p
-                
                       @click="
                         this.isShowMoreAuthorFilter =
                           !this.isShowMoreAuthorFilter
@@ -247,7 +246,7 @@
                     Không có sản phẩm phù hợp với từ khóa tìm kiếm của bạn.
                   </p>
                 </div>
-                <div v-if="checkDataIsNotEmpty" class="col-12 mt-1">
+                <div v-if="isDataEmpty" class="col-12 mt-1">
                   <p class="note-msg" style="">
                     Hiện chưa có sản phẩm nào trong danh mục này.
                   </p>
@@ -483,6 +482,7 @@ export default {
           label: "700.000đ trở lên",
         },
       ],
+      isDataEmpty: false,
     };
   },
   watch: {
@@ -556,16 +556,16 @@ export default {
         (this.filterData.rangeColumn.length > 0 && this.products.length === 0)
       );
     },
-    checkDataIsNotEmpty() {
-      return (
-        (this.filterData.filterInput.length === 0 &&
-          this.products.length === 0) ||
-        (this.filterData.rangeColumn.length === 0 && this.products.length === 0)
-      );
-    },
   },
   methods: {
     ...mapActions(["setSearchStringDefault", "setSearchString"]),
+    checkDataIsNotEmpty() {
+      return (
+        this.filterData.filterInput.length === 0 &&
+        this.products.length === 0 &&
+        this.filterData.rangeColumn.length === 0
+      );
+    },
     /**
      * Hàm thực hiện lấy danh sách các trường chưa dữ liệu để lọc
      * @author LQHUY(16/04/2024)
@@ -639,7 +639,9 @@ export default {
           this.totalPage = res.data.TotalPage;
           this.totalRecord = res.data.TotalRecord;
           this.$emitter.emit("toggleShowLoading", false, 300);
+          this.isDataEmpty = this.checkDataIsNotEmpty();
         }
+
         history.replaceState({}, "", url);
       } catch (error) {
         console.log(error);

@@ -6,8 +6,8 @@
         <h3 class="m-dialog__header-title">
           {{
             this.formMode === this.$Enum.FormMode.Add
-              ? "Thêm mới sách"
-              : "Sửa thông tin sách"
+              ? "Thêm mới NXB"
+              : "Sửa thông tin NXB"
           }}
         </h3>
         <div class="m-dialog__header-action">

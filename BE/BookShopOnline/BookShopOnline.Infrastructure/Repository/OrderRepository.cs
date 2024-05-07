@@ -5,12 +5,15 @@ using BookShopOnline.Core.Model;
 using BookShopOnline.Infrastructure.Interface;
 using Dapper;
 using Microsoft.AspNetCore.Http.Features;
+using MySqlConnector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 namespace BookShopOnline.Infrastructure.Repository
 {
@@ -34,11 +37,50 @@ namespace BookShopOnline.Infrastructure.Repository
             return res;
         }
 
-        public async Task<IEnumerable<Order>> GetByUserId(Guid userId)
+        public async Task<PagingEntity<OrderDto>> GetByUserId(Guid userId, int? PageSize, int? PageNumber, string? ColumnName, string? Value)
         {
-            var procName = "Proc_Order_GetByUserId";
-            var res = await _dbContext.Connection.QueryAsync<Order>(procName, new { UserId = userId }, _dbContext.Transaction);
-            return res;
+            PagingEntity<OrderDto> pagingEntity = new PagingEntity<OrderDto>();
+            DynamicParameters parameters = new DynamicParameters();
+            var sqlCommand = "";
+            if (string.IsNullOrEmpty(ColumnName))
+            {
+                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @userId ORDER BY vo.CreatedDate DESC";
+            }
+            else
+            {
+                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @userId AND ({ColumnName} = @value) ORDER BY vo.CreatedDate DESC";
+                parameters.Add("@value", Value);
+            }
+
+            parameters.Add("@userId", userId);
+            //parameters.Add("@searchString", searchString);
+
+            if (PageSize != null && PageNumber != null)
+            {
+                var paramLimit = " LIMIT @pageSize OFFSET @start_index";
+                sqlCommand += paramLimit;
+                parameters.Add("@pageSize", PageSize);
+                parameters.Add("@start_index", (PageNumber - 1) * PageSize);
+
+                // lấy ra chuỗi sql k có limit
+                int limitIndex = sqlCommand.IndexOf("LIMIT");
+                var sqlComandWithoutLimit = sqlCommand.Substring(0, limitIndex); // Cắt từ vị trí 0 đến vị trí của "LIMIT"
+                var resNoLimit = await _dbContext.Connection.QueryAsync<OrderDto>(sqlComandWithoutLimit, parameters);
+                //gán tổng số bản ghi
+                pagingEntity.TotalRecord = resNoLimit.Count();
+                //gán tổng số trang
+                pagingEntity.TotalPage = (int)Math.Ceiling((double)pagingEntity.TotalRecord / PageSize.Value);
+            }
+            var res = await _dbContext.Connection.QueryAsync<OrderDto>(sqlCommand, parameters);
+            //gán giá trị các bản ghi
+            pagingEntity.Data = res;
+            if (PageSize == null && PageNumber == null)
+            {
+                pagingEntity.TotalRecord = res.Count();
+                pagingEntity.TotalPage = 1;
+            }
+
+            return pagingEntity;
         }
 
         public async Task<double> GetTotalRevenue()

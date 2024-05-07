@@ -61,7 +61,15 @@
       <dic class="">
         <div class="time wrap-date">
           <div class="item">
-            <div class="item-title">Ngày bắt đầu</div>
+            <div class="item-title">
+              {{
+                selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.DATE
+                  ? "Ngày bắt đầu"
+                  : selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH
+                  ? "Tháng bắt đầu"
+                  : "Năm bắt đầu"
+              }}
+            </div>
             <div class="item-condition">
               <Calendar
                 v-model="fromDate"
@@ -76,7 +84,15 @@
             </div>
           </div>
           <div class="item">
-            <div class="item-title">Ngày kết thúc</div>
+            <div class="item-title">
+              {{
+                selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.DATE
+                  ? "Ngày kết thúc"
+                  : selectedTypeOfTime.value === this.$Enum.TYPE_OF_TIME.MONTH
+                  ? "Tháng kết thúc"
+                  : "Năm kết thúc"
+              }}
+            </div>
             <div class="item-condition">
               <Calendar
                 v-model="toDate"
@@ -252,11 +268,11 @@ export default {
       totalRevenueByCondition: 0,
 
       selectedTypeOfTime: {
-        value: this.$Enum.TYPE_OF_TIME.DATE,
-        title: "Báo cáo theo ngày",
-        dateFormat: "dd/mm/yy",
-        placeholder: "DD/MM/YYYY",
-        view: "date",
+        value: this.$Enum.TYPE_OF_TIME.YEAR,
+        title: "Báo cáo theo năm",
+        dateFormat: "yy",
+        placeholder: "YYYY",
+        view: "year",
       },
 
       fromDate: null,
@@ -366,37 +382,72 @@ export default {
   },
   computed: {
     titleHeaderFileExcel: function () {
-      if (this.selectedTypeOfTime.value === 0) {
-        if (this.fromDate.getDay() === this.toDate.getDay()) {
-          return `Thống kê doanh thu (ngày ${this.$helper.formatDate(
-            this.fromDate
-          )}`;
+      if (this.selectedTypeRenvenueValue === 0) {
+        if (this.selectedTypeOfTime.value === 0) {
+          if (this.fromDate.getDay() === this.toDate.getDay()) {
+            return `Thống kê doanh thu (ngày ${this.$helper.formatDate(
+              this.fromDate
+            )}`;
+          } else {
+            return `Thống kê doanh thu (${this.$helper.formatDate(
+              this.fromDate
+            )} - ${this.$helper.formatDate(this.toDate)})`;
+          }
+        } else if (this.selectedTypeOfTime.value === 1) {
+          if (
+            this.fromDate.getMonth() === this.toDate.getMonth() &&
+            this.fromDate.getFullYear() === this.toDate.getFullYear()
+          ) {
+            return `Thống kê doanh thu (tháng ${this.fromDate.getMonth() + 1})`;
+          } else {
+            return `Thống kê doanh thu (tháng ${
+              this.fromDate.getMonth() + 1
+            }/${this.fromDate.getFullYear()} - ${
+              this.toDate.getMonth() + 1
+            }/${this.toDate.getFullYear()})`;
+          }
+        } else if (this.selectedTypeOfTime.value === 2) {
+          if (this.fromDate.getFullYear() === this.toDate.getFullYear()) {
+            return `Thống kê doanh thu (năm ${this.toDate.getFullYear()})`;
+          } else {
+            return `Thống kê doanh thu (năm ${this.fromDate.getFullYear()} - ${this.toDate.getFullYear()} )`;
+          }
         } else {
-          return `Thống kê doanh thu (${this.$helper.formatDate(
-            this.fromDate
-          )} - ${this.$helper.formatDate(this.toDate)})`;
-        }
-      } else if (this.selectedTypeOfTime.value === 1) {
-        if (
-          this.fromDate.getMonth() === this.toDate.getMonth() &&
-          this.fromDate.getFullYear() === this.toDate.getFullYear()
-        ) {
-          return `Thống kê doanh thu (tháng ${this.fromDate.getMonth() + 1})`;
-        } else {
-          return `Thống kê doanh thu (tháng ${
-            this.fromDate.getMonth() + 1
-          }/${this.fromDate.getFullYear()} - ${
-            this.toDate.getMonth() + 1
-          }/${this.toDate.getFullYear()})`;
-        }
-      } else if (this.selectedTypeOfTime.value === 2) {
-        if (this.fromDate.getFullYear() === this.toDate.getFullYear()) {
-          return `Thống kê doanh thu (năm ${this.toDate.getFullYear()})`;
-        } else {
-          return `Thống kê doanh thu (năm ${this.fromDate.getFullYear()} - ${this.toDate.getFullYear()} )`;
+          return "Thống kê doanh thu";
         }
       } else {
-        return "Thống kê doanh thu";
+        if (this.selectedTypeOfTime.value === 0) {
+          if (this.fromDate.getDay() === this.toDate.getDay()) {
+            return `Top sản phẩm có doanh thu cao nhất (ngày ${this.$helper.formatDate(
+              this.fromDate
+            )}`;
+          } else {
+            return `Top sản phẩm có doanh thu cao nhất (${this.$helper.formatDate(
+              this.fromDate
+            )} - ${this.$helper.formatDate(this.toDate)})`;
+          }
+        } else if (this.selectedTypeOfTime.value === 1) {
+          if (
+            this.fromDate.getMonth() === this.toDate.getMonth() &&
+            this.fromDate.getFullYear() === this.toDate.getFullYear()
+          ) {
+            return `Top sản phẩm có doanh thu cao nhất (tháng ${this.fromDate.getMonth() + 1})`;
+          } else {
+            return `Top sản phẩm có doanh thu cao nhất (tháng ${
+              this.fromDate.getMonth() + 1
+            }/${this.fromDate.getFullYear()} - ${
+              this.toDate.getMonth() + 1
+            }/${this.toDate.getFullYear()})`;
+          }
+        } else if (this.selectedTypeOfTime.value === 2) {
+          if (this.fromDate.getFullYear() === this.toDate.getFullYear()) {
+            return `Top sản phẩm có doanh thu cao nhất (năm ${this.toDate.getFullYear()})`;
+          } else {
+            return `Top sản phẩm có doanh thu cao nhất (năm ${this.fromDate.getFullYear()} - ${this.toDate.getFullYear()} )`;
+          }
+        } else {
+          return "Top sản phẩm có doanh thu cao nhất";
+        }
       }
     },
   },
@@ -406,14 +457,18 @@ export default {
       this.toDate = now;
 
       // Lấy ra timestamp của thời điểm hiện tại
-      const currentTimeStamp = now.getTime();
+      // const currentTimeStamp = now.getTime();
+      // Lấy thời gian hiện tại
+      const ngayHienTai = new Date();
+      // Trừ đi 5 năm
+      ngayHienTai.setFullYear(ngayHienTai.getFullYear() - 10);
       // Lấy ra timestamp của thời điểm 7 ngày trước
-      const sevenDaysAgoTimeStamp = currentTimeStamp - 7 * 24 * 60 * 60 * 1000; // 7 ngày * 24 giờ * 60 phút * 60 giây * 1000 milliseconds
-      // Tạo đối tượng Date từ timestamp của thời điểm 7 ngày trước
-      const sevenDaysAgoDate = new Date(sevenDaysAgoTimeStamp);
+      // const sevenDaysAgoTimeStamp = currentTimeStamp - 7 * 24 * 60 * 60 * 1000; // 7 ngày * 24 giờ * 60 phút * 60 giây * 1000 milliseconds
+      // // Tạo đối tượng Date từ timestamp của thời điểm 5 năm trước
+      // const sevenDaysAgoDate = new Date(sevenDaysAgoTimeStamp);
       // Format ngày và giờ 7 ngày trước theo ý muốn
       // Lưu ngày 7 ngày trước vào biến sevenDaysAgo để sử dụng trong template
-      this.fromDate = sevenDaysAgoDate;
+      this.fromDate = ngayHienTai;
     },
 
     getDataChartAndGridWithTypeRevenue() {
@@ -449,9 +504,9 @@ export default {
             datasets: [
               {
                 label: "Doanh thu",
-                type: "line",
-                backgroundColor: ["rgba(249, 115, 22, 0.2)"],
-                borderColor: ["rgb(249, 115, 22)"],
+                type: "bar",
+                backgroundColor: ["#3466D1"],
+                borderColor: ["3466D1"],
                 borderWidth: 1,
                 data: data,
               },
@@ -565,7 +620,6 @@ export default {
           WorksheetName: "Thống kê doanh thu",
         };
         const res = await orderService.exportRevenueByTime(excelRequest);
-        console.log(res);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
@@ -584,8 +638,12 @@ export default {
     async exportRenvenueByProduct() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        const res = await orderService.exportRevenueByProduct(this.gridData);
-        console.log(res);
+        const excelRequest = {
+          TitleHeader: this.titleHeaderFileExcel,
+          Data: this.gridData,
+          WorksheetName: "Thống kê doanh thu",
+        };
+        const res = await orderService.exportRevenueByProduct(excelRequest);
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });

@@ -14,7 +14,7 @@
               itemtype="http://schema.org/ListItem"
               class="d-flex align-items-center"
             >
-              <i style="color: #ff5653" class="fa-solid fa-house me-1"></i>
+              <i style="color: #c92127" class="fa-solid fa-house me-1"></i>
               <a href="/" target="_self" itemprop="item"
                 ><span itemprop="name">Trang chủ</span></a
               >
@@ -26,7 +26,7 @@
               itemscope=""
               itemtype="http://schema.org/ListItem"
             >
-              <a href="/collections" target="_self" itemprop="item">
+              <a href="/" target="_self" itemprop="item">
                 <span itemprop="name">Danh mục</span>
               </a>
               <meta itemprop="position" content="2" />
@@ -226,7 +226,7 @@
                     Không có sản phẩm phù hợp với từ khóa tìm kiếm của bạn.
                   </p>
                 </div>
-                <div v-if="checkDataIsNotEmpty" class="col-12 mt-1">
+                <div v-if="isDataEmpty" class="col-12 mt-1">
                   <p class="note-msg" style="">
                     Hiện chưa có sản phẩm nào trong danh mục này.
                   </p>
@@ -378,8 +378,7 @@ export default {
           label: "Mới nhất",
         },
         rangeColumn: [],
-        filterInput: [
-        ],
+        filterInput: [],
       },
       //danh sách các điều kiện tăng dần hoặc giảm dần
       sortOptions: [
@@ -461,6 +460,7 @@ export default {
           label: "700.000đ trở lên",
         },
       ],
+      isDataEmpty: false,
     };
   },
   watch: {
@@ -532,15 +532,15 @@ export default {
         (this.filterData.rangeColumn.length > 0 && this.products.length === 0)
       );
     },
-    checkDataIsNotEmpty() {
-      return (
-        (this.filterData.filterInput.length === 0 &&
-          this.products.length === 0) ||
-        (this.filterData.rangeColumn.length === 0 && this.products.length === 0)
-      );
-    },
   },
   methods: {
+    checkDataIsNotEmpty() {
+      return (
+        this.filterData.filterInput.length === 0 &&
+        this.products.length === 0 &&
+        this.filterData.rangeColumn.length === 0
+      );
+    },
     /**
      * Hàm thực hiện lấy dữ liệu của category theo CategorySlug
      * @author LQHUY(16/04/2024)
@@ -592,22 +592,7 @@ export default {
         console.log(error);
       }
     },
-    /**
-     * Hàm thực hiện lấy danh sách các product theo CategorySlug
-     * @author LQHUY(16/04/2024)
-     */
-    // async getProductsData() {
-    //   try {
-    //     const res = await bookService.getByCategorySlug(
-    //       this.$route.params.slug
-    //     );
-    //     if (res.status === 200) {
-    //       this.products = res.data;
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+
     /**
      * Hàm thực hiện filter theo điều kiện và lấy ra các bản ghi
      * @author LQHUY(16/04/2024)
@@ -628,6 +613,7 @@ export default {
         if (res.status === 200) {
           this.products = res.data.Data;
           this.totalPage = res.data.TotalPage;
+          this.isDataEmpty = this.checkDataIsNotEmpty();
           // this.filterData.filterInput = this.filterData.filterInput.filter(
           //   (item) => item.ColumnName !== "CategorySlug"
           // );

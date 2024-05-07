@@ -1,14 +1,14 @@
 <template>
   <div class="header">
-    <div class="header__logo">
-      <div class="header__logo-image">
-        <img src="../../../assets/logo.png" alt="" style="width: 80%" />
+    <div class="header__logo h-100">
+      <div class="header__logo-image h-100 justify-content-center">
+        <img src="../../../assets/logo.png" alt="" style=" width: 70%;" />
       </div>
     </div>
 
     <div class="header__info">
       <div class="header__info-name">
-        <h4 class="header__info-company-name">NHÀ SÁCH PANDA</h4>
+        <h4 class="header__info-company-name">NHÀ SÁCH WANDER</h4>
       </div>
       <div class="header__navbar-list">
         <div
@@ -52,10 +52,9 @@ import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "TheHeader",
   created() {
-    this.user = JSON.parse(localStorage.getItem("User"));
   },
-  mounted(){
-    document.title = "Admin"
+  mounted() {
+    document.title = "Admin";
   },
   computed: {
     user: () => {

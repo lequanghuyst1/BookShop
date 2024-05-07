@@ -1,9 +1,9 @@
 <template>
   <div class="content__header">
     <div class="content__header-title">
-      <h3>Quản lý danh mục</h3>
+      <h3>Quản lý khách hàng</h3>
     </div>
-    <div class="content__header-group-button">
+    <!-- <div class="content__header-group-button">
       <tippy content="Thêm mới" placement="bottom" animation="scale">
         <MButton
           class="m-button-icon"
@@ -15,7 +15,7 @@
         >
         </MButton>
       </tippy>
-    </div>
+    </div> -->
   </div>
   <div class="content__body">
     <div class="content__toolbar">
@@ -79,6 +79,7 @@
       :selectAll="selectAll"
       :imageData="imageData"
       :image="false"
+      :isShowIconDelete="false"
       @onDelete="onDeleteItem"
       @onUpdate="onUpdateItem"
       @updateListItemId="updateListItemId"

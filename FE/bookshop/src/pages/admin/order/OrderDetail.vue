@@ -490,10 +490,16 @@ export default {
       accumulatedRevenue: 0,
       isShowDialog: false,
       typeStatus: "",
+      totalOrderCancel: 0,
+      totalOrderComplete: 0,
     };
   },
 
   methods: {
+    /**
+     * Hàm thực hiện lấy thông tin đơn hàng
+     * @author LQHUY
+     */
     async getOrderData() {
       try {
         const res = await orderService.getById(this.$route.params.id);
@@ -504,6 +510,11 @@ export default {
         console.log(error);
       }
     },
+
+    /**
+     * Hàm thực hiện lấy thông tin chi tiết đơn hàng
+     * @author LQHUY
+     */
     async getOrderDetailsData() {
       try {
         const res = await this.$httpRequest.get(
@@ -517,6 +528,10 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện lấy thông tin tài khoản mua hàng
+     * @author LQHUY
+     */
     async getUserInfoData() {
       try {
         const res = await userService.getById(this.order.UserId);
@@ -529,15 +544,18 @@ export default {
     },
 
     async caculTotalOrder() {
-      const res = await orderService.GetByUserId(this.order.UserId);
+      const params = {
+        UserId: this.order.UserId,
+      };
+      const res = await orderService.GetByUserId({ params });
       if (res.status === 200) {
-        this.totalOrderUserOrdered = res.data.length;
-        const ordersComplete = res.data.filter(
+        this.totalOrderUserOrdered = res.data.Data.length;
+        const ordersComplete = res.data.Data.filter(
           (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.COMPLETE
         );
         this.totalOrderComplete = ordersComplete.length;
 
-        const ordersCancel = res.data.filter(
+        const ordersCancel = res.data.Data.filter(
           (item) => item.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED
         );
         this.totalOrderCancel = ordersCancel.length;
@@ -756,7 +774,7 @@ export default {
       }
     },
     backToOrderManagement() {
-      location.href = "http://localhost:8080/admin/order-manegement";
+      this.$router.back(1);
     },
   },
 };

@@ -81,7 +81,8 @@
             :style="{ height: image ? '105px' : '48px' }"
             class="m-table__action"
           >
-          <div
+            <div
+              v-if="isShowIconDelete"
               v-tippy="{
                 content: 'Xóa',
                 placement: 'bottom',
@@ -93,7 +94,7 @@
               "
               class="m-table__action-item m-table__action-item--delete"
             >
-              <div style="font-size: 18px; color: #6B6C72;">
+              <div style="font-size: 18px; color: #6b6c72">
                 <i class="fa-regular fa-trash-can"></i>
               </div>
             </div>
@@ -108,11 +109,12 @@
                 }
               "
               class="m-table__action-item m-table__action-item--edit"
+              :style="{
+                right: isShowIconDelete ? '55px' : '10px',
+              }"
             >
               <div class="m-icon-edit"></div>
             </div>
-
-            
           </div>
         </tr>
       </tbody>
@@ -160,6 +162,10 @@ export default {
     },
     imageData: {
       typeof: Array,
+    },
+    isShowIconDelete: {
+      typeof: Boolean,
+      default: true,
     },
   },
   emit: [

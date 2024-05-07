@@ -4,7 +4,7 @@
       <h3>Quản lý đơn hàng</h3>
     </div>
     <div class="content__header-group-button">
-      <tippy content="Thêm mới" placement="bottom" animation="scale">
+      <!-- <tippy content="Thêm mới" placement="bottom" animation="scale">
         <MButton
           class="m-button-icon"
           icon="fa-solid fa-plus"
@@ -14,7 +14,7 @@
           @click="onCreateItem"
         >
         </MButton>
-      </tippy>
+      </tippy> -->
     </div>
   </div>
   <div class="content__body">
@@ -583,7 +583,8 @@ export default {
      *
      */
     goToOrderDetailPage(id) {
-      location.href = "http://localhost:8080/admin/order-manegement/" + id;
+      // location.href = "http://localhost:8080/admin/order-manegement/" + id;
+      this.$router.push("order-manegement/" + id);
     },
 
     /**

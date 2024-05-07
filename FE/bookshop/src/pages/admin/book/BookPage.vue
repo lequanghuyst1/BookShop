@@ -190,7 +190,6 @@ export default {
               pageSize: this.pageSize,
               pageNumber: this.pageNumber,
             };
-        console.log(this.pageNumber);
         const res = await bookService.getFilterPaging({ params });
         switch (res.status) {
           case 200:

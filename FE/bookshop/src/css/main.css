@@ -77,7 +77,9 @@ a {
 .breadcrumb-shop .breadcrumb-arrows li {
   font-size: 13px;
 }
-
+.breadcrumb-shop .breadcrumb-arrows li.active{
+  color: #ff8c05;
+}
 .breadcrumb-shop .breadcrumb > li + li:before {
   color: #333;
   padding: 0 12px;

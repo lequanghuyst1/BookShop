@@ -6,7 +6,9 @@
         :key="index"
         :to="item.path"
         class="sidebar__item"
-      >
+        @click="indexActiveSidbar = index"
+        >
+        <!-- :class="{ 'is-active': indexActiveSidbar === index }" -->
         <div class="sidebar__item-icon">
           <i :class="item.icon"></i>
         </div>
@@ -40,6 +42,7 @@ export default {
       sidebarList: menu,
       isShowSideBar: true,
       isShowTitle: true,
+      indexActiveSidbar: 0,
     };
   },
 };

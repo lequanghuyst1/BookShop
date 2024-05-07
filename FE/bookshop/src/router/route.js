@@ -14,9 +14,11 @@ import CustomerPage from "@/pages/admin/customer/CustomerPage.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
+import DealHotPage from "../pages/user/home/DealHotPage.vue";
+import BookBestSellingPage from "../pages/user/home/BookBestSellingPage.vue";
+import BookOutstanding from "../pages/user/home/BookOutstanding.vue";
 import CartPage from "../pages/user/cart/CartPage.vue";
 import CategoryUserPage from "../pages/user/category/CategoryPage.vue";
-import OnlinePayment from "@/pages/user/pay/OnlinePayment.vue";
 import PaymentSuccess from "@/pages/user/pay/PaymentSuccess.vue";
 import ProductPage from "../pages/user/product/Product.vue";
 import UserAccountPage from "../pages/user/account/Index.vue";
@@ -25,6 +27,7 @@ import BookAddressPage from "../pages/user/account/BookAddress.vue";
 import HomeAccountUserPage from "../pages/user/account/HomeAccount.vue";
 import PayUserPage from "@/pages/user/pay/Pay.vue";
 import OrderPage from "@/pages/user/order/OrderPage.vue";
+import OrderList from "@/pages/user/order/OrderList.vue";
 import OrderDatail from "@/pages/user/order/OrderDetail.vue";
 import SearchEnginePage from "@/pages/user/search-engine/SearchEngine.vue";
 
@@ -39,6 +42,24 @@ const routes = [
         path: "",
         components: {
           ViewRouterContainer: HomeUserPage,
+        },
+      },
+      {
+        path: "deal-hot-page",
+        components: {
+          ViewRouterContainer: DealHotPage,
+        },
+      },
+      {
+        path: "book-best-selling",
+        components: {
+          ViewRouterContainer: BookBestSellingPage,
+        },
+      },
+      {
+        path: "book-new",
+        components: {
+          ViewRouterContainer: BookOutstanding,
         },
       },
       {
@@ -97,13 +118,27 @@ const routes = [
             components: {
               ViewRouterMainContentAccount: OrderPage,
             },
-          },
-          {
-            path: "order/order-detail/:id",
-            name: "order-detail",
-            components: {
-              ViewRouterMainContentAccount: OrderDatail,
-            },
+            exact: true,
+
+            children: [
+              {
+                path: "",
+                name: "order-list",
+                components: {
+                  ViewRouterContentOrderPage: OrderList,
+                },
+                exact: true,
+              },
+              {
+                path: "order-detail/:id",
+                name: "order-detail",
+                components: {
+                  ViewRouterContentOrderPage: OrderDatail,
+                },
+                props: true,
+                exact: true,
+              },
+            ],
           },
         ],
       },
@@ -124,10 +159,7 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/payment/vnpay/transaction",
-    component: OnlinePayment,
-  },
+
   {
     path: "/admin/login",
     component: LoginAdminPage,

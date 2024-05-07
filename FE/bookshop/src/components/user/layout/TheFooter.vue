@@ -194,10 +194,10 @@
                     </h3>
                     <div class="ft-mb-content">
                       <div class="d-flex flex-wrap">
-                        <img
+                        <!-- <img
                           class="w-100 mb-2"
                           src="//theme.hstatic.net/200000845405/1001198377/14/footer_logo_shipment_1.png?v=450"
-                        />
+                        /> -->
                         <img
                           class="w-100 mb-2"
                           src="//theme.hstatic.net/200000845405/1001198377/14/footer_logo_shipment_2.png?v=450"
@@ -387,17 +387,16 @@
           <div class="col-12 col-md-9">
             <div class="footer-contact">
               <h3 class="footer-title">
-                CÔNG TY CỔ PHẦN THƯƠNG MẠI DỊCH VỤ MÊ KÔNG COM
+                Công Ty Cổ Phần Phát Hành Sách
               </h3>
               <p>
                 Địa chỉ:<span
-                  >52/2 Thoại Ngọc Hầu, Phường Hòa Thạnh, Quận Tân Phú, Hồ Chí
-                  Minh</span
+                  >338 Phố Xã Đàn, Phương Liên, Đống Đa, Hà Nội</span
                 >
               </p>
               <p>
                 MST:<span
-                  >0303615027 do Sở Kế Hoạch Và Đầu Tư Tp.HCM cấp ngày
+                  >0303615027 do Sở Kế Hoạch Và Đầu Tư Tp.Hà Nội cấp ngày
                   10/03/2011</span
                 >
               </p>
@@ -405,7 +404,7 @@
                 Tel:<span>028.73008182</span>- Fax:<span>028.39733234</span>-
                 Email:<span
                   ><a href="mailto:hotro@vinabook.com"
-                    >hotro@vinabook.com</a
+                    >cskh.wanderbook@gmail.com</a
                   ></span
                 >
               </p>

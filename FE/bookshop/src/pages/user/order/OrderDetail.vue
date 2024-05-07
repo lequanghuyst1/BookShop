@@ -41,7 +41,16 @@
         </div>
         <div class="order-view-date">
           <span>Ngày mua: </span
-          ><span>{{ this.$helper.formatDate(order.OrderDate) }}</span>
+          ><span>{{ this.$helper.formatOrderDate(order.OrderDate) }}</span>
+        </div>
+        <div
+          v-if="order.OrderStatus === this.$Enum.ORDER_STATUS.CANCELLED"
+          class="order-view-date"
+        >
+          <span>Ngày hủy: </span
+          ><span>{{
+            this.$helper.formatOrderDate(order.CancellationDate)
+          }}</span>
         </div>
         <div class="order-view-total">
           <span>Tổng Tiền: </span
@@ -506,13 +515,25 @@
                     )
                   }}
                 </p>
+                <p
+                  v-if="
+                    this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.VNPAY
+                  "
+                >
+                  {{
+                    this.$helper.hanldeValueTypeEnum(
+                      "PAYMENT_STATUS",
+                      order.PaymentStatus
+                    )
+                  }}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="border-block-mobile"></div>
-      <div class="order-view-status-container">
+      <!-- <div class="order-view-status-container">
         <div class="order-view-status-new-order">
           <div class="order-view-icon-container">
             <div style="height: 60px; width: 60px; align-self: center">
@@ -582,7 +603,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="order-subOrder-container">
       <div class="order-subOrder-items">
@@ -791,15 +812,16 @@
           <div>
             <p class="order-totals-price">
               <span class="price">{{
-                this.$helper.formatMoney(order.TotalAmount)
+                this.$helper.formatMoney(order.TotalProductCost)
               }}</span
               >&nbsp;<span class="sym-totals">đ</span>
             </p>
 
             <p class="order-totals-price">
-              <span class="price">19.000</span>&nbsp;<span class="sym-totals"
-                >đ</span
-              >
+              <span class="price">{{
+                this.$helper.formatMoney(order.ShippingFee)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span>
             </p>
             <p class="order-totals-price">
               <span class="price">{{
@@ -841,12 +863,13 @@ export default {
       order: {},
       //Lưu tổng số lượng của đơn hàng
       totalQuantity: 0,
+      //Lưu danh sách Id đơn hàng được đặt lại
       orderIdReOrder: [],
     };
   },
   methods: {
     /**
-     * Hàm thực hiện gán giá trị cho orderDetails
+     * Hàm thực hiện lấy thông tin chi tiết đơn hàng
      * @author LQHUY(12/04/2024)
      */
     async getOrderDetailsData() {
@@ -866,12 +889,19 @@ export default {
       }
     },
 
+    /**
+     * Hàm thực hiện lấy thông tin đơn hàng
+     * @author LQHUY(12/04/2024)
+     */
     async getOrderData() {
       try {
+        this.$emitter.emit("toggleShowLoading", true);
+
         const res = await orderService.getById(this.$route.params.id);
         if (res.status === 200) {
           this.order = res.data;
           document.title = "Order # " + this.order.OrderCode;
+          this.$emitter.emit("toggleShowLoading", false, 400);
         }
       } catch (error) {
         console.log(error);

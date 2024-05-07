@@ -7,8 +7,10 @@
       chat-title="Chăm sóc khách hàng"
       agent-id="6c4ef73c-2758-49d4-8582-d469aa2b75d9"
       language-code="vi"
-      chat-icon="../src/assets/chat-icon/2593627.png"
+      chat-icon="../../../../assets/chat-icon/2593627.png"
+      
     ></df-messenger>
+
     <TheFooter></TheFooter>
   </div>
 </template>

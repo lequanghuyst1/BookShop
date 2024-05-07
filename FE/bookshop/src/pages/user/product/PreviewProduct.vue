@@ -89,7 +89,7 @@ export default {
     return {
       starItems: ["Rất tệ", "Tệ", "Bình thường", "Tốt", "Tuyệt vời"],
       previewProduct: {
-        Rating: 5,
+        Rating: 4,
       },
     };
   },
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     rateProduct(rating) {
-      this.previewProduct.Rating = rating + 1;
+      this.previewProduct.Rating = rating;
     },
     handleCheckModeForm() {
       if (this.formMode === this.$Enum.FormMode.Edit) {
@@ -128,10 +128,11 @@ export default {
      * Thực hiện thêm mới đánh giá và nhận xét
      * @author LQHUY(18/04/2024)
      */
-     async handleOnAdd() {
+    async handleOnAdd() {
       try {
         this.previewProduct.UserId = this.$props.userId;
         this.previewProduct.BookId = this.$props.bookId;
+        this.previewProduct.Rating += 1;
         const formData = new FormData();
         formData.append("dataJson", JSON.stringify(this.previewProduct));
         const res = await reviewProductService.post(formData);
@@ -151,6 +152,7 @@ export default {
     async hanldeOnEdit() {
       try {
         const formData = new FormData();
+        this.previewProduct.Rating += 1;
         formData.append("dataJson", JSON.stringify(this.previewProduct));
         const res = await reviewProductService.put(
           this.$props.reviewProductIdEdit,
@@ -176,6 +178,7 @@ export default {
         );
         if (res.status === 200) {
           this.previewProduct = res.data;
+          this.previewProduct.Rating -= 1;
         }
       } catch (error) {
         console.log(error);

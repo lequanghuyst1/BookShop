@@ -18,7 +18,7 @@ namespace BookShopOnline.Core.Interfaces.Infrastructures
         /// <param name="userId">mã định danh người dùng</param>
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(12/02/2024)
-        Task<IEnumerable<Order>> GetByUserId(Guid userId);
+        Task<PagingEntity<OrderDto>> GetByUserId(Guid userId, int? PageSize, int? PageNumber, string? ColumnName, string? Value);
 
         /// <summary>
         /// Hàm thực hiện xác nhận tất cả các đơn hàng chưa được xác nhận

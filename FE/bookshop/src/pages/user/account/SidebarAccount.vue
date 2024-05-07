@@ -6,10 +6,7 @@
         :key="index"
         class="sidebar-account-item"
       >
-        <router-link
-          :to="item.path"
-          class="sidebar-account-item-link"
-        >
+        <router-link exact :to="item.path" class="sidebar-account-item-link">
           <div class="sidebar-account-item-icon">
             <i :class="item.icon"></i>
           </div>
@@ -63,15 +60,7 @@ export default {
         var res = await userService.Logout(this.user?.Email);
         if (res.status === 201) {
           removeAllInfoTokenToStorage();
-          this.$router.push("/").finally(() => {
-            location.reload();
-            this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-              "Đăng xuất thành công",
-              this.$Resource[this.$languageCode].ToastMessage.Status.Success
-            );
-          });
+          location.href = "http://localhost:8080/";
         }
       } catch (error) {
         console.log(error);

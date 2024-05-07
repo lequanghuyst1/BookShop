@@ -39,10 +39,10 @@ namespace BookShopOnline.Api.Controllers
         /// <param name="id">mã đingj danh người dùng</param>
         /// <returns>danh sách các bản ghi</returns>
         /// Created By: LQHUY(12/04/2024)
-        [HttpGet("GetByUserId/{id}")]
-        public async Task<IActionResult> GetByUserId(Guid id)
+        [HttpGet("GetByUserId")]
+        public async Task<IActionResult> GetByUserId(Guid userId, int? PageSize, int? PageNumber, string? ColumnName, string? Value)
         {
-            var res = await _orderService.GetByUserId(id);
+            var res = await _orderRepository.GetByUserId(userId, PageSize, PageNumber, ColumnName, Value);
             return StatusCode(200, res);
         }
 
