@@ -42,7 +42,7 @@ const TEXT_FIELD = {
         placeholder: "",
         rules: {
           lengthMax: 20,
-          required: false,
+          required: true,
           rule: ["number"],
         },
       },
@@ -101,7 +101,43 @@ const TEXT_FIELD = {
           rule: ["number"],
         },
       },
+      heavy: {
+        name: "Heavy",
+        label: "Trọng lượng",
+        ref: "refHeavy",
+        placeholder: "",
+        rules: {
+          lengthMax: 50,
+          required: false,
+          rule: ["number"],
+        },
+      },
+      size: {
+        name: "Size",
+        label: "Kích cỡ",
+        ref: "refSize",
+        placeholder: "",
+        rules: {
+          lengthMax: 50,
+          required: false,
+          rule: ["number"],
+        },
+      },
+      publicationDate: {
+        name: "PublicationDate",
+        label: "Ngày xuất bản",
+        ref: "refPublicationDate",
+        placeholder: "",
+        rules: {
+          lengthMax: 50,
+          required: false,
+          rule: [],
+        },
+      },
     },
+    /**
+     * Start category
+     */
     category: {
       categoryCode: {
         name: "CategoryCode",
@@ -127,9 +163,9 @@ const TEXT_FIELD = {
       },
       description: {
         name: "Description",
-        label: "Mô tả",
+        label: "Nội dung",
         ref: "refDescription",
-        placeholder: "Nhập mô tả",
+        placeholder: "Nhập nội dung",
         rules: {
           lengthMax: 255,
           required: false,
@@ -225,18 +261,7 @@ const TEXT_FIELD = {
         rules: {
           lengthMax: 50,
           required: true,
-          rule: ['phoneNumber'],
-        },
-      },
-      address: {
-        name: "Address",
-        label: "Địa chỉ",
-        ref: "refAddress",
-        placeholder: "Nhập địa chỉ",
-        rules: {
-          lengthMax: 100,
-          required: false,
-          rule: [],
+          rule: ["phoneNumber"],
         },
       },
       accountStatus: {

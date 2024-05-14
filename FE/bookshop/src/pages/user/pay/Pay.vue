@@ -231,7 +231,7 @@
 
           <!-- Start: Phương thức thanh toán -->
           <div class="payment-method">
-            <div class="info-order-title">
+            <div class="info-order-title" style="color: #333;">
               <h3>Phương thức thanh toán</h3>
             </div>
             <div class="payment-method-list">
@@ -362,7 +362,7 @@
               </div>
             </form>
           </div>
-          <div class="member-shop">
+          <!-- <div class="member-shop">
             <div class="info-order-title">
               <h3>Thành viên</h3>
             </div>
@@ -384,7 +384,7 @@
                 <label>Sử dụng fresship</label>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="total-order">
             <div class="info-order-title">
               <h3>Thanh toán</h3>
@@ -858,6 +858,13 @@ export default {
 </script>
 <style scoped>
 @import url(./pay.css);
+.payment-method {
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 32px !important;
+  margin-bottom: 32px;
+}
 .item {
   margin: 8px 0;
 }

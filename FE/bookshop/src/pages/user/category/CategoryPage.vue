@@ -150,7 +150,7 @@
         <div class="col-9">
           <div class="category-tab-product">
             <div class="tab-heading">
-              <h4>Sách mới nổi bật</h4>
+              <h4>Sách {{ category.CategoryName }}</h4>
             </div>
 
             <div class="tab-content">

@@ -7,7 +7,7 @@ const userColumns = [
   },
   {
     field: "Email",
-    nameField: "Name",
+    nameField: "Email",
     class: "table-align-text",
     width: "152px",
   },

@@ -560,14 +560,17 @@ export default {
 };
 </script>
 <style scoped>
+.m-dialog {
+  z-index: 2;
+}
 .topbar {
   align-items: center;
   display: flex;
   position: relative;
   color: #fff;
   min-height: 40px;
-  background-color: #FF94CA;
-  z-index: 10;
+  background-color: #ff94ca;
+  z-index: 3;
 }
 .item {
   margin-right: 30px;
@@ -674,7 +677,7 @@ export default {
   top: 0; /* Khoảng cách header cố định cách top */
   width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
-  z-index: 5;
+  z-index: 3;
 }
 .header__logo img {
   width: 80%;
@@ -848,7 +851,7 @@ export default {
   border: 1px solid #fff;
 }
 .header {
-  z-index: 10;
+  z-index: 3;
 }
 .header__logo {
   flex-shrink: 0;

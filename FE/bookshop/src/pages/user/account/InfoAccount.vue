@@ -3,13 +3,14 @@
     <div class="page-title">
       <h1>Thông tin tài khoản</h1>
     </div>
-    <form v-on:submit.prevent action="" id="form-account-info">
+    <div id="form-account-info">
       <InputAccount
         id="fullname"
         :label="textFields.fullname.label"
         :placeholder="textFields.fullname.placeholder"
         :ref="textFields.fullname.ref"
         :rules="textFields.fullname.rules"
+        :name="textFields.fullname.name"
         v-model="user.Fullname"
       ></InputAccount>
       <InputAccount
@@ -18,6 +19,7 @@
         :placeholder="textFields.phoneNumber.placeholder"
         :ref="textFields.phoneNumber.ref"
         :rules="textFields.phoneNumber.rules"
+        :name="textFields.phoneNumber.name"
         v-model="user.PhoneNumber"
       ></InputAccount>
       <InputAccount
@@ -26,6 +28,7 @@
         :placeholder="textFields.email.placeholder"
         :ref="textFields.email.ref"
         :rules="textFields.email.rules"
+        :name="textFields.email.name"
         v-model="user.Email"
       ></InputAccount>
       <!-- <InputAccount
@@ -111,13 +114,14 @@
         </div>
       </div>
 
-      <div v-if="isChangePassword" class="change-password-layout">
+      <div class="change-password-layout">
         <InputAccount
           id="password-old"
           :label="textFields.currentPassword.label"
           :placeholder="textFields.currentPassword.placeholder"
           :ref="textFields.currentPassword.ref"
           :rules="textFields.currentPassword.rules"
+          :name="textFields.currentPassword.name"
           :errorMessage="this.lstErrorMessage.CurrentPassword"
           v-model="user.CurrentPassword"
         ></InputAccount>
@@ -127,6 +131,7 @@
           :placeholder="textFields.newPassword.placeholder"
           :ref="textFields.newPassword.ref"
           :rules="textFields.newPassword.rules"
+          :name="textFields.newPassword.name"
           v-model="user.NewPassword"
         ></InputAccount>
         <InputAccount
@@ -135,13 +140,14 @@
           :placeholder="textFields.renewPassword.placeholder"
           :ref="textFields.renewPassword.ref"
           :rules="textFields.renewPassword.rules"
+          :name="textFields.renewPassword.name"
           v-model="user.RenewPassword"
         ></InputAccount>
       </div>
       <div @click="handleUpdateUserInfo" class="btn-save-confirm">
         <button>Cập nhật thông tin</button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 <script>
@@ -149,6 +155,7 @@ import InputAccount from "./GroupInput.vue";
 import localStorageService from "@/js/storage/LocalStorageService";
 import userService from "@/utils/UserService";
 import TEXT_FIELD from "@/js/resource/text-field";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "InfoAccountUserPage",
   components: { InputAccount },
@@ -194,6 +201,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     yearNow() {
       let date = new Date();
 
@@ -204,6 +212,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateDefault"]),
     /**
      * Thực hiện save khi click vào btn lưu thông tin
      * Author: LQHUY(08/04/2024)
@@ -214,16 +223,12 @@ export default {
       //validate dữ liệu
       this.handleValidateField();
 
-      if (Object.keys(this.lstErrorMessage).length > 0) {
-        for (const key in this.lstErrorMessage) {
-          const value = this.lstErrorMessage[key];
-          if (value !== null) {
-            this.$refs[key].focusInput();
-            return;
-          }
-        }
+      if (this.globalErrorMsg.length > 0) {
+        console.log(this.globalErrorMsg);
+        const ref = `ref${this.globalErrorMsg[0].name}`;
+        this.$refs[ref].focusInput();
+        return;
       }
-
       //update dữ liệu bản ghi
       this.hanldeOnEdit();
     },
@@ -237,31 +242,21 @@ export default {
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
 
-          //Nếu không thay đổi mật khẩu thì dừng luôn không cần check
-          if (
-            this.isChangePassword === false &&
-            ref === this.textFields.currentPassword.ref
-          ) {
-            break;
-          }
-
           //validate dữ liệu
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-
-          if (rules.required === true) {
-            if (
-              this.user[nameField] === "" ||
-              this.user[nameField] === null ||
-              this.user[nameField] === undefined
-            ) {
-              this.lstErrorMessage[ref] = key;
-            } else {
-              delete this.lstErrorMessage[ref];
-            }
-          }
         }
+        // for (let key in this.textFields) {
+        //   let ref = this.textFields[key].ref;
+        //   Nếu không thay đổi mật khẩu thì dừng luôn không cần check
+        //   if (
+        //     this.isChangePassword === false &&
+        //     ref === this.textFields.currentPassword.ref
+        //   ) {
+        //     break;
+        //   }
+        //   validate dữ liệu
+        //   this.$refs[ref].validate();
+        // }
       } catch (error) {
         console.error(error);
       }

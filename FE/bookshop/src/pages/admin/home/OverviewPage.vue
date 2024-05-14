@@ -4,7 +4,7 @@
       <div class="col-9">
         <div class="content__header">
           <div class="content__header-title">
-            <h3>Tổng quan {{ getCount }}</h3>
+            <h3>Tổng quan</h3>
           </div>
         </div>
         <div class="statistical-wrap">
@@ -269,7 +269,7 @@ export default {
           typeOfTime: 2,
           fromDate: this.year,
           toDate: this.year,
-          quantityFilter: 5,
+          quantityFilter: 3,
         };
         const res = await orderService.getRevenueByProduct({
           params,

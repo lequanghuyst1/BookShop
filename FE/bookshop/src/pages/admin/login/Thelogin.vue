@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login__container">
       <div class="login__wrapper">
-        <div class="login__header"></div>
+        <div class="login__header">Đăng nhập</div>
         <div class="login__form">
           <form action="">
             <div class="row">
@@ -12,6 +12,7 @@
                   :placeholder="textFields.email.placeholder"
                   :ref="textFields.email.ref"
                   :rules="textFields.email.rules"
+                  :name="textFields.email.name"
                   autocomplete="email"
                   v-model="user.Email"
                 ></MInput>
@@ -23,6 +24,7 @@
                 :placeholder="textFields.password.placeholder"
                 :ref="textFields.password.ref"
                 :rules="textFields.password.rules"
+                :name="textFields.password.name"
                 type="password"
                 v-model="user.Password"
               ></MInput>
@@ -58,6 +60,7 @@ import TEXT_FIELD from "@/js/resource/text-field";
 import userService from "@/utils/UserService";
 import { setInfoTokensToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "LoginAdminPage",
   created() {},
@@ -72,25 +75,28 @@ export default {
       }
     });
   },
+  beforeUnmount() {
+    this.setGlobalValidateDefault();
+  },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     //Lấy ra tên và các rằng buộc của người dùng khi đăng nhập
     textFields: function () {
       return TEXT_FIELD[this.$languageCode].userLogin;
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateDefault"]),
     /**
      * Hàm đăng nhập vào hệ thống
      * Author: LQHUY(22/02/2024)
      */
     onLoginInSystem() {
       this.validateTextField();
-
-      if (this.listErr.length > 0) {
-        if (this.listErr.length > 0) {
-          this.$refs[this.listErr[0]].setFocus();
-          return;
-        }
+      if (this.globalErrorMsg.length > 0) {
+        const ref = `ref${this.globalErrorMsg[0].name}`;
+        this.$refs[ref].setFocus();
+        return;
       }
       this.handleLogin();
     },
@@ -100,22 +106,10 @@ export default {
      */
     validateTextField() {
       try {
+        this.setGlobalValidateDefault();
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-          if (rules.required === true) {
-            if (
-              this.user[nameField] === "" ||
-              this.user[nameField] === null ||
-              this.user[nameField] === undefined
-            ) {
-              this.listErr.push(ref);
-            } else {
-              this.listErr = this.listErr.filter((item) => item !== ref);
-            }
-          }
         }
       } catch (error) {
         console.error(error);
@@ -143,11 +137,11 @@ export default {
             ) {
               this.$router.push("/admin/book-management");
               this.$emitter.emit(
-              "onShowToastMessage",
-              this.$Resource[this.$languageCode].ToastMessage.Type.Success,
-              "Đăng nhập thành công",
-              this.$Resource[this.$languageCode].ToastMessage.Status.Success
-            );
+                "onShowToastMessage",
+                this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+                "Đăng nhập thành công",
+                this.$Resource[this.$languageCode].ToastMessage.Status.Success
+              );
             } else {
               this.$emitter.emit(
                 "onShowToastMessage",
@@ -168,7 +162,6 @@ export default {
   data() {
     return {
       user: {},
-      listErr: [],
       errorMessageLogin: null,
     };
   },
@@ -214,16 +207,10 @@ export default {
   z-index: 2;
 }
 .login__header {
-  font-size: 60px;
-  background-image: url(../../../assets/logo.png) center no-repeat;
-  background-size: contain;
-  display: block;
-  display: -moz-box;
-  display: -ms-flexbox;
-  width: 196px;
-  height: 36px;
-  margin: 0 auto;
-  margin-bottom: 40px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 .login__body {
 }
@@ -318,6 +305,7 @@ export default {
 }
 .login-method-item[method="Microsoft"] {
   background-image: url(../../../assets/icons/icon-microsoft.svg);
+  background-position: 0 0;
 }
 .form-input-error-message {
   font-size: 12px;

@@ -38,6 +38,7 @@
                     :placeholder="textFieldsLogin.email.placeholder"
                     :ref="textFieldsLogin.email.ref"
                     :rules="textFieldsLogin.email.rules"
+                    :name="textFieldsLogin.email.name"
                     autocomplete="email"
                     v-model="user.Email"
                   ></MInput>
@@ -49,6 +50,7 @@
                   :placeholder="textFieldsLogin.password.placeholder"
                   :ref="textFieldsLogin.password.ref"
                   :rules="textFieldsLogin.password.rules"
+                  :name="textFieldsLogin.password.name"
                   type="password"
                   v-model="user.Password"
                 ></MInput>
@@ -94,6 +96,7 @@
                     :placeholder="textFieldsRegister.fullname.placeholder"
                     :ref="textFieldsRegister.fullname.ref"
                     :rules="textFieldsRegister.fullname.rules"
+                    :name="textFieldsRegister.fullname.name"
                     v-model="user.Fullname"
                   ></MInput>
                   <MInput
@@ -101,6 +104,7 @@
                     :placeholder="textFieldsRegister.email.placeholder"
                     :ref="textFieldsRegister.email.ref"
                     :rules="textFieldsRegister.email.rules"
+                    :name="textFieldsRegister.email.name"
                     :errMsg="errsMsg.Email"
                     v-model="user.Email"
                   ></MInput>
@@ -110,6 +114,7 @@
                   :placeholder="textFieldsRegister.password.placeholder"
                   :ref="textFieldsRegister.password.ref"
                   :rules="textFieldsRegister.password.rules"
+                  :name="textFieldsRegister.password.name"
                   type="password"
                   v-model="user.Password"
                 ></MInput>
@@ -118,6 +123,7 @@
                   :placeholder="textFieldsRegister.replicaPassword.placeholder"
                   :ref="textFieldsRegister.replicaPassword.ref"
                   :rules="textFieldsRegister.replicaPassword.rules"
+                  :name="textFieldsRegister.replicaPassword.name"
                   :errMsg="errsMsg.ReplicaPassword"
                   type="password"
                   v-model="user.ReplicaPassword"
@@ -168,7 +174,7 @@
             v-if="this.mode === this.$Enum.FormAccount.Register"
             class="register-policy"
           >
-            Bằng việc đăng ký, bạn đã đồng ý với Vinabook.com về
+            Bằng việc đăng ký, bạn đã đồng ý với WanderBook về
             <a href="/">Điều khoản dịch vụ </a> &
             <a href="/"> Chính sách bảo mật</a>
           </div>
@@ -183,6 +189,7 @@ import userService from "@/utils/UserService";
 import { setInfoTokensToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 import cartItemService from "@/utils/CartItemService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "TheLoginUser",
   emits: ["onCloseForm"],
@@ -190,11 +197,14 @@ export default {
     this.mode = this.formAccount;
   },
   mounted() {
-    if (this.formAccount === this.$Enum.FormAccount.Login) {
-      this.$refs[this.textFieldsLogin.email.ref].setFocus();
-    } else {
-      this.$refs[this.textFieldsRegister.fullname.ref].setFocus();
-    }
+    // if (this.formAccount === this.$Enum.FormAccount.Login) {
+    //   this.$refs[this.textFieldsLogin.email.ref].setFocus();
+    // } else {
+    //   this.$refs[this.textFieldsRegister.fullname.ref].setFocus();
+    // }
+  },
+  beforeUnmount() {
+    this.setGlobalValidateDefault();
   },
   props: {
     formAccount: {
@@ -203,6 +213,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     //Lấy ra tên và các rằng buộc của người dùng khi đăng nhập
     textFieldsLogin: function () {
       return TEXT_FIELD[this.$languageCode].userLogin;
@@ -216,14 +227,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions([
+      "setGlobalValidateDefault",
+      "checkErrorEmpty",
+      "setGlobalValidateError",
+    ]),
     /**
      * Thực hiện lưu thông tin người dùng khi click vào đăng ký hoặc đăng nhập
      * Author: LQHUY(06/04/2024)
      */
     handleSaveDataWithMode() {
       this.handleValidateField();
-      if (this.listErr.length > 0) {
-        this.$refs[this.listErr[0]].setFocus();
+      if (this.globalErrorMsg.length > 0) {
+        const ref = `ref${this.globalErrorMsg[0].name}`;
+        this.$refs[ref].setFocus();
         return;
       }
       if (this.mode === this.$Enum.FormAccount.Login) {
@@ -239,13 +256,14 @@ export default {
      */
     checkPasswordDuplicateRegister() {
       if (this.user.ReplicaPassword !== this.user.Password) {
+        this.setGlobalValidateError(
+          { name: this.textFieldsRegister.replicaPassword.name },
+          "Mật khẩu không trùng khớp."
+        );
         this.errsMsg.ReplicaPassword = "Mật khẩu không trùng khớp.";
-        this.listErr.push("refReplicaPassword");
       } else {
         this.errsMsg.ReplicaPassword = null;
-        this.listErr = this.listErr.filter(
-          (item) => item !== "refReplicaPassword"
-        );
+        this.checkErrorEmpty(this.textFieldsRegister.replicaPassword.name);
       }
     },
 
@@ -255,6 +273,7 @@ export default {
      */
     handleValidateField() {
       try {
+        this.setGlobalValidateDefault();
         let textFields;
         if (this.mode === this.$Enum.FormAccount.Login) {
           textFields = this.textFieldsLogin;
@@ -264,23 +283,10 @@ export default {
         for (let key in textFields) {
           let ref = textFields[key].ref;
           this.$refs[ref].validate();
-          let rules = textFields[key].rules;
-          let nameField = textFields[key].name;
-          if (rules.required === true) {
-            if (
-              this.user[nameField] === "" ||
-              this.user[nameField] === null ||
-              this.user[nameField] === undefined
-            ) {
-              this.listErr.push(ref);
-            } else {
-              this.listErr = this.listErr.filter((item) => item !== ref);
-            }
-          }
         }
         if (
           this.mode === this.$Enum.FormAccount.Register &&
-          this.listErr.length === 0
+          this.globalErrorMsg.length === 0
         ) {
           this.checkPasswordDuplicateRegister();
         }
@@ -306,16 +312,14 @@ export default {
               "Đăng nhập thành công",
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
-            console.log(res.data)
             setInfoTokensToStorage(
               res.data.AccessToken,
               res.data.RefreshToken,
               res.data.UserDto
             );
             //lấy ra thông tin người dùng
-            var user =
-              localStorageService.getItemFromLocalStorage("userInfo");
-              console.log(user)
+            var user = localStorageService.getItemFromLocalStorage("userInfo");
+            console.log(user);
             //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
             var result = await cartItemService.getByCartId(user.CartId);
             if (result.status === 200) {
@@ -359,7 +363,6 @@ export default {
     return {
       user: {},
       mode: null,
-      listErr: [],
       errsMsg: {},
     };
   },

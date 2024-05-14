@@ -110,7 +110,6 @@
 }
 .login-method-item[method="Google"] {
   background-image: url(../../../assets/icons/google.png);
-  background-position: 38px center;
 }
 .login-method-item[method="Facebook"] {
   background-image: url(../../../assets/icons/facebook.png);

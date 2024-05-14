@@ -31,6 +31,7 @@
 </template>
 <script>
 import { validateValue } from "@/js/validate/validate";
+import { mapActions } from "vuex";
 export default {
   created() {},
 
@@ -68,6 +69,10 @@ export default {
     errMsg: {
       type: String,
       required: false,
+    },
+    name: {
+      type: String,
+      default: "",
     },
   },
   data() {
@@ -111,6 +116,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateError", "checkErrorEmpty"]),
     // onInputinputValue() {
     //   if (this.formatMoney) {
     //     // Xóa các ký tự không phải số và định dạng do có chữ d nên phải định dạng toàn số
@@ -142,7 +148,7 @@ export default {
     setBorderError() {
       this.$refs["input"].classList.add("m-textfield-error");
     },
-    
+
     /**
      * Blur ra ngoài ô input validate
      * Author: LQHUY(07/12/2002)
@@ -151,21 +157,42 @@ export default {
       this.validate();
     },
 
+    /**
+     * Hàm thực hiện validate theo rule
+     * @author LQHUY
+     */
     validate() {
+      let message = "";
       if (this.rules) {
         if (this.rules?.required === true) {
-          this.messageError = validateValue.required(
-            this.inputValue,
-            this.label
-          );
-          if (!this.messageError) {
+          message = validateValue.required(this.inputValue, this.label);
+          this.hanldeValidate(message);
+          if (!message) {
             if (this.rules?.rule.length > 0) {
               this.rules?.rule.forEach((item) => {
-                this.messageError = validateValue[item](this.inputValue);
+                const msgError = validateValue[item](this.inputValue);
+                this.hanldeValidate(msgError);
               });
             }
           }
         }
+      }
+    },
+
+    /**
+     * Kiểm tra và thêm message lỗi vào mảng 
+     * @param errMessage 
+     */
+    hanldeValidate(errMessage) {
+      if (errMessage) {
+        this.messageError = errMessage;
+        this.setGlobalValidateError({
+          name: this.$props.name,
+          message: errMessage,
+        });
+      } else {
+        this.checkErrorEmpty(this.$props.name);
+        this.messageError = "";
       }
     },
   },

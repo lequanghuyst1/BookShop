@@ -35,36 +35,39 @@
       <div class="m-dialog__content">
         <form action="" style="width: 100%; height: 100%">
           <div class="row">
-            <div class="col-2">
+            <!-- <div class="col-2">
               <MInputImage
                 v-model:imagePath="image.ImagePath"
                 v-model="imageFile"
                 label="Chọn ảnh"
               ></MInputImage>
-            </div>
-            <div class="col-10">
+            </div> -->
+            <div class="col-12">
               <div class="row">
-                <div class="col l-3">
+                <div class="col-3">
                   <MInput
                     :ref="textFields.publisherCode.ref"
                     :label="textFields.publisherCode.label"
                     :rules="textFields.publisherCode.rules"
+                    :name="textFields.publisherCode.name"
                     v-model="publisher.PublisherCode"
                   ></MInput>
                 </div>
-                <div class="col l-5">
+                <div class="col-5">
                   <MInput
                     :ref="textFields.publisherName.ref"
                     :label="textFields.publisherName.label"
                     :rules="textFields.publisherName.rules"
+                    :name="textFields.publisherName.name"
                     v-model="publisher.PublisherName"
                   ></MInput>
                 </div>
-                <div class="col l-4">
+                <div class="col-4">
                   <MInput
                     :ref="textFields.phoneNumber.ref"
                     :label="textFields.phoneNumber.label"
                     :rules="textFields.phoneNumber.rules"
+                    :name="textFields.phoneNumber.name"
                     v-model="publisher.PhoneNumber"
                   ></MInput>
                 </div>
@@ -75,6 +78,7 @@
                     :ref="textFields.address.ref"
                     :label="textFields.address.label"
                     :rules="textFields.address.rules"
+                    :name="textFields.address.name"
                     v-model="publisher.Address"
                   ></MInput>
                 </div>
@@ -131,6 +135,7 @@
 <script>
 import TEXT_FIELD from "@/js/resource/text-field";
 import publisherService from "@/utils/PublisherService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "publisherDetail",
   props: {
@@ -148,12 +153,17 @@ export default {
   mounted() {
     this.$refs[this.textFields.publisherCode.ref].setFocus();
   },
+  beforeUnmount() {
+    this.setGlobalValidateDefault();
+  },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     textFields() {
       return TEXT_FIELD[this.$languageCode].publisher;
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateDefault"]),
     /**
      * Thực hiện kiểm tra giá trị formMode
      * @author LQHUY(13/04/2024)
@@ -174,8 +184,9 @@ export default {
     handleSaveDataWithMode() {
       this.handleValidateField();
       try {
-        if (this.listErr.length > 0) {
-          this.$refs[this.listErr[0]].setFocus();
+        if (this.globalErrorMsg.length > 0) {
+          const ref = `ref${this.globalErrorMsg[0].name}`;
+          this.$refs[ref].setFocus();
           return;
         }
         if (this.formMode === this.$Enum.FormMode.Edit) {
@@ -194,22 +205,10 @@ export default {
      */
     handleValidateField() {
       try {
+        this.setGlobalValidateDefault();
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-          if (rules.required === true) {
-            if (
-              this.publisher[nameField] === "" ||
-              this.publisher[nameField] === null ||
-              this.publisher[nameField] === undefined
-            ) {
-              this.listErr.push(ref);
-            } else {
-              this.listErr = this.listErr.filter((item) => item !== ref);
-            }
-          }
         }
       } catch (error) {
         console.error(error);
@@ -355,11 +354,9 @@ export default {
     return {
       publisher: {},
       imageFile: null,
-      listErr: [],
       image: {},
     };
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

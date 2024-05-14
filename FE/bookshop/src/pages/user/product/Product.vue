@@ -203,7 +203,7 @@
               </div>
             </div>
 
-            <div class="pro-service-item">
+            <!-- <div class="pro-service-item">
               <div class="pro-service-icon">
                 <img
                   src="//theme.hstatic.net/200000845405/1001198377/14/pro_service_icon_3.png?v=457"
@@ -213,7 +213,7 @@
               <div class="pro-service-text">
                 Miễn phí vận chuyển cho Đơn hàng từ 250.000đ
               </div>
-            </div>
+            </div> -->
 
             <div class="pro-service-item">
               <div class="pro-service-icon">

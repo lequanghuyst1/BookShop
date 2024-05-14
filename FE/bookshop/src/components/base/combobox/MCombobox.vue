@@ -56,7 +56,6 @@
             selected: item[this.propText] === this.outputText,
           }"
         >
-          
           <li class="m-combobox-list__item-text">
             {{ item[propText] }}
           </li>
@@ -64,7 +63,6 @@
             <i class="fa-solid fa-check"></i>
           </div>
         </div>
-        
       </ul>
     </div>
     <span class="m-error-message">{{ messageError }}</span>
@@ -77,6 +75,9 @@ const keyCode = {
   ArrowDown: 40,
   ESC: 27,
 };
+import { mapActions } from "vuex";
+import { validateValue } from "@/js/validate/validate";
+
 export default {
   name: "MCombobox",
   props: {
@@ -107,6 +108,10 @@ export default {
     rules: {
       type: Object,
       required: false,
+    },
+    name: {
+      type: String,
+      default: "",
     },
   },
   created() {
@@ -159,6 +164,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateError", "checkErrorEmpty"]),
+
     setOutputSelectedItem() {
       this.dataFilter = this.dataCombobox;
       const itemSelected = this.dataCombobox.find((item) => {
@@ -171,21 +178,35 @@ export default {
     onBulrInput() {
       this.validate();
     },
+    
     validate() {
+      let message = "";
       if (this.rules) {
         if (this.rules?.required === true) {
-          if (
-            this.modelValue === null ||
-            this.modelValue === "" ||
-            this.modelValue === undefined
-          ) {
-            this.messageError = this.$Resource[this.$languageCode].ErrorMessage(
-              this.label
-            );
-          } else {
-            this.messageError = null;
+          message = validateValue.required(this.inputValue, this.label);
+          this.hanldeValidate(message);
+          if (!message) {
+            if (this.rules?.rule.length > 0) {
+              this.rules?.rule.forEach((item) => {
+                const msgError = validateValue[item](this.inputValue);
+                this.hanldeValidate(msgError);
+              });
+            }
           }
         }
+      }
+    },
+
+    hanldeValidate(errMessage) {
+      if (errMessage) {
+        this.messageError = errMessage;
+        this.setGlobalValidateError({
+          name: this.$props.name,
+          message: errMessage,
+        });
+      } else {
+        this.checkErrorEmpty(this.$props.name);
+        this.messageError = "";
       }
     },
     /**

@@ -8,7 +8,7 @@
     </div>
     <div class="col-8">
       <input
-        type="text"
+        :type="type"
         :id="id"
         :placeholder="placeholder"
         v-model="inputValue"
@@ -23,6 +23,8 @@
 </template>
 <script>
 import { validateValue } from "@/js/validate/validate";
+import { mapActions } from "vuex";
+
 export default {
   name: "InputAccount",
   props: {
@@ -54,6 +56,14 @@ export default {
       type: Object,
       required: false,
     },
+    type: {
+      type: String,
+      default: "text",
+    },
+    name: {
+      type: String,
+      default: "",
+    },
   },
   created() {},
   watch: {
@@ -81,28 +91,50 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateError", "checkErrorEmpty"]),
+
     focusInput() {
       this.$refs["refInput"].focus();
     },
     onBulrInput() {
       this.validate();
     },
+    /**
+     * Hàm thực hiện validate theo rule
+     * @author LQHUY
+     */
     validate() {
-      let rules = this.$props.rules;
-      if (rules) {
-        if (rules?.required === true) {
-          this.errMessage = validateValue.required(
-            this.inputValue,
-            this.$props.label
-          );
-          if (!this.errMessage) {
-            if (rules?.rule.length > 0) {
-              rules?.rule.forEach((item) => {
-                this.errMessage = validateValue[item](this.inputValue);
+      let message = "";
+      if (this.rules) {
+        if (this.rules?.required === true) {
+          message = validateValue.required(this.inputValue, this.label);
+          this.hanldeValidate(message);
+          if (!message) {
+            if (this.rules?.rule.length > 0) {
+              this.rules?.rule.forEach((item) => {
+                const msgError = validateValue[item](this.inputValue);
+                this.hanldeValidate(msgError);
               });
             }
           }
         }
+      }
+    },
+
+    /**
+     * Kiểm tra và thêm message lỗi vào mảng
+     * @param errMessage
+     */
+    hanldeValidate(errMessage) {
+      if (errMessage) {
+        this.errMessage = errMessage;
+        this.setGlobalValidateError({
+          name: this.$props.name,
+          message: errMessage,
+        });
+      } else {
+        this.checkErrorEmpty(this.$props.name);
+        this.errMessage = "";
       }
     },
   },
@@ -110,6 +142,7 @@ export default {
     return {
       errMessage: null,
       inputValue: null,
+      typeInput: null,
     };
   },
 };

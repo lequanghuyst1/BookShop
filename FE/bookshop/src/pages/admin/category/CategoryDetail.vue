@@ -40,6 +40,7 @@
                 :ref="textFields.categoryCode.ref"
                 :label="textFields.categoryCode.label"
                 :rules="textFields.categoryCode.rules"
+                :name="textFields.categoryCode.name"
                 v-model="category.CategoryCode"
               ></MInput>
             </div>
@@ -50,6 +51,7 @@
                 :ref="textFields.categoryName.ref"
                 :label="textFields.categoryName.label"
                 :rules="textFields.categoryName.rules"
+                :name="textFields.categoryName.name"
                 v-model="category.CategoryName"
               ></MInput>
             </div>
@@ -101,6 +103,8 @@
 <script>
 import TEXT_FIELD from "@/js/resource/text-field";
 import categoryService from "@/utils/CategoryService";
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "CategoryDetail",
   props: {
@@ -118,12 +122,17 @@ export default {
   mounted() {
     this.$refs[this.textFields.categoryCode.ref].setFocus();
   },
+  beforeUnmount(){
+    this.setGlobalValidateDefault()
+  },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     textFields() {
       return TEXT_FIELD[this.$languageCode].category;
     },
   },
   methods: {
+    ...mapActions(['setGlobalValidateDefault']),
     /**
      * Thực hiện kiểm tra giá trị formMode
      * @author LQHUY(13/04/2024)
@@ -143,8 +152,9 @@ export default {
     handleSaveDataWithMode() {
       this.handleValidateField();
       try {
-        if (this.listErr.length > 0) {
-          this.$refs[this.listErr[0]].setFocus();
+        if (this.globalErrorMsg.length > 0) {
+          const ref = `ref${this.globalErrorMsg[0].name}`;
+          this.$refs[ref].setFocus();
           return;
         }
         if (this.formMode === this.$Enum.FormMode.Edit) {
@@ -163,22 +173,10 @@ export default {
      */
     handleValidateField() {
       try {
+        this.setGlobalValidateDefault();
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-          if (rules.required === true) {
-            if (
-              this.category[nameField] === "" ||
-              this.category[nameField] === null ||
-              this.category[nameField] === undefined
-            ) {
-              this.listErr.push(ref);
-            } else {
-              this.listErr = this.listErr.filter((item) => item !== ref);
-            }
-          }
         }
       } catch (error) {
         console.error(error);
@@ -248,7 +246,7 @@ export default {
           case 200:
             this.category = res.data;
             this.category.QuantityImported = Number(null);
-              this.$emitter.emit("toggleShowLoading", false);
+            this.$emitter.emit("toggleShowLoading", false);
             break;
           default:
             break;
@@ -306,7 +304,6 @@ export default {
   data() {
     return {
       category: {},
-      listErr: [],
     };
   },
 };

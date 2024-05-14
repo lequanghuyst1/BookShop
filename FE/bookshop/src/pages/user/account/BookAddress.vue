@@ -73,6 +73,7 @@
           :placeholder="textFields.reminiscentName.placeholder"
           :ref="textFields.reminiscentName.ref"
           :rules="textFields.reminiscentName.rules"
+          :name="textFields.reminiscentName.name"
           v-model="address.ReminiscentName"
         ></InputAccount>
         <InputAccount
@@ -80,6 +81,7 @@
           :placeholder="textFields.phoneNumber.placeholder"
           :ref="textFields.phoneNumber.ref"
           :rules="textFields.phoneNumber.rules"
+          :name="textFields.phoneNumber.name"
           v-model="address.PhoneNumber"
         ></InputAccount>
 
@@ -184,6 +186,7 @@
           :placeholder="textFields.homeNumber.placeholder"
           :ref="textFields.homeNumber.ref"
           :rules="textFields.homeNumber.rules"
+          :name="textFields.homeNumber.name"
           v-model="address.HomeNumber"
         ></InputAccount>
 
@@ -244,6 +247,7 @@ import deliveryAddressService from "@/utils/DeliveryAddressService";
 import InputAccount from "./GroupInput.vue";
 import TEXT_FIELD from "@/js/resource/text-field";
 import localStorageService from "@/js/storage/LocalStorageService";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "BookAddressPage",
   components: { InputAccount },
@@ -259,7 +263,9 @@ export default {
     });
     document.title = "Sổ địa chỉ";
   },
-
+  beforeUnmount() {
+    this.setGlobalValidateDefault();
+  },
   watch: {
     /**
      * Theo dõi biến provinceSelected
@@ -294,6 +300,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     userInfo: function () {
       return localStorageService.getItemFromLocalStorage("userInfo")
         ? localStorageService.getItemFromLocalStorage("userInfo")
@@ -304,6 +311,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateDefault"]),
     /**
      * Hàm lấy ra các bản ghi theo userId
      * Author: LQHUY(04/04/2024)
@@ -487,8 +495,9 @@ export default {
      */
     handleSave() {
       this.handleValidateField();
-      if (this.refListError.length > 0) {
-        this.$refs[this.refListError[0]].focusInput();
+      if (this.globalErrorMsg.length > 0) {
+        const ref = `ref${this.globalErrorMsg[0].name}`;
+        this.$refs[ref].focusInput();
         return;
       }
       this.handleSaveWithMode();
@@ -512,29 +521,13 @@ export default {
      */
     handleValidateField() {
       try {
+        this.setGlobalValidateDefault();
+
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
-
+          
           //validate dữ liệu
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-
-          if (rules.required === true) {
-            if (
-              this.address[nameField] === "" ||
-              this.address[nameField] === null ||
-              this.address[nameField] === undefined
-            ) {
-              this.lstErrorMessage[ref] = key;
-              this.refListError.push(ref);
-            } else {
-              delete this.lstErrorMessage[ref];
-              this.refListError = this.refListError.filter(
-                (item) => item !== ref
-              );
-            }
-          }
         }
 
         this.setError(

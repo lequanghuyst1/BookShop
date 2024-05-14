@@ -126,6 +126,7 @@
             @click="goToOrderDetail(order.OrderId)"
           >
             Xem chi tiết
+          
           </div>
         </div>
       </div>

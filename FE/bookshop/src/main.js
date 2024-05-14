@@ -71,7 +71,6 @@ app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$httpRequest = httpRequest;
 app.config.globalProperties.$axios = axios;
 
-
 import { createStore } from "vuex";
 
 // import stores from "@/js/store/index.js"
@@ -81,6 +80,7 @@ const store = createStore({
     return {
       count: 1000,
       seachString: "",
+      globalErrorMsg: [],
     };
   },
   getters: {
@@ -88,6 +88,7 @@ const store = createStore({
       return state.count;
     },
     searchString: (state) => state.seachString,
+    globalErrorMsg: (state) => state.globalErrorMsg,
   },
   mutations: {
     increment(state) {
@@ -95,7 +96,27 @@ const store = createStore({
     },
     setSearchString(state, string) {
       state.seachString = string;
-      console.log(state.seachString)
+    },
+    // Thực hiện thêm 1 lỗi vào globalErrorMsg
+    SET_GLOBAl_VALIDATE_ERROR(state, error) {
+      if (state.globalErrorMsg.length > 0) {
+        state.globalErrorMsg = state.globalErrorMsg.filter(
+          (item) => item.name !== error.name
+        );
+      }
+      state.globalErrorMsg.push(error);
+      console.log(state.globalErrorMsg)
+    },
+    CHECK_ERROR_EMPTY(state, name) {
+      if (state.globalErrorMsg.length > 0) {
+        state.globalErrorMsg = state.globalErrorMsg.filter(
+          (item) => item.name !== name
+        );
+      }
+    },
+    //Thực hiện xóa tất cả các lỗi
+    SET_GLOBAL_VALIDATE_DEFAULT(state) {
+      state.globalErrorMsg = [];
     },
   },
   actions: {
@@ -104,6 +125,19 @@ const store = createStore({
     },
     setSearchStringDefault({ commit }) {
       commit("setSearchString", "");
+    },
+
+    //Thực hiện lưu thông báo lỗi validate
+    setGlobalValidateError({ commit }, error) {
+      commit("SET_GLOBAl_VALIDATE_ERROR", error);
+    },
+    //kiểm tra thông báo lỗi validate
+    checkErrorEmpty({ commit }, name) {
+      commit("CHECK_ERROR_EMPTY", name);
+    },
+    //thực hiện xóa tất cả các lỗi
+    setGlobalValidateDefault({ commit }) {
+      commit("SET_GLOBAL_VALIDATE_DEFAULT");
     },
   },
 });

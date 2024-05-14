@@ -50,6 +50,7 @@
                     :ref="textFields.bookCode.ref"
                     :label="textFields.bookCode.label"
                     :rules="textFields.bookCode.rules"
+                    :name="textFields.bookCode.name"
                     v-model="book.BookCode"
                   ></MInput>
                 </div>
@@ -58,6 +59,7 @@
                     :ref="textFields.bookName.ref"
                     :label="textFields.bookName.label"
                     :rules="textFields.bookName.rules"
+                    :name="textFields.bookName.name"
                     v-model="book.BookName"
                   ></MInput>
                 </div>
@@ -66,6 +68,7 @@
                     :ref="textFields.author.ref"
                     :label="textFields.author.label"
                     :rules="textFields.author.rules"
+                    :name="textFields.author.name"
                     v-model="book.Author"
                   ></MInput>
                 </div>
@@ -79,6 +82,7 @@
                     :ref="textFields.categoryId.ref"
                     :label="textFields.categoryId.label"
                     :rules="textFields.categoryId.rules"
+                    :name="textFields.categoryId.name"
                     v-model="book.CategoryId"
                     id="cbCategory"
                   ></MCombobox>
@@ -91,6 +95,7 @@
                     :ref="textFields.publisherId.ref"
                     :label="textFields.publisherId.label"
                     :rules="textFields.publisherId.rules"
+                    :name="textFields.publisherId.name"
                     v-model="book.PublisherId"
                     id="cbPublisher"
                   ></MCombobox>
@@ -100,8 +105,10 @@
                 <div class="col l-3">
                   <MInput
                     type="date"
-                    ref="PublicationDate"
-                    label="Ngày xuất bản"
+                    :ref="textFields.publicationDate.ref"
+                    :label="textFields.publicationDate.label"
+                    :rules="textFields.publicationDate.rules"
+                    :name="textFields.publicationDate.name"
                     v-model="book.PublicationDate"
                   ></MInput>
                 </div>
@@ -110,20 +117,25 @@
                     :ref="textFields.quantityImported.ref"
                     :label="textFields.quantityImported.label"
                     :rules="textFields.quantityImported.rules"
+                    :name="textFields.quantityImported.name"
                     v-model="book.QuantityImported"
                   ></MInput>
                 </div>
                 <div class="col l-3">
                   <MInput
-                    ref="Size"
-                    label="Khổ sách"
+                    :ref="textFields.size.ref"
+                    :label="textFields.size.label"
+                    :rules="textFields.size.rules"
+                    :name="textFields.size.name"
                     v-model="book.Size"
                   ></MInput>
                 </div>
                 <div class="col l-3">
                   <MInput
-                    ref="Heavy"
-                    label="Khối lượng"
+                    :ref="textFields.heavy.ref"
+                    :label="textFields.heavy.label"
+                    :rules="textFields.heavy.rules"
+                    :name="textFields.heavy.name"
                     v-model="book.Heavy"
                   ></MInput>
                 </div>
@@ -136,6 +148,7 @@
                 :ref="textFields.originalPrice.ref"
                 :label="textFields.originalPrice.label"
                 :rules="textFields.originalPrice.rules"
+                :name="textFields.originalPrice.name"
                 v-model="book.OriginalPrice"
               ></MInput>
             </div>
@@ -144,6 +157,7 @@
                 :ref="textFields.discount.ref"
                 :label="textFields.discount.label"
                 :rules="textFields.discount.rules"
+                :name="textFields.discount.name"
                 v-model="book.Discount"
               ></MInput>
             </div>
@@ -152,6 +166,7 @@
                 :ref="textFields.numberOfPage.ref"
                 :label="textFields.numberOfPage.label"
                 :rules="textFields.numberOfPage.rules"
+                :name="textFields.numberOfPage.name"
                 v-model="book.NumberOfPage"
               ></MInput>
             </div>
@@ -160,7 +175,7 @@
             <div class="col l-12">
               <MTextarea
                 id="description"
-                label="Mô tả"
+                label="Nội dung"
                 v-model="book.Description"
               ></MTextarea>
             </div>
@@ -206,6 +221,8 @@ import bookService from "@/utils/BookService";
 import TEXT_FIELD from "@/js/resource/text-field";
 import categoryService from "@/utils/CategoryService";
 import publisherService from "@/utils/PublisherService";
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "BookDetail",
   props: {
@@ -225,12 +242,17 @@ export default {
   mounted() {
     this.$refs[this.textFields.bookCode.ref].setFocus();
   },
+  beforeUnmount() {
+    this.setGlobalValidateDefault();
+  },
   computed: {
+    ...mapGetters(["globalErrorMsg"]),
     textFields() {
       return TEXT_FIELD[this.$languageCode].book;
     },
   },
   methods: {
+    ...mapActions(["setGlobalValidateDefault"]),
     /**
      * Thực hiện kiểm tra giá trị formMode
      * @author LQHUY(13/04/2024)
@@ -251,8 +273,9 @@ export default {
     handleSaveDataWithMode() {
       this.handleValidateField();
       try {
-        if (this.listErr.length > 0) {
-          this.$refs[this.listErr[0]].setFocus();
+        if (this.globalErrorMsg.length > 0) {
+          const ref = `ref${this.globalErrorMsg[0].name}`;
+          this.$refs[ref].setFocus();
           return;
         }
         if (this.formMode === this.$Enum.FormMode.Edit) {
@@ -271,22 +294,10 @@ export default {
      */
     handleValidateField() {
       try {
+        this.setGlobalValidateDefault();
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
           this.$refs[ref].validate();
-          let rules = this.textFields[key].rules;
-          let nameField = this.textFields[key].name;
-          if (rules.required === true) {
-            if (
-              this.book[nameField] === "" ||
-              this.book[nameField] === null ||
-              this.book[nameField] === undefined
-            ) {
-              this.listErr.push(ref);
-            } else {
-              this.listErr = this.listErr.filter((item) => item !== ref);
-            }
-          }
         }
       } catch (error) {
         console.error(error);
@@ -448,7 +459,6 @@ export default {
     return {
       book: {},
       imageFile: null,
-      listErr: [],
       image: {},
       comboboxCategoryData: [],
       comboboxPublisherData: [],
