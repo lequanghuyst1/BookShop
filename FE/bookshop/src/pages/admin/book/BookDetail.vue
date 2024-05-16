@@ -362,6 +362,12 @@ export default {
           case 200:
             this.book = res.data;
             this.book.QuantityImported = Number(0);
+            if (this.book.PublicationDate) {
+              this.book.PublicationDate = this.$helper.formatDate(
+                this.book.PublicationDate,
+                true
+              );
+            }
             this.$emitter.emit("toggleShowLoading", false);
             break;
           default:
@@ -369,6 +375,7 @@ export default {
         }
       } catch (error) {
         this.$emitter.emit("handleApiError", error);
+        this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
     },
@@ -384,12 +391,12 @@ export default {
           case 200:
             this.book.BookCode = res.data;
             this.$emitter.emit("toggleShowLoading", false);
-
             break;
           default:
             break;
         }
       } catch (error) {
+        this.$emitter.emit("toggleShowLoading", false);
         console.log(error);
       }
     },

@@ -6,6 +6,7 @@ using BookShopOnline.Core.Interfaces.Infrastructures;
 using BookShopOnline.Core.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,13 +25,15 @@ namespace BookShopOnline.Core.Services
         Dictionary<string, string[]> errors;
         IConfiguration _config;
         IMapper _mapper;
-        public JWTAuthenticationService(IUserRepository userRepository, IJWTAuthenticationRepository jwtRepository, IConfiguration configuration, IMapper mapper )
+        ICacheRepository _cacheRepository;
+        public JWTAuthenticationService(IUserRepository userRepository, IJWTAuthenticationRepository jwtRepository, IConfiguration configuration, IMapper mapper, ICacheRepository cacheRepository)
         {
             _userRepository = userRepository;
             errors = new Dictionary<string, string[]>();
             _jwtRepository = jwtRepository;
             _config = configuration;
             _mapper = mapper;
+            _cacheRepository = cacheRepository;
         }
 
         public async Task<TokenModel> LoginAsync(UserLogin userLogin)
@@ -63,6 +66,9 @@ namespace BookShopOnline.Core.Services
             await _userRepository.UpdateAsync(user.UserId, user);
 
             var userDto = _mapper.Map<UserDto>(user);
+            var TokenValidityInMinutes = int.Parse(_config["Jwt:TokenValidityInMinutes"]);
+
+            _cacheRepository.AddToCache<string>(new JwtSecurityTokenHandler().WriteToken(token), user.Email, TimeSpan.FromMinutes(TokenValidityInMinutes));
 
             return new TokenModel
             {
@@ -107,9 +113,9 @@ namespace BookShopOnline.Core.Services
             user.RefreshToken = newRefreshToken;
 
             await _userRepository.UpdateAsync(user.UserId, user);
-
             var userDto = _mapper.Map<UserDto>(user);
 
+            _cacheRepository.AddToCache<string>(new JwtSecurityTokenHandler().WriteToken(newAccessToken), user.Email, TimeSpan.FromMinutes(TokenValidityInMinutes));
             return new TokenModel
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),

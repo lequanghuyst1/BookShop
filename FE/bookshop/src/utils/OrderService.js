@@ -35,7 +35,6 @@ class OrderService extends BaseService {
     return res;
   }
   async calculateTotalAmountByTypeOfTime(data) {
-    console.log(data);
     const res = await this.baseAxios.get(
       `${this.baseUrl}/Chart/CalculateTotalAmountByTypeOfTime`,
       data

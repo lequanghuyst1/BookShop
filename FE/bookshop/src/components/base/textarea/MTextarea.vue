@@ -46,8 +46,6 @@ export default {
       }
     },
     modelValue(newValue) {
-      console.log(newValue)
-
       this.value = newValue;
     },
   },

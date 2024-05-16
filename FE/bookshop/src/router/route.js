@@ -234,7 +234,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const user = localStorageService.getItemFromLocalStorage("userInfo");
 
-  if (to.meta.requiresAuth && !checkInfoTokensInStorage()) {
+  if (
+    (to.meta.requiresAuth && !checkInfoTokensInStorage()) ||
+    (to.meta.requiresAuth &&
+      checkInfoTokensInStorage() &&
+      user?.RoleName !== "Admin")
+  ) {
     next("/admin/login");
   } else if (
     to.meta.requiresAuth &&
@@ -243,14 +248,7 @@ router.beforeEach((to, from, next) => {
     checkInfoTokensInStorage()
   ) {
     next();
-  }
-  // else if (to.meta.requiresAuth && user?.RoleName !== "Admin") {
-  //   next("/admin/login");
-  // }
-  // else if (to.meta.requiresAuth && user?.RoleName === "Admin") {
-  //   next();
-  // }
-  else {
+  } else {
     next();
   }
 });

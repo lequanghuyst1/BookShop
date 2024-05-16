@@ -45,12 +45,11 @@ function phoneNumberValidate(value) {
  * thực hiện kiểm tra chuỗi nhập vào đúng định dạng kiểu số nguyên
  * @param {String} str chuỗi cần check
  * @return {String} lỗi nếu không đúng định dạng
- * @author: nvthuan (10/07/2023)
+ * @author LQHUY (10/07/2023)
  */
 export function checkValidateNumberString(str) {
   const regex = /^\d+$/;
   let check = "";
-  console.log(regex.test(str));
   if (str) {
     check = regex.test(str) === true ? undefined : returnResult().number;
   } else {

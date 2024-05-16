@@ -178,12 +178,12 @@ export default {
     onBulrInput() {
       this.validate();
     },
-    
+
     validate() {
       let message = "";
       if (this.rules) {
         if (this.rules?.required === true) {
-          message = validateValue.required(this.inputValue, this.label);
+          message = validateValue.required(this.$props.modelValue, this.label);
           this.hanldeValidate(message);
           if (!message) {
             if (this.rules?.rule.length > 0) {

@@ -22,7 +22,6 @@ namespace BookShopOnline.Core.Services.Base
         {
             _imageService = imageService;
             errors = new Dictionary<string, string[]>();
-
         }
 
         public async Task<int> DeleteManyServiceAsync(List<Guid> ids)

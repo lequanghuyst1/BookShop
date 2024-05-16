@@ -1,4 +1,6 @@
 import axios from "axios";
+import localStorageService from "@/js/storage/LocalStorageService";
+
 /**
  * Khởi tạo instance axiois
  * author : LQHUY(05/12/2023)
@@ -7,104 +9,59 @@ const httpRequest = axios.create({
   baseURL: "https://localhost:7015/api/v1/",
   headers: { Accept: "application/json", "Content-Type": "application/json" },
 });
-/**
- * Hàm gọi API lấy dữ liệu
- * @param {string} path
- * @param {object} options
- * @returns object
- * * author : LQHUY(05/12/2023)
- */
-// export const get = async (path, options = {}) => {
-//   const res = await httpRequest.get(path, options);
-//   return res;
-// };
 
-// export const getAuthorization = async (path, options = {}) => {
-//   const token = JSON.parse(localStorage.getItem("Token"));
-//   const headers = {
-//     Authorization: `Bearer ${token.AccessToken}`,
-//     "Content-Type": "application/json",
-//   };
-//   const res = await httpRequest.get(path, { headers, ...options });
-//   return res;
-// };
+//  thêm token JWT
+httpRequest.interceptors.request.use(
+  (config) => {
+    // Lấy token JWT từ local storage
+    const token = localStorageService.getItemFromLocalStorage("jwtToken");
+    // Nếu tồn tại token, thêm vào header Authorization
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
 
-// /**
-//  * Hàm gọi API xóa dữ liệu
-//  * @param {string} path
-//  * @param {object} options
-//  * @returns int`
-//  * * author : LQHUY(05/12/2023)
-//  */
-// export const remove = async (path, options = {}) => {
-//   const res = await httpRequest.delete(path, options);
-//   return res;
-// };
-
-// /**
-//  * Hàm gọi API thêm dữ liệu
-//  * @param {string} path
-//  * @param {object} options
-//  * @returns int
-//  * * author : LQHUY(05/12/2023)
-//  */
-// export const post = async (path, options = {}) => {
-//   const res = await httpRequest.post(path, options);
-//   return res;
-// };
-
-// /**
-//  * Hàm gọi API xóa sửa dữ liệu
-//  * @param {string} path
-//  * @param {object} options
-//  * @returns int
-//  * * author : LQHUY(05/12/2023)
-//  */
-// export const put = async (path, options = {}) => {
-//   const res = await httpRequest.put(path, options);
-//   return res;
-// };
-
-// /**
-//  * Hàm gọi API xuất khẩu dữ liệu
-//  * @param {string} path
-//  * @param {object} options
-//  * @returns object
-//  * * author : LQHUY(16/01/2023)
-//  */
-// export const getExcel = async (path, options) => {
-//   const res = await httpRequest.post(path, options, {
-//     responseType: "blob",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-//   return res;
-// };
-
-// /**
-//  * Hàm gọi API nhập khẩu dữ liệu
-//  * @param {string} path
-//  * @param {object} options
-//  * @returns object
-//  * * author : LQHUY(16/01/2023)
-//  */
-// export const postExcel = async (path, options) => {
-//   const res = await httpRequest.post(path, options, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-//   return res;
-// };
-
-// export const importExcel = async (path, option) => {
-//   const res = await httpRequest.post(path, option, {
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-//   return res;
-// };
+// Thêm interceptor cho phản hồi
+httpRequest.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    // const originalRequest = error.config;
+    // console.log(error);
+    // if (error.response?.status === 401 && checkInfoTokensInStorage() &&!originalRequest._retry ) {
+    //   originalRequest._retry = true;
+    //   try {
+    //     let tokens = {
+    //       AccessToken: localStorageService.getItemFromLocalStorage("jwtToken"),
+    //       RefreshToken:
+    //         localStorageService.getItemFromLocalStorage("refreshToken"),
+    //     };
+    //     const res = await httpRequest.post("Users/RenewToken", tokens);
+    //     if (res.status === 201) {
+    //       setInfoTokensToStorage(
+    //         res.data.AccessToken,
+    //         res.data.RefreshToken,
+    //         res.data.UserDto
+    //       );
+    //     }
+    //     const accessToken = res.data.AccessToken;
+    //     httpRequest.defaults.headers.common[
+    //       "Authorization"
+    //     ] = `Bearer ${accessToken}`;
+    //     return httpRequest(originalRequest);
+    //   } catch (error) {
+    //     return Promise.reject(error);
+    //   }
+    // }
+    return Promise.reject(error);
+  }
+);
 
 export default httpRequest;

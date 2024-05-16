@@ -15,6 +15,7 @@ using BookShopOnline.Core.Dto.DeliveryAddress;
 using BookShopOnline.Core.Dto.Cart;
 using BookShopOnline.Core.Dto.Order;
 using BookShopOnline.Core.Dto.ProductReview;
+using BookShopOnline.Core.Dto.Vourcher;
 
 namespace BookShopOnline.Core.AutoMapper
 {
@@ -34,6 +35,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDetail, OrderDetailDto>();
             CreateMap<ReviewProduct, ReviewProductDto>();
+            CreateMap<Vourcher, VourcherDto>();
         }
     }
 }

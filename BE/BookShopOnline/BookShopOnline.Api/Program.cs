@@ -101,14 +101,21 @@ builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IReviewProductService, ReviewProductService>();
 builder.Services.AddScoped<IReviewProductRepository, ReviewProductRepository>();
 
+builder.Services.AddScoped<IVourcherService, VourcherService>();
+builder.Services.AddScoped<IVourcherRepository, VourcherRepository>();
+
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<ICacheRepository, CacheRepository>();
 
 //builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 //builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+
+//Add memory cache
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
@@ -122,19 +129,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
+//Tạo file tĩnh wwwroot
+app.UseStaticFiles();
 //Use the CORS policy
 app.UseCors("AllowOrigin");
 
+app.UseAuthentication();
+app.UseAuthorization();
+//app.UseMiddleware<JWTValidationMiddleware>();
+app.MapControllers();
+
 //config middleware
 app.UseMiddleware<ExceptionMiddleware>();
-
-//Tạo file tĩnh wwwroot
-app.UseStaticFiles();
 
 app.Run();

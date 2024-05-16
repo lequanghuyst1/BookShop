@@ -86,6 +86,7 @@ export default {
      */
     handleApiError(req) {
       try {
+        console.log(req);
         switch (req.response.status) {
           //Lỗi từ người dùng nhập thông tin không hợp lệ
           case 400:
@@ -97,9 +98,7 @@ export default {
           case 401:
             this.$emitter.emit("toggleShowLoading", false);
             this.$emitter.emit("toggleShowLoadingTable", false);
-            this.onShowDialogWarning(
-              Object.values(req.response.data.errors).join("")
-            );
+            this.onShowDialogWarning("Bạn không có quyền truy cập");
             break;
           //Lỗi khi không có quyền truy cập
           case 403:

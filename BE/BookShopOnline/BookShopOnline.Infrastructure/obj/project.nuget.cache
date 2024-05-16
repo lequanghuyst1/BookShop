@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HBwiF2UzyrPqBNfqPhpFrRbijnwm0Ufe1oIxO2IYO2pgtHaq78yDlpmaTuwDBhTmOYLDCCp0ZPKl7GEPTtRwZA==",
+  "dgSpecHash": "Hl68uMkZwdiMolztVTMtJ/r6utqoIFScd4RvBW67U1tPbNl2OuNf49fiziOpv0eqZl8XMxDhMfRnBC2jr1BihQ==",
   "success": true,
   "projectFilePath": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Infrastructure\\BookShopOnline.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\6.0.0\\microsoft.extensions.caching.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.configuration\\6.0.0\\microsoft.extensions.configuration.6.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\6.0.0\\microsoft.extensions.configuration.fileextensions.6.0.0.nupkg.sha512",

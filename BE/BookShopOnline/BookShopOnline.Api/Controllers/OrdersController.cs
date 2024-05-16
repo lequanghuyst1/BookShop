@@ -8,6 +8,7 @@ using BookShopOnline.Core.Interfaces.Services.Base;
 using BookShopOnline.Core.Model;
 using BookShopOnline.Core.Model.Excel;
 using BookShopOnline.Core.Model.Revenue;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -141,6 +142,7 @@ namespace BookShopOnline.Api.Controllers
         /// - StatusCode: 500 có vấn đề trên service
         /// </returns>
         /// Created by: LQHUY(06/01/2024)
+        //[Authorize(Roles = ("Admin"))]
         [HttpPost("Export")]
         public async Task<IActionResult> ExportToExcel([FromBody] ExcelRequest<Order> excelRequest)
         {
@@ -157,6 +159,7 @@ namespace BookShopOnline.Api.Controllers
             return File(res, contenType, fileName);
         }
 
+        //[Authorize(Roles = ("Admin"))]
         [HttpPost("Export/[action]")]
         public IActionResult ExportRevenueByTime(ExcelRequest<Order> excelRequest)
         {
