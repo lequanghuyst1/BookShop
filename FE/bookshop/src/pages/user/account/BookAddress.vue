@@ -92,26 +92,28 @@
             >
           </div>
           <div class="col-8">
-            <select
-              ref="province"
-              id="cbProvince"
-              class="m-textfield comboxbox p-0 ps-2 w-100"
-              :class="{ 'm-textfield-error': lstErrorMessage.province }"
-              v-model="provinceSelected"
-            >
-              <option value="" selected>Chọn tỉnh/thành phố</option>
-              <option
-                v-for="item in provinceData"
-                :key="item.province_id"
-                :value="{
-                  province_id: item.province_id,
-                  province_name: item.province_name,
-                  province_type: item.province_type,
-                }"
+            <div class="group-input">
+              <select
+                ref="province"
+                id="cbProvince"
+                class="m-textfield comboxbox p-0 ps-2 w-100"
+                :class="{ 'm-textfield-error': lstErrorMessage.province }"
+                v-model="provinceSelected"
               >
-                {{ item.province_name }}
-              </option>
-            </select>
+                <option value="" selected>Chọn tỉnh/thành phố</option>
+                <option
+                  v-for="item in provinceData"
+                  :key="item.province_id"
+                  :value="{
+                    province_id: item.province_id,
+                    province_name: item.province_name,
+                    province_type: item.province_type,
+                  }"
+                >
+                  {{ item.province_name }}
+                </option>
+              </select>
+            </div>
             <span class="m-error-message">{{ lstErrorMessage.province }}</span>
           </div>
         </div>
@@ -123,29 +125,31 @@
             >
           </div>
           <div class="col-8">
-            <select
-              id="cbDistrict"
-              class="m-textfield comboxbox p-0 ps-2 w-100"
-              v-model="districtSelected"
-              :class="{ 'm-textfield-error': lstErrorMessage.district }"
-              ref="district"
-            >
-              <option value="" selected>Chọn quận/huyện</option>
-              <option
-                v-for="item in districtData"
-                :key="item.district_id"
-                :value="{
-                  district_id: item.district_id,
-                  district_name: item.district_name,
-                  district_type: item.district_type,
-                  lat: null,
-                  lng: null,
-                  province_id: this.provinceSelected.province_id,
-                }"
+            <div class="group-input">
+              <select
+                id="cbDistrict"
+                class="m-textfield comboxbox p-0 ps-2 w-100"
+                v-model="districtSelected"
+                :class="{ 'm-textfield-error': lstErrorMessage.district }"
+                ref="district"
               >
-                {{ item.district_name }}
-              </option>
-            </select>
+                <option value="" selected>Chọn quận/huyện</option>
+                <option
+                  v-for="item in districtData"
+                  :key="item.district_id"
+                  :value="{
+                    district_id: item.district_id,
+                    district_name: item.district_name,
+                    district_type: item.district_type,
+                    lat: null,
+                    lng: null,
+                    province_id: this.provinceSelected.province_id,
+                  }"
+                >
+                  {{ item.district_name }}
+                </option>
+              </select>
+            </div>
             <span class="m-error-message">{{ lstErrorMessage.district }}</span>
           </div>
         </div>
@@ -157,26 +161,28 @@
             >
           </div>
           <div class="col-8">
-            <select
-              id="ward"
-              class="m-textfield comboxbox p-0 ps-2 w-100"
-              v-model="wardSelected"
-              :class="{ 'm-textfield-error': lstErrorMessage.ward }"
-            >
-              <option value="" selected>Chọn phường/Xã</option>
-              <option
-                v-for="item in wardData"
-                :key="item.ward_id"
-                :value="{
-                  district_id: this.districtSelected.district_id,
-                  ward_id: item.ward_id,
-                  ward_name: item.ward_name,
-                  ward_type: item.ward_type,
-                }"
+            <div class="group-input">
+              <select
+                id="ward"
+                class="m-textfield comboxbox p-0 ps-2 w-100"
+                v-model="wardSelected"
+                :class="{ 'm-textfield-error': lstErrorMessage.ward }"
               >
-                {{ item.ward_name }}
-              </option>
-            </select>
+                <option value="" selected>Chọn phường/Xã</option>
+                <option
+                  v-for="item in wardData"
+                  :key="item.ward_id"
+                  :value="{
+                    district_id: this.districtSelected.district_id,
+                    ward_id: item.ward_id,
+                    ward_name: item.ward_name,
+                    ward_type: item.ward_type,
+                  }"
+                >
+                  {{ item.ward_name }}
+                </option>
+              </select>
+            </div>
             <span class="m-error-message">{{ lstErrorMessage.ward }}</span>
           </div>
         </div>

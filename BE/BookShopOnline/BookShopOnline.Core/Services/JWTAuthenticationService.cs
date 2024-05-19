@@ -73,8 +73,8 @@ namespace BookShopOnline.Core.Services
             return new TokenModel
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                RefreshToken = refreshToken,
-                Expiration = token.ValidTo,
+                RefreshToken = user.RefreshToken,
+                Expiration = DateTime.Now.AddMinutes(TokenValidityInMinutes),
                 UserDto = userDto,
             };
         }
@@ -119,8 +119,8 @@ namespace BookShopOnline.Core.Services
             return new TokenModel
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-                RefreshToken = refreshToken,
-                Expiration = newAccessToken.ValidTo,
+                RefreshToken = user.RefreshToken,
+                Expiration = DateTime.Now.AddMinutes(TokenValidityInMinutes),
                 UserDto = userDto,
             };
         }

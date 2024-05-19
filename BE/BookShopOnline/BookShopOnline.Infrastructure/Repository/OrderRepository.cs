@@ -44,15 +44,15 @@ namespace BookShopOnline.Infrastructure.Repository
             var sqlCommand = "";
             if (string.IsNullOrEmpty(ColumnName))
             {
-                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @userId ORDER BY vo.CreatedDate DESC";
+                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @UserId ORDER BY vo.CreatedDate DESC";
             }
             else
             {
-                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @userId AND ({ColumnName} = @value) ORDER BY vo.CreatedDate DESC";
+                sqlCommand = $"SELECT * FROM view_order vo WHERE vo.UserId = @UserId AND ({ColumnName} = @value) ORDER BY vo.CreatedDate DESC";
                 parameters.Add("@value", Value);
             }
 
-            parameters.Add("@userId", userId);
+            parameters.Add("@UserId", userId);
             //parameters.Add("@searchString", searchString);
 
             if (PageSize != null && PageNumber != null)

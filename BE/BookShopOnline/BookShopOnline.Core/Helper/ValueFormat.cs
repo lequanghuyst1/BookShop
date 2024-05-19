@@ -1,6 +1,7 @@
 ﻿using BookShopOnline.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,6 +81,15 @@ namespace BookShopOnline.Core.Helper
                 default:
                     return "";
             }
+        }
+
+        public static string GetDecimalTypeFormat(Decimal value)
+        {
+            CultureInfo vietnamese = new CultureInfo("vi-VN");
+
+            // Tạo định dạng tùy chỉnh
+            string formattedAmount = value.ToString("#,##0", vietnamese) + " đ";
+            return formattedAmount;
         }
     }
 }

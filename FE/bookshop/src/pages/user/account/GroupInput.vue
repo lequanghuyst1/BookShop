@@ -7,16 +7,24 @@
       >
     </div>
     <div class="col-8">
-      <input
-        :type="type"
-        :id="id"
-        :placeholder="placeholder"
-        v-model="inputValue"
-        ref="refInput"
-        class="m-textfield"
-        :class="{ 'm-textfield-error': errMessage }"
-        @blur="onBulrInput"
-      />
+      <div class="group-input">
+        <input
+          :type="type"
+          :id="id"
+          :placeholder="placeholder"
+          v-model="inputValue"
+          ref="refInput"
+          class="m-textfield"
+          :class="{ 'm-textfield-error': errMessage }"
+          @blur="onBulrInput"
+        />
+        <div
+          class="btn-show-pass"
+          v-if="this.$props.type === 'password'"
+          :class="{ active: isShowPassword }"
+          @click="onShowPassword"
+        ></div>
+      </div>
       <span class="m-error-message">{{ errMessage }}</span>
     </div>
   </div>
@@ -137,19 +145,44 @@ export default {
         this.errMessage = "";
       }
     },
+    onShowPassword() {
+      this.isShowPassword = !this.isShowPassword;
+      if (this.isShowPassword) {
+        this.$refs["refInput"].setAttribute("type", "text");
+      } else {
+        this.$refs["refInput"].setAttribute("type", "password");
+      }
+    },
   },
   data() {
     return {
       errMessage: null,
       inputValue: null,
       typeInput: null,
+      isShowPassword: false
     };
   },
 };
 </script>
 <style scoped>
+
+.btn-show-pass {
+  display: block;
+  position: absolute;
+  right: 12px;
+  top: calc(50% - 8px);
+  width: 16px;
+  height: 16px;
+  background: url(../../../assets/icons/icon-hide-pass.svg) center no-repeat;
+}
+.btn-show-pass.active {
+  display: block;
+  background: url(../../../assets/icons/icon-show-pass.svg) center no-repeat;
+}
 .group-input {
   padding: 4px 0;
+  position: relative;
+
 }
 .group-input .input-label {
   width: 186px;

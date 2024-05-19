@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Interfaces.Services
 {
-    public interface IVourcherService : IBaseService<Vourcher, VourcherDto>
+    public interface IVoucherService : IBaseService<Voucher, VoucherDto>
     {
+        Task<VoucherDto> ApplyVoucher(string voucherCode, decimal totalProductCost);
     }
 }

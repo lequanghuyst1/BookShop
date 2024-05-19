@@ -43,6 +43,13 @@ namespace BookShopOnline.Core.Services
             var count = 0;
             if (res > 0)
             {
+                //cập nhật lại số lượng voucher
+                if(orderData.Voucher?.VoucherCode != null)
+                {
+                    var voucherInDb = await _unitOfWork.Voucher.GetByVoucherCode(orderData.Voucher.VoucherCode);
+                    voucherInDb.Quantity -= 1;
+                    await _unitOfWork.Voucher.UpdateAsync( voucherInDb.VoucherId, voucherInDb);
+                }
                 //var result = await _unitOfWork.OrderDetail.InsertManyAsync(ordersDetail);
                 foreach (var item in ordersDetail)
                 {

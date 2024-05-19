@@ -101,8 +101,8 @@ builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IReviewProductService, ReviewProductService>();
 builder.Services.AddScoped<IReviewProductRepository, ReviewProductRepository>();
 
-builder.Services.AddScoped<IVourcherService, VourcherService>();
-builder.Services.AddScoped<IVourcherRepository, VourcherRepository>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 

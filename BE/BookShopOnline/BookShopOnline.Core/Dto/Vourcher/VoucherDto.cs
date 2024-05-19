@@ -1,4 +1,5 @@
 ﻿using BookShopOnline.Core.Entitites;
+using BookShopOnline.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Dto.Vourcher
 {
-    public class VourcherDto : BaseEntity
+    public class VoucherDto : BaseEntity
     {
-        public Guid VourcherId { get; set; }
-        public string VourcherCode { get; set; }
-        public int VourcherType { get; set; }
+        public Guid VoucherId { get; set; }
+        public string VoucherCode { get; set; }
+        public VoucherType VoucherType { get; set; }
         public Decimal AmountDiscount { get; set; }
-        public Decimal VourcherCondition { get; set; }
+        public Decimal? VoucherCondition { get; set; }
         public int Quantity { get; set; }
         public string? Description { get; set; }
         public DateTime ExpiredDate { get; set; }

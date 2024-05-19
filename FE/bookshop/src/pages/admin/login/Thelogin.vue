@@ -131,6 +131,10 @@ export default {
               res.data.RefreshToken,
               res.data.UserDto
             );
+            localStorageService.setItemToLocalStorage(
+              "expiration",
+              res.data.Expiration
+            );
             if (
               localStorageService.getItemFromLocalStorage("userInfo")
                 .RoleName === "Admin"

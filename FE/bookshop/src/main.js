@@ -105,7 +105,6 @@ const store = createStore({
         );
       }
       state.globalErrorMsg.push(error);
-      console.log(state.globalErrorMsg)
     },
     CHECK_ERROR_EMPTY(state, name) {
       if (state.globalErrorMsg.length > 0) {

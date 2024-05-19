@@ -13,21 +13,22 @@ namespace BookShopOnline.Infrastructure.Repository
     public class UnitOfWork : IUnitOfWork
     {
         IDbContext _dbContext;
-        public UnitOfWork(IDbContext dbContext, ICartItemRepository cartItemRepository, IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, IBookRepository book)
+        public UnitOfWork(IDbContext dbContext, ICartItemRepository cartItemRepository, IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, IBookRepository book, IVoucherRepository voucher)
         {
             _dbContext = dbContext;
             CartItems = cartItemRepository;
             OrderDetail = orderDetailRepository;
             Order = orderRepository;
             Book = book;
+            Voucher = voucher;
         }
 
         public ICartItemRepository CartItems { get; }
-
         public IOrderDetailRepository OrderDetail { get; }
-
         public IOrderRepository Order { get; }
         public IBookRepository Book { get; }
+        public IVoucherRepository Voucher { get; }
+
 
 
         public void BeginTransaction()

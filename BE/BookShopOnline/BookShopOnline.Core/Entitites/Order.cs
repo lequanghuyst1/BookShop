@@ -21,6 +21,8 @@ namespace BookShopOnline.Core.Entitites
         public string Address { get; set; }
         public double TotalAmount { get; set; }
         public double? ShippingFee { get; set; }
+        public Decimal? DiscountCoupons { get; set; }
+        public Decimal? DiscountDelivery { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DeliveryStatus DeliveryStatus { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }

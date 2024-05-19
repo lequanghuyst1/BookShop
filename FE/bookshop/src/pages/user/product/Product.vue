@@ -105,15 +105,15 @@
                       >-{{ productInfo.Discount }}%</span
                     >
                   </div>
-                  <div class="policy-return d-flex">
+                  <div v-if="this.deliveryAddress" class="policy-return d-flex">
                     <p>Thời gian giao hàng</p>
                     <div class="">
                       <p>
                         Giao hàng đến
                         <b
                           >{{ deliveryAddress?.Ward }},
-                          {{ deliveryAddress.District }},
-                          {{ deliveryAddress.Province }}</b
+                          {{ deliveryAddress?.District }},
+                          {{ deliveryAddress?.Province }}</b
                         >
                       </p>
                       <p class="mt-2">
@@ -537,7 +537,7 @@
                   </div>
                   <p>{{ this.$helper.formatOrderDate(item.ReviewDate) }}</p>
                 </div>
-                <!-- <p v-show="item.IsEdit" class="content-edit">Đã chỉnh sửa</p> -->
+                <p v-show="item.IsEdit" class="content-edit">Đã chỉnh sửa</p>
               </div>
               <div
                 v-if="item.UserId === this.userInfo?.UserId"
@@ -956,43 +956,45 @@ export default {
           this.deliveryAddress = res.data.filter(
             (item) => item.DeliveryAddressDefault === true
           )[0];
-          // Lấy ra ngày hiện tại
-          var today = new Date();
+          if (this.deliveryAddress) {
+            // Lấy ra ngày hiện tại
+            var today = new Date();
 
-          // Cộng thêm 3 ngày
-          var nextDate = new Date(today);
-          if (this.deliveryAddress.Province === "Thành phố Hà Nội") {
-            nextDate.setDate(today.getDate() + 3);
-          } else {
-            nextDate.setDate(today.getDate() + 5);
+            // Cộng thêm 3 ngày
+            var nextDate = new Date(today);
+            if (this.deliveryAddress.Province === "Thành phố Hà Nội") {
+              nextDate.setDate(today.getDate() + 3);
+            } else {
+              nextDate.setDate(today.getDate() + 5);
+            }
+
+            // Danh sách các ngày trong tuần
+            var daysOfWeek = [
+              "Chủ Nhật",
+              "Thứ Hai",
+              "Thứ Ba",
+              "Thứ Tư",
+              "Thứ Năm",
+              "Thứ Sáu",
+              "Thứ Bảy",
+            ];
+
+            // Lấy ra thứ của ngày kế tiếp
+            var nextDayOfWeek = daysOfWeek[nextDate.getDay()];
+
+            // Lấy ra ngày và tháng của ngày kế tiếp
+            var nextDay = nextDate.getDate();
+            var nextMonth = nextDate.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+
+            // Hiển thị kết quả
+
+            this.dateDelivery =
+              nextDayOfWeek +
+              " - " +
+              (nextDay < 10 ? "0" + nextDay : nextDay) +
+              "/" +
+              (nextMonth < 10 ? "0" + nextMonth : nextMonth);
           }
-
-          // Danh sách các ngày trong tuần
-          var daysOfWeek = [
-            "Chủ Nhật",
-            "Thứ Hai",
-            "Thứ Ba",
-            "Thứ Tư",
-            "Thứ Năm",
-            "Thứ Sáu",
-            "Thứ Bảy",
-          ];
-
-          // Lấy ra thứ của ngày kế tiếp
-          var nextDayOfWeek = daysOfWeek[nextDate.getDay()];
-
-          // Lấy ra ngày và tháng của ngày kế tiếp
-          var nextDay = nextDate.getDate();
-          var nextMonth = nextDate.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
-
-          // Hiển thị kết quả
-
-          this.dateDelivery =
-            nextDayOfWeek +
-            " - " +
-            (nextDay < 10 ? "0" + nextDay : nextDay) +
-            "/" +
-            (nextMonth < 10 ? "0" + nextMonth : nextMonth);
         }
       } catch (error) {
         console.log(error);

@@ -108,7 +108,7 @@
                 </div>
                 <div class="group-filter" aria-expanded="false">
                   <div class="layer-subtitle d-flex justify-content-between">
-                    <span>Nhà cung cấp</span>
+                    <span>Nhà xuất bản</span>
                   </div>
                   <div class="layer-content">
                     <ul
@@ -410,7 +410,9 @@
 </template>
 <script>
 import bookService from "@/utils/BookService";
-import { mapGetters, mapActions } from "vuex";
+import cartItemService from "@/utils/CartItemService";
+import cartLocalStorageService from "@/js/storage/CartLocalStorage";
+import localStorageService from "@/js/storage/LocalStorageService";
 export default {
   name: "CategoryUserPage",
   mounted() {
@@ -517,7 +519,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["searchString"]),
     /**
      * Xét paging dạng ...
      * Author : LQHUY(16/04/2024)
@@ -564,9 +565,41 @@ export default {
         (this.filterData.rangeColumn.length > 0 && this.products.length === 0)
       );
     },
+    userInfo: function () {
+      return localStorageService.getItemFromLocalStorage("userInfo");
+    },
   },
   methods: {
-    ...mapActions(["setSearchStringDefault", "setSearchString"]),
+    /**
+     * Thực hiện thêm vào giỏ hàng khi click btn Thêm vào giỏ hàng
+     * @author LQHUY(09/04/2024)
+     */
+     async handleOnAdd(item) {
+      item.CartId = this.userInfo.CartId;
+      item.Quantity = 1;
+      const formData = new FormData();
+      formData.append("dataJson", JSON.stringify(item));
+      //gọi api thêm mới
+      const res = await cartItemService.post(formData);
+      if (res.status === 201) {
+        const result = await cartItemService.getByCartId(this.userInfo.CartId);
+        if (result.status === 200) {
+          const dataCart = result.data;
+          //thêm mới item vào cart local
+          cartLocalStorageService.setCartToLocalStorage(dataCart);
+        }
+
+        this.$emitter.emit(
+          "onShowToastMessage",
+          this.$Resource[this.$languageCode].ToastMessage.Type.Success,
+          "Sản phẩm đã được thêm vào giỏ hàng.",
+          this.$Resource[this.$languageCode].ToastMessage.Status.Success
+        );
+
+        //Update lại tổng số lượng sản phẩm trong cart
+        this.$emitter.emit("getQuantityOfCart");
+      }
+    },
     checkDataIsNotEmpty() {
       return (
         this.filterData.filterInput.length === 0 &&

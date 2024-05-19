@@ -89,6 +89,10 @@ const Resource = {
       male: "Nam",
       feMale: "Nữ",
       other: "Khác"
+    },
+    ENUM_VOUCHER_TYPE : {
+      delivery: "Voucher giảm giá",
+      shipping: "Voucher vận chuyển"
     }
   },
 };

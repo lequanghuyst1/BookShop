@@ -792,7 +792,24 @@
               >&nbsp;<span class="sym-totals">đ</span></span
             >
           </div>
-
+          <div v-if="order.DiscountDelivery">
+            <span>Mã vận chuyển: </span>
+            <span class="order-totals-price"
+              ><span class="price">{{
+                this.$helper.formatMoney(order.DiscountDelivery)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span></span
+            >
+          </div>
+          <div v-if="order.DiscountCoupons">
+            <span>Mã giảm giá: </span>
+            <span class="order-totals-price"
+              ><span class="price">{{
+                this.$helper.formatMoney(order.DiscountCoupons)
+              }}</span
+              >&nbsp;<span class="sym-totals">đ</span></span
+            >
+          </div>
           <div>
             <span>Tổng Số Tiền (gồm VAT): </span>
             <span class="order-totals-price"
@@ -807,6 +824,8 @@
             <p><span>Thành tiền: </span></p>
 
             <p><span>Phí vận chuyển: </span></p>
+            <p v-if="order.DiscountCoupons"><span>Mã giảm giá: </span></p>
+            <p v-if="order.DiscountDelivery"><span>Mã vận chuyển: </span></p>
             <p><span>Tổng Số Tiền (gồm VAT): </span></p>
           </div>
           <div>
@@ -821,6 +840,16 @@
               <span class="price">{{
                 this.$helper.formatMoney(order.ShippingFee)
               }}</span
+              >&nbsp;<span class="sym-totals">đ</span>
+            </p>
+            <p v-if="order.DiscountCoupons" class="order-totals-price">
+              <span class="price"
+                >- {{ this.$helper.formatMoney(order.DiscountCoupons) }}</span
+              >&nbsp;<span class="sym-totals">đ</span>
+            </p>
+            <p v-if="order.DiscountDelivery" class="order-totals-price">
+              <span class="price"
+                >- {{ this.$helper.formatMoney(order.DiscountDelivery) }}</span
               >&nbsp;<span class="sym-totals">đ</span>
             </p>
             <p class="order-totals-price">

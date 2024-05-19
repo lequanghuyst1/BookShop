@@ -58,5 +58,7 @@ namespace BookShopOnline.Core.Dto.Order
         public DateTime? CancellationDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string Note { get; set; }
+        public Decimal? DiscountCoupons { get; set; }
+        public Decimal? DiscountDelivery { get; set; }
     }
 }

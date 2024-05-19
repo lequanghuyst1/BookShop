@@ -126,10 +126,7 @@ export default {
     //     this.inputValue = inputValueFormat;
     //   }
     // },
-    /**
-     * Set focus vào ô input
-     * Author: LQHUY(07/12/2002)
-     */
+    
     onShowPassword() {
       this.isShowPassword = !this.isShowPassword;
       if (this.isShowPassword) {
@@ -138,6 +135,10 @@ export default {
         this.$refs["input"].setAttribute("type", "password");
       }
     },
+    /**
+     * Set focus vào ô input
+     * Author: LQHUY(07/12/2002)
+     */
     setFocus() {
       this.$refs["input"].focus();
     },

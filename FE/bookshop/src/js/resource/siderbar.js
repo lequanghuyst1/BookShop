@@ -20,6 +20,11 @@ const menu = [
         path: "publisher-management",
     },
     {
+        title: "Quản lý khuyến mãi",
+        icon: "fa-solid fa-ticket",
+        path: "voucher-management",
+    },
+    {
         title: "Quản lý đơn hàng",
         icon: "fa-solid fa-file-invoice",
         path: "order-management",

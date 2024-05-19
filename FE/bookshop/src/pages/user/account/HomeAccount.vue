@@ -74,7 +74,7 @@
               <td>
                 <a
                   :href="
-                    'http://localhost:8080/customer/order/order-detail' +
+                    'http://localhost:8080/customer/order/order-detail/' +
                     item.OrderId
                   "
                   style="color: #c92127"

@@ -317,9 +317,12 @@ export default {
               res.data.RefreshToken,
               res.data.UserDto
             );
+            localStorageService.setItemToLocalStorage(
+              "expiration",
+              res.data.Expiration
+            );
             //lấy ra thông tin người dùng
             var user = localStorageService.getItemFromLocalStorage("userInfo");
-            console.log(user);
             //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
             var result = await cartItemService.getByCartId(user.CartId);
             if (result.status === 200) {
@@ -343,13 +346,13 @@ export default {
         const res = await userService.RegisterUser(this.user);
         switch (res.status) {
           case 201:
-            this.$emit("onCloseForm");
             this.$emitter.emit(
               "onShowToastMessage",
               this.$Resource[this.$languageCode].ToastMessage.Type.Success,
               "Đăng ký thành công",
               this.$Resource[this.$languageCode].ToastMessage.Status.Success
             );
+            this.mode = this.$Enum.FormAccount.Login;
         }
       } catch (error) {
         let errors = error.response.data.errors;

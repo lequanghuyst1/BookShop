@@ -143,7 +143,7 @@ const TEXT_FIELD = {
         name: "CategoryCode",
         label: "Mã danh mục",
         ref: "refCategoryCode",
-        placeholder: "Nhập mã danh mục",
+        placeholder: "Mã danh mục",
         rules: {
           lengthMax: 100,
           required: true,
@@ -154,7 +154,7 @@ const TEXT_FIELD = {
         name: "CategoryName",
         label: "Tên danh mục",
         ref: "refCategoryName",
-        placeholder: "Nhập tên danh mục",
+        placeholder: "Tên danh mục",
         rules: {
           lengthMax: 100,
           required: true,
@@ -226,6 +226,85 @@ const TEXT_FIELD = {
         rules: {
           lengthMax: 255,
           required: false,
+          rule: [],
+        },
+      },
+    },
+    voucher: {
+      voucherCode: {
+        name: "VoucherCode",
+        label: "Mã khuyến mãi",
+        ref: "refVoucherCode",
+        placeholder: "Mã khuyến mãi",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      voucherType: {
+        name: "VoucherType",
+        label: "Kiểu khuyến mãi",
+        ref: "refVoucherType",
+        placeholder: "Kiểu khuyến mãi",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: [],
+        },
+      },
+      amountDiscount: {
+        name: "AmountDiscount",
+        label: "Số tiền giảm",
+        ref: "refAmountDiscount",
+        placeholder: "Số tiền giảm",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: ["number"],
+        },
+      },
+      voucherCondition: {
+        name: "VoucherCondition",
+        label: "Điều kiện sử dụng",
+        ref: "refVoucherCondition",
+        placeholder: "Điều kiện sử dụng",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: ["number"],
+        },
+      },
+      quantity: {
+        name: "Quantity",
+        label: "Số lượng",
+        ref: "refQuantity",
+        placeholder: "Số lượng",
+        rules: {
+          lengthMax: 50,
+          required: true,
+          rule: ["number"],
+        },
+      },
+      description: {
+        name: "Description",
+        label: "Mô tả",
+        ref: "refDescription",
+        placeholder: "Số lượng",
+        rules: {
+          lengthMax: 255,
+          required: false,
+          rule: [],
+        },
+      },
+      expiredDate: {
+        name: "ExpiredDate",
+        label: "Ngày hết hạn",
+        ref: "refExpiredDate",
+        placeholder: "Ngày hết hạn",
+        rules: {
+          lengthMax: 255,
+          required: true,
           rule: [],
         },
       },
@@ -418,41 +497,8 @@ const TEXT_FIELD = {
         },
       },
     },
-    onlinePayment: {
-      accountName: {
-        name: "AccountName",
-        label: "Tên chủ thẻ",
-        ref: "refAccountName",
-        placeholder: "Nhập tên chủ thẻ(không dấu)",
-        rules: {
-          lengthMax: 50,
-          required: true,
-          rule: [],
-        },
-      },
-      cardNumber: {
-        name: "CardNumber",
-        label: "Số thẻ",
-        ref: "refCardNumber",
-        placeholder: "Nhập số thẻ",
-        rules: {
-          lengthMax: 50,
-          required: true,
-          rule: [],
-        },
-      },
-      releaseDate: {
-        name: "ReleaseDate",
-        label: "Ngày phát hành",
-        ref: "refReleaseDate",
-        placeholder: "MM/YYYY",
-        rules: {
-          lengthMax: 50,
-          required: true,
-          rule: [],
-        },
-      },
-    },
+
+    //start vouhcer
   },
 };
 export default TEXT_FIELD;

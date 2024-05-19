@@ -143,7 +143,7 @@ export default {
   },
   watch: {
     modelValue(newValue) {
-      if (newValue && this.propText) {
+      if (newValue !== null && this.propText) {
         this.selectedItemId = newValue;
         this.setOutputSelectedItem();
       } else {
@@ -183,7 +183,7 @@ export default {
       let message = "";
       if (this.rules) {
         if (this.rules?.required === true) {
-          message = validateValue.required(this.$props.modelValue, this.label);
+          message = validateValue.required(this.outputText, this.label);
           this.hanldeValidate(message);
           if (!message) {
             if (this.rules?.rule.length > 0) {

@@ -11,6 +11,7 @@ import OrderManegementPage from "../pages/admin/order/OrderPage.vue";
 import OrderDetailAdminPage from "@/pages/admin/order/OrderDetail.vue";
 import RevenueStatisticsPage from "@/pages/admin/revenue-statistics/RevenueStatisticsPage.vue";
 import CustomerPage from "@/pages/admin/customer/CustomerPage.vue";
+import VoucherPage from "@/pages/admin/voucher/VoucherPage.vue";
 
 import LayoutHeaderAndFooter from "@/components/user/layout/layout-default/LayoutHeaderAndFooter.vue";
 import HomeUserPage from "../pages/user/home/HomePage.vue";
@@ -220,6 +221,12 @@ const routes = [
         path: "customer-management",
         components: {
           ContentRouterView: CustomerPage,
+        },
+      },
+      {
+        path: "voucher-management",
+        components: {
+          ContentRouterView: VoucherPage,
         },
       },
     ],

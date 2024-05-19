@@ -46,6 +46,7 @@ export default {
 .payment-success {
   background-color: #f1f1f1;
   padding: 32px 0;
+  
 }
 .success-main {
   background-color: #fff;

@@ -35,7 +35,7 @@ namespace BookShopOnline.Core.AutoMapper
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDetail, OrderDetailDto>();
             CreateMap<ReviewProduct, ReviewProductDto>();
-            CreateMap<Vourcher, VourcherDto>();
+            CreateMap<Voucher, VoucherDto>();
         }
     }
 }

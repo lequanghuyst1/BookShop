@@ -114,7 +114,7 @@
         </div>
       </div>
 
-      <div class="change-password-layout">
+      <div v-if="this.isChangePassword" class="change-password-layout">
         <InputAccount
           id="password-old"
           :label="textFields.currentPassword.label"
@@ -124,6 +124,7 @@
           :name="textFields.currentPassword.name"
           :errorMessage="this.lstErrorMessage.CurrentPassword"
           v-model="user.CurrentPassword"
+          type="password"
         ></InputAccount>
         <InputAccount
           id="password-new"
@@ -133,6 +134,7 @@
           :rules="textFields.newPassword.rules"
           :name="textFields.newPassword.name"
           v-model="user.NewPassword"
+          type="password"
         ></InputAccount>
         <InputAccount
           id="password-renew"
@@ -141,7 +143,9 @@
           :ref="textFields.renewPassword.ref"
           :rules="textFields.renewPassword.rules"
           :name="textFields.renewPassword.name"
+          :errorMessage="this.lstErrorMessage.RenewPassword"
           v-model="user.RenewPassword"
+          type="password"
         ></InputAccount>
       </div>
       <div @click="handleUpdateUserInfo" class="btn-save-confirm">
@@ -165,11 +169,13 @@ export default {
     this.user = localStorageService.getItemFromLocalStorage("userInfo")
       ? localStorageService.getItemFromLocalStorage("userInfo")
       : {};
-    const dob = this.$helper.formatDate(this.user.DateOfBirth);
-    const parts = dob.split("/");
-    this.date = parts[1];
-    this.month = parts[0];
-    this.year = parts[2];
+    if (this.user.DateOfBirth) {
+      const dob = this.$helper.formatDate(this.user.DateOfBirth);
+      const parts = dob.split("/");
+      this.date = parts[1];
+      this.month = parts[0];
+      this.year = parts[2];
+    }
     this.$emitter.emit("toggleShowLoading", true);
     this.$emitter.emit("toggleShowLoading", false, 400);
     document.title = "Thông tin tài khoản";
@@ -180,7 +186,7 @@ export default {
         this.date = 31;
       }
       if (newValue < 0) {
-        this.date = 0;
+        this.date = null;
       }
     },
     month(newValue) {
@@ -188,7 +194,7 @@ export default {
         this.month = 12;
       }
       if (newValue < 1) {
-        this.month = 1;
+        this.month = null;
       }
     },
     year(newValue) {
@@ -212,7 +218,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setGlobalValidateDefault"]),
+    ...mapActions(["setGlobalValidateDefault","setGlobalValidateError"]),
     /**
      * Thực hiện save khi click vào btn lưu thông tin
      * Author: LQHUY(08/04/2024)
@@ -222,9 +228,7 @@ export default {
 
       //validate dữ liệu
       this.handleValidateField();
-
       if (this.globalErrorMsg.length > 0) {
-        console.log(this.globalErrorMsg);
         const ref = `ref${this.globalErrorMsg[0].name}`;
         this.$refs[ref].focusInput();
         return;
@@ -239,24 +243,31 @@ export default {
      */
     handleValidateField() {
       try {
+        if (this.isChangePassword) {
+          this.$refs[this.textFields.currentPassword.ref].validate();
+          this.$refs[this.textFields.newPassword.ref].validate();
+          this.$refs[this.textFields.renewPassword.ref].validate();
+          if (this.user.NewPassword !== this.user.RenewPassword) {
+            this.setGlobalValidateError({
+              name: this.textFields.renewPassword.name,
+              message: "Nhập lại mật khẩu không chính xác",
+            });
+            this.lstErrorMessage.RenewPassword =
+              "Nhập lại mật khẩu không chính xác";
+          }
+        }
         for (let key in this.textFields) {
           let ref = this.textFields[key].ref;
-
+          //Nếu không thay đổi mật khẩu thì dừng luôn không cần check
+          if (
+            this.isChangePassword === false &&
+            ref === this.textFields.currentPassword.ref
+          ) {
+            break;
+          }
           //validate dữ liệu
           this.$refs[ref].validate();
         }
-        // for (let key in this.textFields) {
-        //   let ref = this.textFields[key].ref;
-        //   Nếu không thay đổi mật khẩu thì dừng luôn không cần check
-        //   if (
-        //     this.isChangePassword === false &&
-        //     ref === this.textFields.currentPassword.ref
-        //   ) {
-        //     break;
-        //   }
-        //   validate dữ liệu
-        //   this.$refs[ref].validate();
-        // }
       } catch (error) {
         console.error(error);
       }
@@ -269,7 +280,10 @@ export default {
     async hanldeOnEdit() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-
+        if (!this.date) {
+          this.date = this.date < 10 ? `0${this.date}` : this.date;
+          this.month = this.date < 10 ? `0${this.month}` : this.month;
+        }
         this.user.DateOfBirth = this.date + "/" + this.month + "/" + this.year;
         var formData = new FormData();
         formData.append("dataJson", JSON.stringify(this.user));

@@ -73,7 +73,7 @@ namespace BookShopOnline.Infrastructure.Repository
 
         public async Task<User?> GetUserByToken(string token)
         {
-            var sql = "Select * from User where RefreshToken = @RefreshToken";
+            var sql = "Select * from view_user where RefreshToken = @RefreshToken";
             var param = new DynamicParameters();
             param.Add("@RefreshToken", token);
             var res = await _dbContext.Connection.QueryFirstOrDefaultAsync<User>(sql, param);

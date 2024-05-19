@@ -175,7 +175,7 @@
               <i class="fa-solid fa-user-plus"></i>
             </div>
             <div class="analytis-item__body">
-              <div class="analytis-item__title">
+              <div @click="goToCustomerManagement" class="analytis-item__title">
                 <p>Khách hàng mới</p>
                 <p>24 giờ qua</p>
               </div>
@@ -492,6 +492,10 @@ export default {
     goToOrderManagement() {
       this.$router.push("order-management");
     },
+    goToCustomerManagement(){
+      this.$router.push("customer-management");
+
+    }
   },
 };
 </script>

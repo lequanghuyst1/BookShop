@@ -178,6 +178,13 @@ const helper = {
           return resource().ENUM_GENDER.other;
         }
         break;
+        case "VOUCHER_TYPE": 
+        if (value === Enum.VOUCHER_TYPE.COUPONS) {
+          return resource().ENUM_VOUCHER_TYPE.delivery;
+        } else if (value === Enum.VOUCHER_TYPE.DELIVERY) {
+          return resource().ENUM_VOUCHER_TYPE.shipping;
+        }
+        break;
       default:
         return "";
     }

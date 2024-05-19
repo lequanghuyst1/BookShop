@@ -25,9 +25,15 @@ namespace BookShopOnline.Core.Services
         public async override Task ValidateBeforeInsert(Category category)
         {
             //categoryCode không hợp lệ ném ra exception
+            if (await _categoryRepository.CheckDuplicateCodeAsync(category.CategoryCode))
+            {
+                errors.Add("CategoryName", new string[] { $"Mã danh mục <{category.CategoryCode}> đã tồn tại trong hệ thống." });
+                throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
+            }
+            //categoryName không hợp lệ ném ra exception
             if (await _categoryRepository.CheckExitEntityNameAsync(category.CategoryName))
             {
-                errors.Add("CategoryName", new string[] { $"Danh mục {category.CategoryName} đã tồn tại trong hệ thống." });
+                errors.Add("CategoryName", new string[] { $"Danh mục <{category.CategoryName}> đã tồn tại trong hệ thống." });
                 throw new ValidateException(ResourceVN.Exception_Validate_Default, errors);
             }
         }

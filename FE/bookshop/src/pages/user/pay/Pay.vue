@@ -8,9 +8,20 @@
             <div class="info-order-title mb-3">
               <h3>Địa chỉ giao hàng</h3>
             </div>
-            <div v-show="isAddressExist" class="select-address">
+            <div
+              v-for="item in addressDelivery"
+              :key="item.DeliveryAddressId"
+              v-show="this.addressDelivery.length > 0"
+              class="select-address"
+            >
               <label style="margin-top: 20px" class="warrap__input-radio">
-                <input type="radio" name="address" :checked="isAddressExist" />
+                <input
+                  type="radio"
+                  v-model="selectedDeliveryAddress"
+                  :value="item"
+                  @click="this.isShowFormAddress = false"
+                  name="address"
+                />
                 <span class="checkmark"></span>
               </label>
               <div class="address-item">
@@ -23,30 +34,35 @@
                 <div class="item__content">
                   <div class="content__title d-flex gap-3">
                     <p class="title__name">
-                      {{ addressDeliveryDefault?.ReminiscentName }}
+                      {{ item?.ReminiscentName }}
                     </p>
-                    <p class="title__type">Mặc định</p>
+                    <p v-if="item.DeliveryAddressDefault" class="title__type">
+                      Mặc định
+                    </p>
                   </div>
                   <div class="content__address">
-                    {{ addressDeliveryDefault?.DeliveryAddressName }}
+                    {{ item?.DeliveryAddressName }}
                   </div>
                   <div class="content__phone">
-                    {{ addressDeliveryDefault?.PhoneNumber }}
+                    {{ item?.PhoneNumber }}
                   </div>
                 </div>
-                <div class="button__edit-address">
+                <!-- <div class="button__edit-address">
                   <i
                     v-tippy="{ content: 'Chỉnh sửa', placement: 'top' }"
                     class="fa-solid fa-pen-to-square"
                     @click="onToggleShowActionItem()"
                   ></i>
-                </div>
+                </div> -->
               </div>
             </div>
-            <div v-show="isAddressExist" class="address-different">
+            <div class="address-different">
               <label class="warrap__input-radio">
                 <input
-                  @click="this.isShowFormAddress = true"
+                  @click="()=>{
+                    this.isShowFormAddress = true;
+                    this.address = {}
+                  }"
                   type="radio"
                   name="address"
                 />
@@ -59,7 +75,10 @@
               >
             </div>
             <div
-              v-show="isAddressExist === false || isShowFormAddress"
+              v-if="
+                !this.selectedDeliveryAddress?.ReminiscentName ||
+                isShowFormAddress
+              "
               class="block-address-form"
             >
               <form v-on:submit.prevent action="">
@@ -231,7 +250,7 @@
 
           <!-- Start: Phương thức thanh toán -->
           <div class="payment-method">
-            <div class="info-order-title" style="color: #333;">
+            <div class="info-order-title" style="color: #333">
               <h3>Phương thức thanh toán</h3>
             </div>
             <div class="payment-method-list">
@@ -351,15 +370,27 @@
             <div class="info-order-title">
               <h3>Mã khuyến mãi, quà tặng</h3>
             </div>
-            <form class="mt-3" action="">
+            <form v-on:submit.prevent class="mt-3" action="">
               <div class="discount-code-input">
                 <input
                   class="input-discount"
                   type="text"
                   placeholder="Mã giảm giá"
+                  v-model="voucherCode"
                 />
-                <button class="btn-discount-code">Sử dụng</button>
+                <button
+                  class="btn-discount-code"
+                  :style="{
+                    'background-color': voucherCode ? '#338dbc' : '#c8c8c8',
+                  }"
+                  @click="handleApplyVoucher"
+                >
+                  Sử dụng
+                </button>
               </div>
+              <span class="m-error-message" style="font-size: 14px">{{
+                errMessageVoucher
+              }}</span>
             </form>
           </div>
           <!-- <div class="member-shop">
@@ -399,6 +430,28 @@
               <p class="total-name">Phí vận chuyển</p>
               <p class="total-price">
                 {{ this.$helper.formatMoney(this.order.ShippingFee) }}đ
+              </p>
+            </div>
+            <div
+              v-if="
+                this.voucher.VoucherType === this.$Enum.VOUCHER_TYPE.COUPONS
+              "
+              class="total-line total-delivery mb-3"
+            >
+              <p class="total-name">Mã giảm giá</p>
+              <p class="total-price">
+                - {{ this.$helper.formatMoney(this.order.DiscountCoupons) }}đ
+              </p>
+            </div>
+            <div
+              v-if="
+                this.voucher.VoucherType === this.$Enum.VOUCHER_TYPE.DELIVERY
+              "
+              class="total-line total-delivery mb-3"
+            >
+              <p class="total-name">Mã vận chuyển</p>
+              <p class="total-price">
+                - {{ this.$helper.formatMoney(this.order.DiscountDelivery) }}đ
               </p>
             </div>
             <div class="total-line total-amount">
@@ -443,18 +496,23 @@ import cartLocalStorageService from "@/js/storage/CartLocalStorage";
 import orderService from "@/utils/OrderService";
 import vnPayService from "@/utils/VnPayService";
 import PaymentSuccess from "./PaymentSuccess.vue";
+import voucherService from "@/utils/VoucherService";
 export default {
   name: "PayUserPage",
   components: { TheHeader, InputAccount, PaymentSuccess },
   mounted() {
     this.getDataProvince();
-    this.getAddressDeliveryDefault();
+    this.getAddressDelivery();
     this.getOrderDetailsData();
     document.title = "Thanh toán";
   },
   data() {
     return {
       address: {},
+
+      voucherCode: "",
+      voucher: {},
+      errMessageVoucher: "",
 
       urlApiAddress: "https://vapi.vnappmob.com/api/province",
 
@@ -471,10 +529,10 @@ export default {
       lstErrorMessage: {},
       refListError: [],
 
-      addressDeliveryDefault: {},
+      addressDelivery: [],
+      selectedDeliveryAddress: {},
 
       isShowNote: false,
-      isAddressExist: false,
       isShowFormAddress: false,
       orderDetailData: [],
       totalAmountCart: 0,
@@ -649,9 +707,7 @@ export default {
             this.$Resource[this.$languageCode].ToastMessage.Status.Success
           );
 
-          //quay lại trang danh sách địa chỉ và load lại dữ liệu
-          this.numberPage = 1;
-          this.handleLoadData();
+          this.getAddressDelivery();
         }
       } catch (error) {
         console.log(error);
@@ -664,13 +720,15 @@ export default {
      * @author LQHUY(12/04/2024)
      */
     async handleCheckout() {
-      this.$emitter.emit("toggleShowLoading", true);
       try {
         //thiết lập thông tin đơn hàng
-        if (this.isAddressExist) {
-          this.order.Fullname = this.addressDeliveryDefault.ReminiscentName;
-          this.order.PhoneNumber = this.addressDeliveryDefault.PhoneNumber;
-          this.order.Address = this.addressDeliveryDefault.DeliveryAddressName;
+        if (
+          this.selectedDeliveryAddress?.ReminiscentName &&
+          !this.isShowFormAddress
+        ) {
+          this.order.Fullname = this.selectedDeliveryAddress.ReminiscentName;
+          this.order.PhoneNumber = this.selectedDeliveryAddress.PhoneNumber;
+          this.order.Address = this.selectedDeliveryAddress.DeliveryAddressName;
         } else {
           this.order.Fullname = this.address.ReminiscentName;
           this.order.PhoneNumber = this.address.PhoneNumber;
@@ -691,6 +749,9 @@ export default {
           Order: this.order,
           CartItemIds: this.orderDetailIds,
         };
+        if (this.voucher.VoucherCode) {
+          orderInfo.Voucher = this.voucher;
+        }
 
         //gọi api thanh toán
         const res = await orderService.checkout(orderInfo);
@@ -701,9 +762,8 @@ export default {
           );
           cartLocalStorageService.setCartToLocalStorage(cartData.data);
           this.$emitter.emit("getQuantityOfCart");
-          this.$emitter.emit("toggleShowLoading", false);
           localStorageService.setItemToLocalStorage("itemSelected", []);
-          this.isShowPaymentSuccess = true;
+
           if (this.order.PaymentMethod === this.$Enum.PAYMENT_METHOD.VNPAY) {
             const paymentInfo = {
               OrderType: "electronic",
@@ -714,11 +774,11 @@ export default {
             const resUrl = await vnPayService.CreatePaymentUrl(paymentInfo);
             if (resUrl.status === 201) {
               const urlPayment = resUrl.data;
-
+              //di chuyển đến trang thanh toán online
               location.href = urlPayment;
             }
           } else {
-            location.href = "http://localhost:8080/payment/success";
+            this.isShowPaymentSuccess = true;
           }
         }
       } catch (error) {
@@ -761,22 +821,23 @@ export default {
      * Hàm lấy dữ liệu địa chỉ mặc định của người dùng
      * Author: LQHUY(04/04/2024)
      */
-    async getAddressDeliveryDefault() {
+    async getAddressDelivery() {
       try {
         const res = await deliveryAddressService.getAllByUserId(
           this.userInfo.UserId
         );
+
         if (res.data.length === 0) {
-          this.addressDeliveryDefault = {};
+          this.addressDelivery = [];
           return;
+        }
+        if (res.data.length > 0) {
+          this.addressDelivery = res.data;
         }
         const addressDeliveryDefault = res.data.filter(
           (item) => item.DeliveryAddressDefault === true
         );
-        this.addressDeliveryDefault = addressDeliveryDefault[0];
-        if (this.addressDeliveryDefault) {
-          this.isAddressExist = true;
-        }
+        this.selectedDeliveryAddress = addressDeliveryDefault[0];
       } catch (error) {
         console.log(error);
       }
@@ -850,6 +911,42 @@ export default {
           )[0];
         }
       } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleApplyVoucher() {
+      try {
+        if (this.voucherCode) {
+          const params = {
+            voucherCode: this.voucherCode,
+            totalProductCost: this.order.TotalProductCost,
+          };
+          const res = await voucherService.applyVoucher({ params });
+          if (res.status === 200) {
+            this.errMessageVoucher = "";
+            this.voucher = res.data;
+            if (this.voucher.VoucherType === this.$Enum.VOUCHER_TYPE.DELIVERY) {
+              if (this.voucher.AmountDiscount >= this.order.ShippingFee) {
+                this.order.DiscountDelivery = this.order.ShippingFee;
+                this.order.TotalAmount -= this.order.DiscountDelivery;
+              } else {
+                this.order.DiscountDelivery = this.voucher.AmountDiscount;
+                this.order.TotalAmount -= this.order.DiscountDelivery;
+              }
+            } else if (
+              this.voucher.VoucherType === this.$Enum.VOUCHER_TYPE.COUPONS
+            ) {
+              this.order.DiscountCoupons = this.voucher.AmountDiscount;
+              this.order.TotalAmount -= this.order.DiscountCoupons;
+            }
+          }
+        }
+      } catch (error) {
+        if (error.response.status === 400) {
+          this.errMessageVoucher = Object.values(
+            error.response.data.errors
+          ).join("");
+        }
         console.log(error);
       }
     },

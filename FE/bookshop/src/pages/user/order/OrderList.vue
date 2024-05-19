@@ -18,7 +18,7 @@
                 'swiper-slide',
                 { 'tab-history-item-active': index === activeTabIndex },
               ]"
-              @click="getOrdersPagingData(tab.columnName, tab.status, index)"
+              @click="getOrdersPagingData(tab.columnName, tab.value, index)"
             >
               <div class="tab-history-item-border-left"></div>
               <div class="tab-history-item-number">{{ tab.quantity }}</div>
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div class="my-account mt-4">
+    <div v-if="this.orders.length > 0" class="my-account mt-4">
       <div class="table-order-container">
         <div class="table-order-row table-order-header">
           <div class="table-order-cell" style="width: 120px">Mã đơn hàng</div>
@@ -126,7 +126,6 @@
             @click="goToOrderDetail(order.OrderId)"
           >
             Xem chi tiết
-          
           </div>
         </div>
       </div>
@@ -167,6 +166,22 @@
           <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
+    </div>
+    <div
+      class="my-account mt-4"
+      style="text-align: center; background-color: #f4f6f8"
+      v-if="this.orders.length === 0"
+    >
+      <div>
+        <img src="../../../assets/img/no-order.png" alt="" />
+      </div>
+      <p style="font-size: 16px; margin-top: 12px !important">
+        {{
+          this.activeTabIndex === 0
+            ? "Không có đơn hàng nào"
+            : "Không có đơn hàng nào thỏa mãn"
+        }}
+      </p>
     </div>
   </div>
 </template>
@@ -209,27 +224,27 @@ export default {
         {
           label: "Chờ xác nhận",
           columnName: "OrderStatus",
-          status: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
+          value: this.$Enum.ORDER_STATUS.WAIT_FOR_CONFIRMATION,
         },
         {
           label: "Đã xác nhận",
           columnName: "OrderStatus",
-          status: this.$Enum.ORDER_STATUS.CONFIRMED,
+          value: this.$Enum.ORDER_STATUS.CONFIRMED,
         },
         {
           label: "Đang vận chuyển",
           columnName: "DeliveryStatus",
-          status: this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED,
+          value: this.$Enum.DELIVERY_STATUS.BEING_TRANSPORTED,
         },
         {
           label: "Hoàn tất",
           columnName: "OrderStatus",
-          status: this.$Enum.ORDER_STATUS.COMPLETE,
+          value: this.$Enum.ORDER_STATUS.COMPLETE,
         },
         {
           label: "Bị hủy",
           columnName: "OrderStatus",
-          status: this.$Enum.ORDER_STATUS.CANCELLED,
+          value: this.$Enum.ORDER_STATUS.CANCELLED,
         },
       ],
       activeTabIndex: 0, // Chỉ số của tab đang được chọn mặc định là 0
@@ -363,7 +378,7 @@ export default {
      * @param index vị trí chọn
      * @author LQHUY
      */
-    async getOrdersPagingData(columnName = null, value = null, index = 0) {
+    async getOrdersPagingData(columnName = null, value , index = 0) {
       try {
         this.activeTabIndex = index;
         this.$emitter.emit("toggleShowLoading", true);
@@ -372,7 +387,7 @@ export default {
           PageSize: this.filterData.pageSize,
           PageNumber: this.filterData.pageNumber,
           ColumnName: columnName,
-          Value: value ? `${value}` : null,
+          Value: value !==null ? `${value}` : null,
         };
         const res = await orderService.GetByUserId({ params });
         if (res.status === 200) {

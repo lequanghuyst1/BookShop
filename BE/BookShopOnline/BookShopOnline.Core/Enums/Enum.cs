@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BookShopOnline.Core.Enums
 {
+    public enum VoucherType
+    {
+        COUPONS = 0,
+        DELIVERY = 1,
+    }
     /// <summary>
     /// Tình trạng đơn hàng
     /// </summary>

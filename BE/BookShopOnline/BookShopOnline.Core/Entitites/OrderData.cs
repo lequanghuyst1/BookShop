@@ -11,5 +11,6 @@ namespace BookShopOnline.Core.Entitites
         public List<OrderDetail> OrderDetails { get; set; }
         public Order Order { get; set; }
         public List<Guid>? CartItemIds { get; set; }
+        public Voucher? Voucher { get; set; }
     }
 }

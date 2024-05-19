@@ -261,22 +261,27 @@
                       <p class="info-item__value">
                         {{
                           this.$helper.formatMoney(
-                            order.TotalAmount - order.ShippingFee
+                            order.TotalProductCost
                           )
                         }}đ
                       </p>
                     </div>
-                    <div class="info-item">
-                      <p class="info-item__title">Giảm giá</p>
-                      <p class="info-item__value">0đ</p>
-                    </div>
+                    
                     <div class="info-item">
                       <p class="info-item__title">Vận chuyển</p>
                       <p class="info-item__value">
                         {{ this.$helper.formatMoney(order.ShippingFee) }}đ
                       </p>
                     </div>
-                    <div class="info-item">
+                    <div v-if="order.DiscountDelivery" class="info-item">
+                      <p class="info-item__title">Mã vận chuyển</p>
+                      <p class="info-item__value">- {{ this.$helper.formatMoney(order.DiscountDelivery) }}đ</p>
+                    </div>
+                    <div v-if="order.DiscountCoupons" class="info-item">
+                      <p class="info-item__title">Mã giảm giá</p>
+                      <p class="info-item__value">- {{ this.$helper.formatMoney(order.DiscountCoupons) }}đ</p>
+                    </div>
+                    <div  class="info-item">
                       <div class="info-item__title">
                         <b>Tổng giá trị đơn hàng</b>
                       </div>

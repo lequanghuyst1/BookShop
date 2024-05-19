@@ -68,13 +68,13 @@
           </div>
           <div class="row">
             <div class="col l-12">
-              <MInput
+              <!-- <MInput
                 :ref="textFields.address.ref"
                 :label="textFields.address.label"
                 :rules="textFields.address.rules"
                 v-model="user.Address"
-              ></MInput>
-              <div class="col l-6">
+              ></MInput> -->
+              <div class="col-6">
                 <MCombobox
                   propValue="value"
                   propText="name"

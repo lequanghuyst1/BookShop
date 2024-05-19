@@ -14,6 +14,8 @@ namespace BookShopOnline.Core.Interfaces.UnitOfWork
         IOrderDetailRepository OrderDetail { get; }
         IOrderRepository Order { get; } 
         IBookRepository Book { get; }
+        IVoucherRepository Voucher { get; }
+
 
         /// <summary>
         /// Bắt đầu transition

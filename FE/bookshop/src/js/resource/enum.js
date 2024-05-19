@@ -4,7 +4,7 @@ const Enum = {
     FEMALE: 1,
     OTHER: 2,
   },
-  
+
   FormMode: {
     Add: 0,
     Edit: 1,
@@ -68,6 +68,11 @@ const Enum = {
   ACCOUNT_STATUS: {
     IN_ACTIVE: 0,
     ACTIVE: 1,
+  },
+
+  VOUCHER_TYPE: {
+    COUPONS: 0,
+    DELIVERY: 1,
   },
 };
 

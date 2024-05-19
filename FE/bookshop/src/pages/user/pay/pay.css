@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   height: 20px;
-  margin-top: -20px;
+  margin-top: -6px;
   margin-bottom: 32px;
 }
 
@@ -201,7 +201,7 @@
   font-size: 14px;
 }
 .total-delivery {
-  margin-bottom: 16px !important;
+  margin-bottom: 8px !important;
 }
 .total-amount {
   border-top: 1px solid #ccc;
