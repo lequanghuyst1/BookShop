@@ -65,7 +65,7 @@ builder.Services.AddAutoMapper
 (typeof(AutoMapperProfile).Assembly);
         
 //config DI
-builder.Services.AddScoped<IDbContext, MySqlContext>();
+builder.Services.AddScoped<IDbContext, MariaDbContext>();
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
