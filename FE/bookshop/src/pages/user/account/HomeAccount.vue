@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <div class="block-order-recent p-4">
+    <div v-if="recentOrders.length > 0" class="block-order-recent p-4">
       <div
         class="box-header mb-4 d-flex justify-content-between align-items-center"
       >
@@ -86,20 +86,18 @@
         </table>
       </div>
     </div>
-    <div class="block-deliver-address p-4">
+    <div v-if="deliveryAddressDefault?.ReminiscentName" class="block-deliver-address p-4">
       <div class="box-title">Sổ địa chỉ</div>
       <div class="box-content mt-3 pb-3">
         <h4>Địa chỉ giao hàng mặc định</h4>
         <address>
-          {{ deliveryAddressDefault.ReminiscentName }}
+          {{ deliveryAddressDefault?.ReminiscentName }}
+          
           <br />
-          {{ deliveryAddressDefault.HomeNumber }}
+          {{ deliveryAddressDefault?.DeliveryAddressName }}
           <br />
-          {{ deliveryAddressDefault.DeliveryAddressName }}
+          {{ deliveryAddressDefault?.PhoneNumber }}
           <br />
-          {{ deliveryAddressDefault.PhoneNumber }}
-          <br />
-          <a style="color: #c92127" href="">Sửa địa chỉ</a>
         </address>
       </div>
     </div>

@@ -27,5 +27,7 @@ namespace BookShopOnline.Core.Dto.Order
         public int? NumberOfPage { get; set; }
         public double? Heavy { get; set; }
         public string? Image { get; set; }
+        public int? QuantityInStock { get; set; }
+
     }
 }

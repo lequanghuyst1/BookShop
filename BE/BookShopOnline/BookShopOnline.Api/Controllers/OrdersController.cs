@@ -159,7 +159,6 @@ namespace BookShopOnline.Api.Controllers
             return File(res, contenType, fileName);
         }
 
-        [Authorize(Roles = ("Admin"))]
         [HttpPost("Export/[action]")]
         public IActionResult ExportRevenueByTime(ExcelRequest<Order> excelRequest)
         {

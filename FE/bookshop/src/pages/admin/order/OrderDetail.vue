@@ -178,6 +178,7 @@
                 </div>
                 <div class="product-item-desc">
                   <h3 class="product-item-name">{{ item.BookName }}</h3>
+                  <p class="mt-2">Số lượng tồn: {{ item.QuantityInStock }}</p>
                 </div>
                 <div class="product-item-quantiy">{{ item.Quantity }}</div>
                 <div class="product-item-price">
@@ -187,6 +188,7 @@
                   {{ this.$helper.formatMoney(item.Quantity * item.Price) }}đ
                 </div>
               </div>
+            
             </div>
             <div class="total-amount-order">
               <p>Tổng cộng :</p>
@@ -259,14 +261,10 @@
                     <div class="info-item">
                       <p class="info-item__title">Tổng tiền hàng</p>
                       <p class="info-item__value">
-                        {{
-                          this.$helper.formatMoney(
-                            order.TotalProductCost
-                          )
-                        }}đ
+                        {{ this.$helper.formatMoney(order.TotalProductCost) }}đ
                       </p>
                     </div>
-                    
+
                     <div class="info-item">
                       <p class="info-item__title">Vận chuyển</p>
                       <p class="info-item__value">
@@ -275,13 +273,18 @@
                     </div>
                     <div v-if="order.DiscountDelivery" class="info-item">
                       <p class="info-item__title">Mã vận chuyển</p>
-                      <p class="info-item__value">- {{ this.$helper.formatMoney(order.DiscountDelivery) }}đ</p>
+                      <p class="info-item__value">
+                        -
+                        {{ this.$helper.formatMoney(order.DiscountDelivery) }}đ
+                      </p>
                     </div>
                     <div v-if="order.DiscountCoupons" class="info-item">
                       <p class="info-item__title">Mã giảm giá</p>
-                      <p class="info-item__value">- {{ this.$helper.formatMoney(order.DiscountCoupons) }}đ</p>
+                      <p class="info-item__value">
+                        - {{ this.$helper.formatMoney(order.DiscountCoupons) }}đ
+                      </p>
                     </div>
-                    <div  class="info-item">
+                    <div class="info-item">
                       <div class="info-item__title">
                         <b>Tổng giá trị đơn hàng</b>
                       </div>
@@ -427,7 +430,8 @@
             <button
               v-show="
                 order.OrderStatus !== this.$Enum.ORDER_STATUS.COMPLETE &&
-                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED
+                order.OrderStatus !== this.$Enum.ORDER_STATUS.CANCELLED &&
+                order.PaymentStatus !== this.$Enum.PAYMENT_STATUS.PAID
               "
               @click="onCancelOrder"
               class="m-button"

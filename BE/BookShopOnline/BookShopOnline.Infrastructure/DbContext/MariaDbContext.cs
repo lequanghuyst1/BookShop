@@ -131,7 +131,6 @@ namespace BookShopOnline.Infrastructure.DbContext
             }
         }
 
-
         public async Task<PagingEntity<TEntity>> GetFilterPagingAsync<TEntity>(string? searchString, int pageSize, int pageNumber)
         {
             var tableName = typeof(TEntity).Name;

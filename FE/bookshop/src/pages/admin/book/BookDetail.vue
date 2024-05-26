@@ -333,7 +333,7 @@ export default {
      */
     async editBook() {
       try {
-        this.book.QuantityInStock += this.book.QuantityImported;
+        this.book.QuantityInStock = Number(this.book.QuantityInStock) + Number(this.book.QuantityImported);
         var formData = new FormData();
         formData.append("imageFile", this.imageFile);
         formData.append("dataJson", JSON.stringify(this.book));

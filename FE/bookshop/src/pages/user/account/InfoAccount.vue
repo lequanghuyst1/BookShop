@@ -31,6 +31,14 @@
         :name="textFields.email.name"
         v-model="user.Email"
       ></InputAccount>
+      <InputAccount
+        id="dateofbirdth"
+        label="Ngày sinh"
+        ref="refDateOfBirth"
+        name="DateOfBirth"
+        v-model="user.DateOfBirth"
+        type="date"
+      ></InputAccount>
       <!-- <InputAccount
         id="address"
         :label="textFields.address.label"
@@ -61,43 +69,6 @@
             <span class="checkmark"></span>
           </label>
           <span class="m-error-message"></span>
-        </div>
-      </div>
-
-      <div class="row group-input-account group-input-dateofbirth">
-        <div class="input-label">
-          <label for="birthday" class="">Ngày sinh</label>
-        </div>
-        <div class="col-8">
-          <div class="row">
-            <div class="col-3">
-              <input
-                type="text"
-                id="date"
-                placeholder="DD"
-                class="m-textfield"
-                v-model="date"
-              />
-            </div>
-            <div class="col-3">
-              <input
-                type="text"
-                id="month"
-                placeholder="MM"
-                class="m-textfield"
-                v-model="month"
-              />
-            </div>
-            <div class="col-3">
-              <input
-                type="text"
-                id="year"
-                placeholder="YYYY"
-                class="m-textfield"
-                v-model="year"
-              />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -170,55 +141,25 @@ export default {
       ? localStorageService.getItemFromLocalStorage("userInfo")
       : {};
     if (this.user.DateOfBirth) {
-      const dob = this.$helper.formatDate(this.user.DateOfBirth);
-      const parts = dob.split("/");
-      this.date = parts[1];
-      this.month = parts[0];
-      this.year = parts[2];
+      this.user.DateOfBirth = this.$helper.formatDate(
+        this.user.DateOfBirth,
+        true
+      );
     }
     this.$emitter.emit("toggleShowLoading", true);
     this.$emitter.emit("toggleShowLoading", false, 400);
     document.title = "Thông tin tài khoản";
   },
-  watch: {
-    date(newValue) {
-      if (newValue > 31) {
-        this.date = 31;
-      }
-      if (newValue < 0) {
-        this.date = null;
-      }
-    },
-    month(newValue) {
-      if (newValue > 12) {
-        this.month = 12;
-      }
-      if (newValue < 1) {
-        this.month = null;
-      }
-    },
-    year(newValue) {
-      if (newValue > this.yearNow) {
-        this.year = this.yearNow;
-      }
-      if (newValue < 1) {
-        this.year = 1;
-      }
-    },
-  },
+  watch: {},
   computed: {
     ...mapGetters(["globalErrorMsg"]),
-    yearNow() {
-      let date = new Date();
-
-      return date.getFullYear();
-    },
+ 
     textFields: function () {
       return TEXT_FIELD[this.$languageCode].user;
     },
   },
   methods: {
-    ...mapActions(["setGlobalValidateDefault","setGlobalValidateError"]),
+    ...mapActions(["setGlobalValidateDefault", "setGlobalValidateError"]),
     /**
      * Thực hiện save khi click vào btn lưu thông tin
      * Author: LQHUY(08/04/2024)
@@ -280,11 +221,7 @@ export default {
     async hanldeOnEdit() {
       try {
         this.$emitter.emit("toggleShowLoading", true);
-        if (!this.date) {
-          this.date = this.date < 10 ? `0${this.date}` : this.date;
-          this.month = this.date < 10 ? `0${this.month}` : this.month;
-        }
-        this.user.DateOfBirth = this.date + "/" + this.month + "/" + this.year;
+       
         var formData = new FormData();
         formData.append("dataJson", JSON.stringify(this.user));
 

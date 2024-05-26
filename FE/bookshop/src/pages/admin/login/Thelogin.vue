@@ -61,10 +61,12 @@ import userService from "@/utils/UserService";
 import { setInfoTokensToStorage } from "@/js/token/TokenService";
 import localStorageService from "@/js/storage/LocalStorageService";
 import { mapActions, mapGetters } from "vuex";
+import cartItemService from "@/utils/CartItemService";
 export default {
   name: "LoginAdminPage",
   created() {},
   mounted() {
+    this.$refs[this.textFields.email.ref].setFocus();
     document.addEventListener("keydown", (e) => {
       switch (e.keyCode) {
         case 13:
@@ -139,13 +141,20 @@ export default {
               localStorageService.getItemFromLocalStorage("userInfo")
                 .RoleName === "Admin"
             ) {
-              this.$router.push("/admin/book-management");
+              this.$router.push("/admin/home");
               this.$emitter.emit(
                 "onShowToastMessage",
                 this.$Resource[this.$languageCode].ToastMessage.Type.Success,
                 "Đăng nhập thành công",
                 this.$Resource[this.$languageCode].ToastMessage.Status.Success
               );
+              //lấy ra thông tin người dùng
+            var user = localStorageService.getItemFromLocalStorage("userInfo");
+            //gọi api lấy ra danh sách các sản phẩm có trong giỏ hàng
+            var result = await cartItemService.getByCartId(user.CartId);
+            if (result.status === 200) {
+              localStorageService.setItemToLocalStorage("cart", result.data);
+            }
             } else {
               this.$emitter.emit(
                 "onShowToastMessage",

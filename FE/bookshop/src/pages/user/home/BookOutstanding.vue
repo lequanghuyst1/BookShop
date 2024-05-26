@@ -67,14 +67,7 @@
                   <div class="layer-content">
                     <ul
                       class="check-box-list"
-                      :style="{
-                        maxHeight: isShowMoreCategoryFilter
-                          ? 'max-content'
-                          : '300px',
-                        overflow: isShowMoreCategoryFilter
-                          ? 'visible'
-                          : 'hidden',
-                      }"
+                      
                     >
                       <li
                         class="check-box-item"
@@ -93,7 +86,7 @@
                         }}</label>
                       </li>
                     </ul>
-                    <p
+                    <!-- <p
                       @click="
                         this.isShowMoreCategoryFilter =
                           !this.isShowMoreCategoryFilter
@@ -103,7 +96,7 @@
                       {{
                         isShowMoreCategoryFilter ? "Hiện ít lại" : "Xem thêm"
                       }}
-                    </p>
+                    </p> -->
                   </div>
                 </div>
                 <div class="group-filter" aria-expanded="false">
@@ -113,14 +106,7 @@
                   <div class="layer-content">
                     <ul
                       class="check-box-list"
-                      :style="{
-                        maxHeight: isShowMorePublisherFilter
-                          ? 'max-content'
-                          : '300px',
-                        overflow: isShowMorePublisherFilter
-                          ? 'visible'
-                          : 'hidden',
-                      }"
+                      
                     >
                       <li
                         class="check-box-item"
@@ -137,7 +123,7 @@
                         <label :for="'publisher' + index">{{ item }}</label>
                       </li>
                     </ul>
-                    <p
+                    <!-- <p
                       @click="
                         this.isShowMorePublisherFilter =
                           !this.isShowMorePublisherFilter
@@ -147,7 +133,7 @@
                       {{
                         isShowMorePublisherFilter ? "Hiện ít lại" : "Xem thêm"
                       }}
-                    </p>
+                    </p> -->
                   </div>
                 </div>
                 <div class="group-filter" aria-expanded="false">
@@ -158,12 +144,7 @@
                     <ul
                       ref="authorFilter"
                       class="check-box-list"
-                      :style="{
-                        maxHeight: isShowMoreAuthorFilter
-                          ? 'max-content'
-                          : '300px',
-                        overflow: isShowMoreAuthorFilter ? 'visible' : 'hidden',
-                      }"
+                     
                     >
                       <li
                         v-for="(item, index) in authors"
@@ -180,7 +161,7 @@
                         <label :for="'author' + index">{{ item }}</label>
                       </li>
                     </ul>
-                    <p
+                    <!-- <p
                       @click="
                         this.isShowMoreAuthorFilter =
                           !this.isShowMoreAuthorFilter
@@ -188,7 +169,7 @@
                       class="narrow-by-list"
                     >
                       {{ isShowMoreAuthorFilter ? "Hiện ít lại" : "Xem thêm" }}
-                    </p>
+                    </p> -->
                   </div>
                 </div>
 

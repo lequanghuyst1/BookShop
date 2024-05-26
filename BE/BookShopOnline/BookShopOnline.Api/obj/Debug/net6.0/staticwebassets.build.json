@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "HftWSJ7BbE356KV9z7vJLRlmHpY4n6DMRjzzVVyhCLQ=",
+  "Hash": "cJdKGqcV5ymgfsty0atmXTbK9E7cJ/m80SQZRasYJH4=",
   "Source": "BookShopOnline.Api",
   "BasePath": "_content/BookShopOnline.Api",
   "Mode": "Default",
@@ -253,6 +253,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\9726a839a056959e94aba54e7c1ff0d6_1_1.jpg"
+    },
+    {
+      "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\9786043440287.jpg",
+      "SourceId": "BookShopOnline.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\",
+      "BasePath": "_content/BookShopOnline.Api",
+      "RelativePath": "images/9786043440287.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\9786043440287.jpg"
     },
     {
       "Identity": "D:\\DoAnTotNghiep\\BE\\BookShopOnline\\BookShopOnline.Api\\wwwroot\\images\\9786044778617.jpg",

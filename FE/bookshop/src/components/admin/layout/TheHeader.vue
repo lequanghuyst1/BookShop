@@ -80,6 +80,8 @@ export default {
           this.$router.replace("login").finally(() => {
             document.title = "Đăng nhập"; // Đặt lại tiêu đề sau khi chuyển hướng
           });
+          removeAllInfoTokenToStorage();
+          localStorageService.removeItemLocalStorage("cart");
         }
       } catch (error) {
         console.log(error);

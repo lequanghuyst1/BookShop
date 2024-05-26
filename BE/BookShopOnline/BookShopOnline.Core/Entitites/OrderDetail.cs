@@ -26,6 +26,7 @@ namespace BookShopOnline.Core.Entitites
         public int? NumberOfPage { get; set; }
         public double? Heavy { get; set; }
         public string? Image { get; set; }
+        public int? QuantityInStock { get; set; }
 
     }
 }

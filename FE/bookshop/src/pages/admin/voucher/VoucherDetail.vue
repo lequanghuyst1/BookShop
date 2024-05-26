@@ -325,7 +325,6 @@ export default {
       comboboxData: [
         { value: 0, name: "Voucher giảm giá" },
         { value: 1, name: "Voucher vận chuyển" },
-        { value: 2, name: "Voucher v" },
       ],
     };
   },

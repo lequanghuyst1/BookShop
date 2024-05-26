@@ -43,7 +43,7 @@
         </div> -->
         <div class="top-banner-block">
           <p>
-            <a href="https://www.fahasa.com/minh-long?fhs_campaign=topbanner"
+            <a href="/"
               ><img
                 src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/SieeuSale_Week2_T524_Banner_Header_1263x60.jpg"
                 alt=""

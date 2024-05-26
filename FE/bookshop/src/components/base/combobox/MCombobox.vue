@@ -18,6 +18,7 @@
         class="m-textfield"
         ref="input"
         @blur="onBulrInput"
+        style="margin: 4px 0;"
       />
       <div
         @click="onClickIconDown"
